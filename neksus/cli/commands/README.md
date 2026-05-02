@@ -22,9 +22,15 @@ Each file here contains one command group or shared command helper.
     - `new`
     - `validate`
     - `render`
+    - `templates`
     - `schema`
     - `inspect`
+    - `migrate`
   - Handles strict mode and output mode branching.
+
+- `render.py`
+  - Implements top-level `neksus-jobspec render`.
+  - Renders all project JobSpecs to configured output directory.
 
 - `check.py`
   - Implements `neksus-jobspec check`.

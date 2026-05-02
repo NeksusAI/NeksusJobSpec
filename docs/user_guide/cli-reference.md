@@ -4,6 +4,7 @@ Neksus JobSpec provides a command-line interface with these command groups:
 
 - `neksus-jobspec version`
 - `neksus-jobspec init`
+- `neksus-jobspec render`
 - `neksus-jobspec spec ...`
 - `neksus-jobspec check`
 - `neksus-jobspec config ...`
@@ -26,6 +27,7 @@ Options:
 Create a new spec file.
 
 Options:
+- `--template {basic,engineering,product,sales}`
 - `--output PATH`
 - `--force`
 - `--json`
@@ -43,9 +45,16 @@ Options:
 Render a spec file.
 
 Options:
-- `--format {markdown,html}`
+- `--format {markdown,html,json}`
 - `--output PATH`
 - `--no-validate`
+- `--json`
+
+## `neksus-jobspec spec templates`
+
+List built-in templates.
+
+Options:
 - `--json`
 
 ## `neksus-jobspec spec schema`
@@ -63,12 +72,31 @@ Inspect normalized metadata.
 Options:
 - `--json`
 
+## `neksus-jobspec spec migrate PATH`
+
+Inspect schema-version migration status.
+
+Options:
+- `--write` (reserved; currently not implemented)
+- `--json`
+
+## `neksus-jobspec render`
+
+Render all `*.jobspec.yaml` files in the configured project `spec_directory`.
+
+Options:
+- `--all` (alias/no-op)
+- `--format {markdown,html,json}`
+- `--clean`
+- `--json`
+
 ## `neksus-jobspec check`
 
 Run project checks.
 
 Options:
 - `--strict`
+- `--format {human,github}`
 - `--json`
 
 ## `neksus-jobspec config get [KEY]`

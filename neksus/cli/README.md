@@ -21,6 +21,7 @@ Root command: `neksus-jobspec`
 
 - `version`
 - `init`
+- `render`
 - `spec ...`
 - `check`
 - `config ...`

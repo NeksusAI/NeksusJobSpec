@@ -11,7 +11,7 @@ pip install neksus-jobspec
 Or install from local repository:
 
 ```bash
-pip install -e .[dev]
+uv sync
 ```
 
 ## Quick Start
@@ -39,15 +39,23 @@ neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml
 ```bash
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format markdown --output dist/backend-engineer.md
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --output dist/backend-engineer.html
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format json --output dist/backend-engineer.json
 ```
 
 ### 5. Run project checks
 
 ```bash
 neksus-jobspec check
+neksus-jobspec check --format github
 ```
 
-### 6. Export schema
+### 6. Batch render project specs
+
+```bash
+neksus-jobspec render --format markdown
+```
+
+### 7. Export schema
 
 ```bash
 neksus-jobspec spec schema --output schemas/jobspec.v1.json

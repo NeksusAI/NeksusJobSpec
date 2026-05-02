@@ -8,7 +8,7 @@
 ## Setup
 
 ```bash
-git clone https://github.com/stefanrobertstegaru/NeksusJobSpec.git
+git clone https://github.com/NeksusAI/NeksusJobSpec.git
 cd NeksusJobSpec
 uv sync
 ```

@@ -3,7 +3,7 @@ name = "neksus-jobspec"
 version = "0.1.0"
 description = "Local-first CLI for Neksus JobSpec files"
 readme = "README.md"
-license = "MIT"
+license = "AGPL-3.0-or-later"
 requires-python = ">=3.11"
 authors = [
   { name = "Neksus Team" },
@@ -29,9 +29,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/stefanrobertstegaru/NeksusJobSpec"
-Repository = "https://github.com/stefanrobertstegaru/NeksusJobSpec"
-Issues = "https://github.com/stefanrobertstegaru/NeksusJobSpec/issues"
+Homepage = "https://github.com/NeksusAI/NeksusJobSpec"
+Repository = "https://github.com/NeksusAI/NeksusJobSpec"
+Issues = "https://github.com/NeksusAI/NeksusJobSpec/issues"
 
 [project.optional-dependencies]
 dev = [

@@ -19,15 +19,20 @@ from neksus.cli.commands.common import (
     print_kv_table,
     print_success,
     print_warning,
-    stdout,
 )
 from neksus.core.errors import ConfigError, FileSystemError
 from neksus.core.jobspec.inspect import inspect_jobspec
+from neksus.core.jobspec.migrate import inspect_schema_version
 from neksus.core.jobspec.models import JobSpec
 from neksus.core.jobspec.parser import load_jobspec, load_yaml_file
 from neksus.core.jobspec.renderer import render_jobspec
 from neksus.core.jobspec.schema import jobspec_json_schema
-from neksus.core.jobspec.templates import build_jobspec_template, dump_jobspec_yaml, slugify_name
+from neksus.core.jobspec.templates import (
+    build_jobspec_template,
+    dump_jobspec_yaml,
+    list_template_names,
+    slugify_name,
+)
 from neksus.core.jobspec.validator import (
     pydantic_errors_to_issues,
     validate_spec_data,
@@ -64,12 +69,18 @@ def _resolve_new_path(name: str, output: Path | None) -> Path:
 @app.command("new")
 def spec_new(
     name: Annotated[str, typer.Argument(help="Name used to generate JobSpec id and file name.")],
+    template: Annotated[
+        str,
+        typer.Option("--template", help="Built-in template name."),
+    ] = "basic",
     output: Annotated[Path | None, typer.Option("--output", help="Custom output path.")] = None,
     force: Annotated[bool, typer.Option("--force", help="Overwrite existing file.")] = False,
     json: Annotated[bool, typer.Option("--json", help="Output machine-readable JSON.")] = False,
 ) -> None:
     """Create a new JobSpec file."""
     try:
+        if template not in list_template_names():
+            raise typer.BadParameter(f"Unknown template: {template}", param_hint="--template")
         # Resolve and guard output path before writing.
         target = _resolve_new_path(name, output)
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -77,17 +88,17 @@ def spec_new(
             raise FileSystemError(f"File already exists: {target}. Use --force to overwrite.")
 
         # Generate valid template and validate once before writing to disk.
-        template = build_jobspec_template(name)
-        JobSpec.model_validate(template)
-        target.write_text(dump_jobspec_yaml(template), encoding="utf-8")
+        template_data = build_jobspec_template(name, template=template)
+        JobSpec.model_validate(template_data)
+        target.write_text(dump_jobspec_yaml(template_data), encoding="utf-8")
     except Exception as exc:  # noqa: BLE001
         handle_expected_error(exc, as_json=json)
         return
 
     if json:
-        print_json({"ok": True, "file": str(target)})
+        print_json({"ok": True, "file": str(target), "template": template})
         return
-    print_success(f"Created JobSpec: {target}")
+    print_success(f"Created JobSpec: {target} (template: {template})")
 
 
 @app.command("validate")
@@ -183,7 +194,7 @@ def spec_render(
         if json:
             print_json({"ok": True, "file": str(path), "format": format, "content": rendered})
             return
-        stdout.print(rendered, end="")
+        typer.echo(rendered, nl=False)
     except ValidationError as exc:
         issues = pydantic_errors_to_issues(exc)
         payload = {
@@ -254,14 +265,70 @@ def spec_schema(
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(to_json(schema), encoding="utf-8")
             if json:
-                print_json({"ok": True, "output": str(output), "schema_version": 1})
+                print_json(
+                    {
+                        "ok": True,
+                        "format": "json-schema",
+                        "schema_version": 1,
+                        "output": str(output),
+                    }
+                )
             else:
                 print_success(f"Wrote schema to {output}")
             return
 
         if json:
-            print_json({"ok": True, "schema": schema, "schema_version": 1})
+            print_json({"ok": True, "format": "json-schema", "schema_version": 1, "schema": schema})
             return
-        stdout.print(to_json(schema))
+        typer.echo(to_json(schema))
     except Exception as exc:  # noqa: BLE001
         handle_expected_error(exc, as_json=json)
+
+
+@app.command("templates")
+def spec_templates(
+    json: Annotated[bool, typer.Option("--json", help="Output machine-readable JSON.")] = False,
+) -> None:
+    """List built-in JobSpec templates."""
+    templates = list(list_template_names())
+    if json:
+        print_json({"ok": True, "templates": templates})
+        return
+    print_kv_table("Built-in Templates", [(name, "available") for name in templates])
+
+
+@app.command("migrate")
+def spec_migrate(
+    path: Annotated[Path, typer.Argument(help="Path to a JobSpec YAML file.")],
+    write: Annotated[
+        bool,
+        typer.Option("--write", help="Enable writing migrations (not implemented)."),
+    ] = False,
+    json: Annotated[bool, typer.Option("--json", help="Output machine-readable JSON.")] = False,
+) -> None:
+    """Inspect schema migration status for a JobSpec."""
+    try:
+        result = inspect_schema_version(path)
+    except Exception as exc:  # noqa: BLE001
+        handle_expected_error(exc, as_json=json)
+        return
+
+    if write:
+        message = "Write mode is not implemented for schema migrations."
+        if json:
+            print_json({"ok": False, "file": str(path), "error": message})
+        else:
+            print_error(message)
+        raise typer.Exit(1)
+
+    ok = result["status"] == "already_current"
+    payload = {"ok": ok, "file": str(path), **result}
+    if json:
+        print_json(payload)
+        raise typer.Exit(0 if ok else 1)
+
+    if ok:
+        print_success(f"{path}: already current (schema_version=1)")
+        return
+    print_warning(f"{path}: {result['message']}")
+    raise typer.Exit(1)

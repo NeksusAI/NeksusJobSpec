@@ -2,6 +2,11 @@
 
 A JobSpec is a YAML document validated against schema version `1`.
 
+Schema version policy:
+- `schema_version: 1` is the current and supported version.
+- Future versions are currently rejected.
+- Use `neksus-jobspec spec migrate PATH` to inspect migration status.
+
 ## Minimal valid example
 
 ```yaml

@@ -30,4 +30,4 @@ def find_project_root(start: Path | None = None) -> Path:
         if (candidate / ".neksus" / "config.yaml").exists():
             return candidate
 
-    raise ConfigError("No Neksus project found. Run `neksus init` first.")
+    raise ConfigError("No Neksus project found. Run `neksus-jobspec init` first.")

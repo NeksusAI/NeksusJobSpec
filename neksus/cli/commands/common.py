@@ -5,6 +5,7 @@ Centralizes output and consistent exit-code handling for all commands.
 
 from __future__ import annotations
 
+import click
 import typer
 from rich.console import Console
 from rich.table import Table
@@ -60,7 +61,9 @@ def handle_expected_error(exc: Exception, as_json: bool = False) -> None:
         as_json: If True, emit JSON error payload.
     """
     # Map domain exceptions to documented exit codes.
-    if isinstance(exc, FileSystemError):
+    if isinstance(exc, (typer.BadParameter, click.UsageError)):
+        code = 2
+    elif isinstance(exc, FileSystemError):
         code = 3
     elif isinstance(exc, ConfigError):
         code = 4

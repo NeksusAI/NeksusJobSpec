@@ -5,7 +5,7 @@ Employer-side JobSpec builder for teams that want **version-controlled hiring sp
 Write a JobSpec in YAML, then run:
 
 ```bash
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml
+neksus-jobspec render --format markdown
 ```
 
 and get deterministic, human-readable output.
@@ -30,7 +30,7 @@ pip install neksus-jobspec
 For local development:
 
 ```bash
-pip install -e .[dev]
+uv sync
 ```
 
 ### 2. Initialize a project
@@ -58,12 +58,15 @@ neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml
 ```bash
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format markdown --output dist/backend-engineer.md
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --output dist/backend-engineer.html
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format json --output dist/backend-engineer.json
+neksus-jobspec render --format markdown
 ```
 
 ### 5. Export schema for editor support
 
 ```bash
 neksus-jobspec spec schema --output schemas/jobspec.v1.json
+neksus-jobspec spec schema --json
 ```
 
 ## CLI Commands
@@ -73,8 +76,11 @@ neksus-jobspec spec schema --output schemas/jobspec.v1.json
 - `neksus-jobspec spec new NAME`
 - `neksus-jobspec spec validate PATH`
 - `neksus-jobspec spec render PATH`
+- `neksus-jobspec spec templates`
 - `neksus-jobspec spec schema`
 - `neksus-jobspec spec inspect PATH`
+- `neksus-jobspec spec migrate PATH`
+- `neksus-jobspec render`
 - `neksus-jobspec check`
 - `neksus-jobspec config get [KEY]`
 - `neksus-jobspec config set KEY VALUE`

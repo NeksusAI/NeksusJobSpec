@@ -47,6 +47,7 @@ def test_spec_render_html_stdout() -> None:
         assert result.exit_code == 0
         assert "<!doctype html>" in result.stdout.lower()
         assert "<h1>Backend Engineer</h1>" in result.stdout
+        assert "<style>" in result.stdout
 
 
 def test_spec_render_html_output_writes_file() -> None:
@@ -73,6 +74,40 @@ def test_spec_render_unsupported_format_fails() -> None:
         result = runner.invoke(app, ["spec", "render", str(target), "--format", "pdf"])
         assert result.exit_code == 1
         assert "Unsupported render format" in result.output
+
+
+def test_spec_render_json_stdout() -> None:
+    with runner.isolated_filesystem():
+        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        target = Path("valid.jobspec.yaml")
+        shutil.copy(src, target)
+
+        result = runner.invoke(app, ["spec", "render", str(target), "--format", "json"])
+        assert result.exit_code == 0
+        payload = json.loads(result.stdout)
+        assert payload["id"] == "backend-engineer"
+
+
+def test_spec_render_html_escapes_content() -> None:
+    with runner.isolated_filesystem():
+        target = Path("unsafe.jobspec.yaml")
+        target.write_text(
+            """schema_version: 1
+id: unsafe
+title: "<script>alert(1)</script>"
+summary: "Hello <b>world</b>"
+responsibilities:
+  - "Own <tag>"
+requirements:
+  - "Ship > 1 feature"
+""",
+            encoding="utf-8",
+        )
+
+        result = runner.invoke(app, ["spec", "render", str(target), "--format", "html"])
+        assert result.exit_code == 0
+        assert "<script>" not in result.stdout
+        assert "&lt;script&gt;alert(1)&lt;/script&gt;" in result.stdout
 
 
 def test_spec_inspect_json_output() -> None:

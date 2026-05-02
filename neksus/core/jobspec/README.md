@@ -14,7 +14,7 @@ JobSpec-centric domain logic.
    - Adds non-fatal warnings (short title, duplicates, missing location detail).
 
 3. `renderer.render_jobspec(spec, format="markdown")`
-   - Converts a validated model into markdown or html.
+   - Converts a validated model into markdown, html, or json.
    - Omits empty optional sections.
 
 4. `schema.jobspec_json_schema()`
@@ -38,16 +38,19 @@ JobSpec-centric domain logic.
   - `pydantic_errors_to_issues(...)` gives stable, CLI-safe issue shapes.
 
 - `renderer.py`
-  - Markdown + HTML renderer and humanized value formatting.
+  - Markdown + HTML + JSON renderer and humanized value formatting.
 
 - `schema.py`
   - JSON Schema export helper for editor/tooling integration.
 
 - `templates.py`
-  - `slugify_name(...)`, `title_from_name(...)`, `build_jobspec_template(...)`.
+  - `slugify_name(...)`, `title_from_name(...)`, `build_jobspec_template(...)`, template names.
 
 - `inspect.py`
   - Normalized metadata extraction with counts and validity status.
+
+- `migrate.py`
+  - Schema-version inspection helper for placeholder migration command behavior.
 
 ## Validation philosophy
 

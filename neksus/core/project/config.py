@@ -26,7 +26,7 @@ class ProjectConfig(BaseModel):
     version: int = 1
     spec_directory: str = "jobspecs"
     output_directory: str = "dist"
-    default_format: Literal["markdown"] = "markdown"
+    default_format: Literal["markdown", "html", "json"] = "markdown"
     strict_validation: bool = False
 
 

@@ -131,8 +131,11 @@ neksus-jobspec init
 neksus-jobspec spec new NAME
 neksus-jobspec spec validate PATH
 neksus-jobspec spec render PATH
+neksus-jobspec spec templates
 neksus-jobspec spec schema
 neksus-jobspec spec inspect PATH
+neksus-jobspec spec migrate PATH
+neksus-jobspec render
 neksus-jobspec check
 neksus-jobspec config get [KEY]
 neksus-jobspec config set KEY VALUE
@@ -267,9 +270,11 @@ strict_validation
 
 Rendering Rules
 
-Initial supported format:
+Supported formats:
 
 markdown
+html
+json
 
 Renderer function:
 
@@ -287,7 +292,7 @@ Do not render:
 
 Unknown formats must raise UnsupportedFormatError.
 
-Do not add PDF, DOCX, HTML, ATS, or web rendering in the initial CLI implementation.
+Do not add PDF, DOCX, ATS, or web rendering in the initial CLI implementation.
 
 Error Handling
 
@@ -333,8 +338,12 @@ neksus-jobspec spec validate invalid fixture
 neksus-jobspec spec validate --json
 neksus-jobspec spec render
 neksus-jobspec spec render --output
+neksus-jobspec spec templates
+neksus-jobspec spec migrate
+neksus-jobspec render
 neksus-jobspec spec inspect --json
 neksus-jobspec check
+neksus-jobspec check --format github
 duplicate JobSpec IDs fail project check
 invalid JobSpec ID fails model validation
 empty requirements fail validation
@@ -497,7 +506,6 @@ authentication
 plugin system
 PDF export
 DOCX export
-HTML export
 ATS integrations
 database storage
 web UI

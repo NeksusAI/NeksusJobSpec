@@ -16,6 +16,6 @@ def version_command(
     """Print CLI version."""
     # Keep version payload small and stable for scripts.
     if json:
-        print_json({"name": "neksus", "version": __version__})
+        print_json({"name": "neksus-jobspec", "version": __version__})
         return
-    print_success(f"neksus {__version__}")
+    print_success(f"neksus-jobspec {__version__}")

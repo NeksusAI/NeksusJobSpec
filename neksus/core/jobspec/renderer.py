@@ -6,6 +6,7 @@ import html
 
 from neksus.core.errors import UnsupportedFormatError
 from neksus.core.jobspec.models import JobSpec
+from neksus.core.output import to_json
 
 
 def _human_location(spec: JobSpec) -> str | None:
@@ -110,7 +111,31 @@ def _render_html(spec: JobSpec) -> str:
         '<html lang="en">\n'
         "<head>\n"
         '  <meta charset="utf-8">\n'
+        '  <meta name="viewport" content="width=device-width, initial-scale=1">\n'
         f"  <title>{title}</title>\n"
+        "  <style>\n"
+        "    :root { color-scheme: light; }\n"
+        "    body {\n"
+        "      margin: 0;\n"
+        "      background: #f7f8fa;\n"
+        "      color: #1f2937;\n"
+        "      font-family: Georgia, 'Times New Roman', serif;\n"
+        "      line-height: 1.55;\n"
+        "    }\n"
+        "    main {\n"
+        "      max-width: 860px;\n"
+        "      margin: 2rem auto;\n"
+        "      background: #ffffff;\n"
+        "      border: 1px solid #d9dce3;\n"
+        "      border-radius: 10px;\n"
+        "      padding: 1.5rem;\n"
+        "    }\n"
+        "    h1, h2 { line-height: 1.25; }\n"
+        "    h1 { margin-top: 0; }\n"
+        "    section + section { margin-top: 1.25rem; }\n"
+        "    ul { padding-left: 1.25rem; }\n"
+        "    li + li { margin-top: 0.35rem; }\n"
+        "  </style>\n"
         "</head>\n"
         "<body>\n"
         "  <main>\n"
@@ -135,12 +160,19 @@ def _render_html(spec: JobSpec) -> str:
     )
 
 
+def _render_json(spec: JobSpec) -> str:
+    """Render a JobSpec into normalized JSON."""
+    return to_json(spec.model_dump())
+
+
 def render_jobspec(spec: JobSpec, format: str = "markdown") -> str:
     """Render a JobSpec in a supported output format."""
     if format == "markdown":
         return _render_markdown(spec)
     if format == "html":
         return _render_html(spec)
-    if format not in {"markdown", "html"}:
+    if format == "json":
+        return _render_json(spec)
+    if format not in {"markdown", "html", "json"}:
         raise UnsupportedFormatError(f"Unsupported render format: {format}")
     raise UnsupportedFormatError(f"Unsupported render format: {format}")

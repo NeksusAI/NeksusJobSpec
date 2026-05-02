@@ -10,6 +10,7 @@ import typer
 from neksus.cli.commands.check import app as check_app
 from neksus.cli.commands.config import app as config_app
 from neksus.cli.commands.init import init_command
+from neksus.cli.commands.render import render_command
 from neksus.cli.commands.spec import app as spec_app
 from neksus.cli.commands.version import version_command
 
@@ -19,6 +20,7 @@ app = typer.Typer(help="Neksus JobSpec CLI")
 app.command("version")(version_command)
 app.command("init")(init_command)
 app.add_typer(spec_app, name="spec")
+app.command("render")(render_command)
 app.command("check")(check_app)
 app.add_typer(config_app, name="config")
 

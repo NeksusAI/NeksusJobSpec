@@ -17,5 +17,7 @@ neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html 
 ## Notes
 
 - HTML renderer is template-free and semantic (`<main>`, `<section>`, headings, lists).
+- Output is a single self-contained file with embedded CSS.
+- No JavaScript is emitted.
 - Optional sections are omitted when empty.
 - No PDF generation in this milestone.

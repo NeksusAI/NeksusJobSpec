@@ -21,10 +21,19 @@ from neksus.core.project.discovery import find_project_root
 
 def app(
     strict: Annotated[bool, typer.Option("--strict", help="Treat warnings as failures.")] = False,
+    format: Annotated[
+        str,
+        typer.Option("--format", help="Output format: human or github."),
+    ] = "human",
     json: Annotated[bool, typer.Option("--json", help="Output machine-readable JSON.")] = False,
 ) -> None:
     """Run project-level checks."""
     try:
+        if json and format == "github":
+            raise typer.BadParameter(
+                "--json and --format github are mutually exclusive.",
+                param_hint="--format",
+            )
         # Discover project root then execute all configured checks.
         root = find_project_root()
         result = run_project_checks(root, strict=strict)
@@ -43,6 +52,18 @@ def app(
     if json:
         print_json(payload)
         raise typer.Exit(0 if result.ok else 1)
+
+    if format == "github":
+        for error in result.errors:
+            typer.echo(f"::error file={error.path}::{error.message}")
+        for warning in result.warnings:
+            typer.echo(f"::warning file={warning.path}::{warning.message}")
+        raise typer.Exit(0 if result.ok else 1)
+    if format != "human":
+        raise typer.BadParameter(
+            f"Unsupported format: {format}",
+            param_hint="--format",
+        )
 
     summary = Table(title="Project Checks")
     summary.add_column("Check", style="cyan")
