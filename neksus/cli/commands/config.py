@@ -6,7 +6,13 @@ from typing import Annotated
 
 import typer
 
-from neksus.cli.commands.common import handle_expected_error, print_json, stdout
+from neksus.cli.commands.common import (
+    handle_expected_error,
+    print_json,
+    print_kv_table,
+    print_success,
+    stdout,
+)
 from neksus.core.project.config import load_project_config, set_config_key
 from neksus.core.project.discovery import find_project_root
 
@@ -43,8 +49,7 @@ def config_get(
     if json:
         print_json({"ok": True, "config": data})
         return
-    for item_key, item_value in data.items():
-        stdout.print(f"{item_key}: {item_value}")
+    print_kv_table("Project Config", [(key, str(value)) for key, value in data.items()])
 
 
 @app.command("set")
@@ -65,4 +70,4 @@ def config_set(
     if json:
         print_json({"ok": True, "config": updated.model_dump()})
         return
-    stdout.print(f"Updated {key}.")
+    print_success(f"Updated {key}.")

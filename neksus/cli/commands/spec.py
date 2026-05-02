@@ -12,7 +12,15 @@ from typing import Annotated
 import typer
 from pydantic import ValidationError
 
-from neksus.cli.commands.common import handle_expected_error, print_json, stderr, stdout
+from neksus.cli.commands.common import (
+    handle_expected_error,
+    print_error,
+    print_json,
+    print_kv_table,
+    print_success,
+    print_warning,
+    stdout,
+)
 from neksus.core.errors import ConfigError, FileSystemError
 from neksus.core.jobspec.inspect import inspect_jobspec
 from neksus.core.jobspec.models import JobSpec
@@ -79,7 +87,7 @@ def spec_new(
     if json:
         print_json({"ok": True, "file": str(target)})
         return
-    stdout.print(f"Created JobSpec: {target}")
+    print_success(f"Created JobSpec: {target}")
 
 
 @app.command("validate")
@@ -112,17 +120,17 @@ def spec_validate(
         raise typer.Exit(0 if ok else 1)
 
     if ok:
-        stdout.print(f"Valid JobSpec: {path}")
+        print_success(f"Valid JobSpec: {path}")
         if result.warnings:
             for warning in result.warnings:
-                stdout.print(f"Warning [{warning.path}] {warning.message}")
+                print_warning(f"Warning [{warning.path}] {warning.message}")
         return
 
-    stderr.print(f"Invalid JobSpec: {path}")
+    print_error(f"Invalid JobSpec: {path}")
     for error in result.errors:
-        stderr.print(f"Error [{error.path}] {error.message}")
+        print_error(f"Error [{error.path}] {error.message}")
     for warning in result.warnings:
-        stderr.print(f"Warning [{warning.path}] {warning.message}")
+        print_warning(f"Warning [{warning.path}] {warning.message}")
     raise typer.Exit(1)
 
 
@@ -155,7 +163,7 @@ def spec_render(
             if json:
                 print_json(payload)
             else:
-                stderr.print(f"Invalid JobSpec: {path}")
+                print_error(f"Invalid JobSpec: {path}")
             raise typer.Exit(1)
 
         # Delegate format-specific rendering to core renderer.
@@ -168,7 +176,7 @@ def spec_render(
             if json:
                 print_json({"ok": True, "file": str(path), "format": format, "output": str(output)})
             else:
-                stdout.print(f"Rendered JobSpec to {output}")
+                print_success(f"Rendered JobSpec to {output}")
             return
 
         # Stdout mode prints either JSON metadata/content or raw markdown.
@@ -188,9 +196,9 @@ def spec_render(
         if json:
             print_json(payload)
         else:
-            stderr.print(f"Invalid JobSpec: {path}")
+            print_error(f"Invalid JobSpec: {path}")
             for issue in issues:
-                stderr.print(f"Error [{issue.path}] {issue.message}")
+                print_error(f"Error [{issue.path}] {issue.message}")
         raise typer.Exit(1)
     except Exception as exc:  # noqa: BLE001
         handle_expected_error(exc, as_json=json)
@@ -215,16 +223,21 @@ def spec_inspect(
         print_json({"ok": True, "file": str(path), "metadata": metadata})
         return
 
-    stdout.print(f"Title: {metadata['title']}")
-    stdout.print(f"ID: {metadata['id']}")
-    stdout.print(f"Schema Version: {metadata['schema_version']}")
-    stdout.print(f"Department: {metadata['department']}")
-    stdout.print(f"Level: {metadata['level']}")
-    stdout.print(f"Location: {metadata['location']}")
-    stdout.print(f"Responsibilities: {metadata['responsibilities_count']}")
-    stdout.print(f"Requirements: {metadata['requirements_count']}")
-    stdout.print(f"Nice to Have: {metadata['nice_to_have_count']}")
-    stdout.print(f"Valid: {'yes' if metadata['valid'] else 'no'}")
+    print_kv_table(
+        "JobSpec Inspection",
+        [
+            ("Title", str(metadata["title"])),
+            ("ID", str(metadata["id"])),
+            ("Schema Version", str(metadata["schema_version"])),
+            ("Department", str(metadata["department"])),
+            ("Level", str(metadata["level"])),
+            ("Location", str(metadata["location"])),
+            ("Responsibilities", str(metadata["responsibilities_count"])),
+            ("Requirements", str(metadata["requirements_count"])),
+            ("Nice to Have", str(metadata["nice_to_have_count"])),
+            ("Valid", "yes" if bool(metadata["valid"]) else "no"),
+        ],
+    )
 
 
 @app.command("schema")
@@ -243,7 +256,7 @@ def spec_schema(
             if json:
                 print_json({"ok": True, "output": str(output), "schema_version": 1})
             else:
-                stdout.print(f"Wrote schema to {output}")
+                print_success(f"Wrote schema to {output}")
             return
 
         if json:

@@ -7,7 +7,7 @@ from typing import Annotated
 import typer
 
 from neksus import __version__
-from neksus.cli.commands.common import print_json, stdout
+from neksus.cli.commands.common import print_json, print_success
 
 
 def version_command(
@@ -18,4 +18,4 @@ def version_command(
     if json:
         print_json({"name": "neksus", "version": __version__})
         return
-    stdout.print(f"neksus {__version__}")
+    print_success(f"neksus {__version__}")

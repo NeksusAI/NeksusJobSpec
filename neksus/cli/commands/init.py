@@ -7,7 +7,7 @@ from typing import Annotated
 
 import typer
 
-from neksus.cli.commands.common import handle_expected_error, print_json, stdout
+from neksus.cli.commands.common import handle_expected_error, print_json, print_success
 from neksus.core.project.init_project import init_project
 
 
@@ -32,4 +32,4 @@ def init_command(
     if json:
         print_json({"ok": True, "created": created})
         return
-    stdout.print("Initialized Neksus project.")
+    print_success("Initialized Neksus project.")

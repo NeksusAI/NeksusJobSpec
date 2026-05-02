@@ -5,8 +5,16 @@ from __future__ import annotations
 from typing import Annotated
 
 import typer
+from rich.table import Table
 
-from neksus.cli.commands.common import handle_expected_error, print_json, stderr, stdout
+from neksus.cli.commands.common import (
+    handle_expected_error,
+    print_error,
+    print_json,
+    print_success,
+    print_warning,
+    stdout,
+)
 from neksus.core.project.checks import run_project_checks
 from neksus.core.project.discovery import find_project_root
 
@@ -36,19 +44,27 @@ def app(
         print_json(payload)
         raise typer.Exit(0 if result.ok else 1)
 
+    summary = Table(title="Project Checks")
+    summary.add_column("Check", style="cyan")
+    summary.add_column("Status", style="white")
+    summary.add_column("Message", style="white")
+    for check in result.checks:
+        summary.add_row(check.name, "ok" if check.ok else "failed", check.message)
+    stdout.print(summary)
+
     if result.ok:
-        stdout.print("Project check passed.")
+        print_success("Project check passed.")
         if result.warnings:
             for warning in result.warnings:
-                stdout.print(f"Warning [{warning.path}] {warning.message}")
+                print_warning(f"Warning [{warning.path}] {warning.message}")
         return
 
-    stderr.print("Project check failed.")
+    print_error("Project check failed.")
     for check in result.checks:
         if not check.ok:
-            stderr.print(f"Check failed: {check.name} - {check.message}")
+            print_error(f"Check failed: {check.name} - {check.message}")
     for error in result.errors:
-        stderr.print(f"Error [{error.path}] {error.message}")
+        print_error(f"Error [{error.path}] {error.message}")
     for warning in result.warnings:
-        stderr.print(f"Warning [{warning.path}] {warning.message}")
+        print_warning(f"Warning [{warning.path}] {warning.message}")
     raise typer.Exit(1)
