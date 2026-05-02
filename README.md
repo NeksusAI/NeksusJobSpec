@@ -1,9 +1,76 @@
 # Neksus JobSpec
 
-Neksus JobSpec is a CLI-first Python package for creating structured, portable job postings.
+Neksus JobSpec is a local-first CLI and Python package for creating, validating, inspecting, and rendering structured JobSpec YAML files.
 
-It lets you define a job once in YAML or JSON, validate the content, lint it for quality issues, and render the common artifacts needed for a structured hiring process — including a public job post, HTML job page, Schema.org/Google JobPosting JSON-LD, internal hiring brief, screening questions, interview scorecard, application form schema, and evaluation criteria.
+## Install (local)
 
-The core package is deterministic and does not depend on AI, hosted services, databases, candidate storage, or external APIs. It is designed to work locally as a CLI and Python library, with optional future support for local MCP tools and assistant-compatible workflows.
+```bash
+pip install -e .
+```
 
-Neksus JobSpec is not an ATS, recruitment CRM, candidate database, AI recruiter, or hiring-decision system. It focuses on making the job specification itself structured, reusable, version-control friendly, and easy for both humans and systems to work with.
+## Quick start
+
+```bash
+neksus-jobspec init
+neksus-jobspec spec new backend-engineer
+neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --output dist/backend-engineer.md
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --output dist/backend-engineer.html
+neksus-jobspec spec schema --output schemas/jobspec.v1.json
+neksus-jobspec check
+```
+
+## Commands
+
+- `neksus-jobspec version`
+- `neksus-jobspec init`
+- `neksus-jobspec spec new NAME`
+- `neksus-jobspec spec validate PATH`
+- `neksus-jobspec spec render PATH`
+- `neksus-jobspec spec schema`
+- `neksus-jobspec spec inspect PATH`
+- `neksus-jobspec check`
+- `neksus-jobspec config get [KEY]`
+- `neksus-jobspec config set KEY VALUE`
+
+## Example JobSpec
+
+```yaml
+schema_version: 1
+id: backend-engineer
+title: Backend Engineer
+summary: "Describe the role."
+responsibilities:
+  - "Define the main responsibilities."
+requirements:
+  - "Define the core requirements."
+nice_to_have: []
+```
+
+## Development
+
+```bash
+uv sync
+uv run pytest
+uv run ruff check .
+uv run ruff format --check .
+```
+
+## Packaging
+
+Build distribution artifacts:
+
+```bash
+python -m pip install build
+python -m build
+```
+
+This creates:
+- `dist/*.tar.gz` (source distribution)
+- `dist/*.whl` (wheel)
+
+For the full release process, see `docs/releasing.md`.
+
+## Documentation
+
+See [docs/README.md](docs/README.md) for user guides and module docs.

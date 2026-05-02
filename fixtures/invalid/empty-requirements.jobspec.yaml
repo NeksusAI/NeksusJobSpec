@@ -1,0 +1,8 @@
+schema_version: 1
+id: backend-engineer
+title: Backend Engineer
+summary: "Describe the role."
+responsibilities:
+  - "Define the main responsibilities."
+requirements: []
+nice_to_have: []

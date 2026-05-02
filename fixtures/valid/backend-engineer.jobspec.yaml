@@ -1,0 +1,17 @@
+schema_version: 1
+id: backend-engineer
+title: Backend Engineer
+department: Engineering
+level: Mid/Senior
+location:
+  type: remote
+  city: null
+  country: null
+summary: "Describe the role."
+responsibilities:
+  - "Define the main responsibilities."
+requirements:
+  - "Define the core requirements."
+nice_to_have: []
+employment:
+  type: full-time

@@ -1,0 +1,64 @@
+[project]
+name = "neksus-jobspec"
+version = "0.1.0"
+description = "Local-first CLI for Neksus JobSpec files"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+authors = [
+  { name = "Neksus Team" },
+]
+keywords = ["cli", "jobspec", "yaml", "pydantic", "typer"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Utilities",
+  "Environment :: Console",
+  "Typing :: Typed",
+]
+dependencies = [
+  "typer>=0.12.0",
+  "pydantic>=2.0.0",
+  "PyYAML>=6.0",
+  "rich>=13.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/stefanrobertstegaru/NeksusJobSpec"
+Repository = "https://github.com/stefanrobertstegaru/NeksusJobSpec"
+Issues = "https://github.com/stefanrobertstegaru/NeksusJobSpec/issues"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+  "ruff>=0.5.0",
+  "mypy>=1.10.0",
+]
+
+[project.scripts]
+neksus-jobspec = "neksus.cli.main:app"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["neksus*"]
+
+[tool.setuptools.package-data]
+neksus = ["py.typed"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+addopts = "-q"

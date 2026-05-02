@@ -1,0 +1,18 @@
+schema_version: 1
+id: hybrid-sales-executive
+title: Hybrid Sales Executive
+department: Sales
+level: Mid
+location:
+  type: hybrid
+  city: London
+  country: United Kingdom
+summary: "Drive pipeline growth and close enterprise deals."
+responsibilities:
+  - "Own outbound and inbound sales cycles."
+requirements:
+  - "Proven B2B sales track record."
+nice_to_have:
+  - "Experience in HR-tech or recruiting-tech markets."
+employment:
+  type: full-time

@@ -1,0 +1,17 @@
+schema_version: 1
+id: onsite-operations-manager
+title: Onsite Operations Manager
+department: Operations
+level: Mid
+location:
+  type: onsite
+  city: Copenhagen
+  country: Denmark
+summary: "Lead daily operations for the local office."
+responsibilities:
+  - "Manage office logistics and vendor relationships."
+requirements:
+  - "3+ years in operations or facilities management."
+nice_to_have: []
+employment:
+  type: full-time

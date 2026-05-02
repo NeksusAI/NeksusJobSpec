@@ -1,0 +1,168 @@
+{
+  "$defs": {
+    "Employment": {
+      "description": "Employment type model.",
+      "properties": {
+        "type": {
+          "enum": [
+            "full-time",
+            "part-time",
+            "contract",
+            "internship"
+          ],
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "Employment",
+      "type": "object"
+    },
+    "Location": {
+      "description": "Location model for a job role.",
+      "properties": {
+        "city": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "City"
+        },
+        "country": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Country"
+        },
+        "type": {
+          "enum": [
+            "remote",
+            "hybrid",
+            "onsite"
+          ],
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "Location",
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.neksus.dev/jobspec.v1.json",
+  "description": "Top-level JobSpec model.",
+  "properties": {
+    "department": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Department"
+    },
+    "employment": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Employment"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "id": {
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "title": "Id",
+      "type": "string"
+    },
+    "level": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Level"
+    },
+    "location": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Location"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "nice_to_have": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Nice To Have",
+      "type": "array"
+    },
+    "requirements": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Requirements",
+      "type": "array"
+    },
+    "responsibilities": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Responsibilities",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "summary": {
+      "title": "Summary",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "summary",
+    "responsibilities",
+    "requirements"
+  ],
+  "title": "Neksus JobSpec",
+  "type": "object",
+  "x-schema-version": 1
+}

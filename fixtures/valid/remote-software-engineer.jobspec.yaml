@@ -1,0 +1,20 @@
+schema_version: 1
+id: remote-software-engineer
+title: Remote Software Engineer
+department: Engineering
+level: Senior
+location:
+  type: remote
+  city: null
+  country: null
+summary: "Build and maintain product backend services."
+responsibilities:
+  - "Design and implement backend APIs."
+  - "Collaborate with product and design on feature delivery."
+requirements:
+  - "5+ years of backend development experience."
+  - "Strong Python and SQL fundamentals."
+nice_to_have:
+  - "Experience with distributed systems."
+employment:
+  type: full-time
