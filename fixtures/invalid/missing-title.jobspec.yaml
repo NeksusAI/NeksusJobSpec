@@ -4,11 +4,11 @@ department: Engineering
 level: Mid/Senior
 location:
   type: remote
-summary: "Describe the role."
+summary: "Build reliable backend services for employer-side hiring workflows."
 responsibilities:
-  - "Define the main responsibilities."
+  - "Design and maintain Python services that expose internal and public APIs."
 requirements:
-  - "Define the core requirements."
+  - "3+ years of backend software engineering experience in production environments."
 nice_to_have: []
 employment:
   type: full-time

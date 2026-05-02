@@ -7,14 +7,17 @@ location:
   type: remote
   city: null
   country: null
-summary: "Build and maintain product backend services."
+summary: "Lead implementation of platform capabilities for creating, validating, and rendering employer-ready JobSpecs across distributed teams."
 responsibilities:
-  - "Design and implement backend APIs."
-  - "Collaborate with product and design on feature delivery."
+  - "Architect backend components that keep schema validation deterministic and easy to extend."
+  - "Mentor engineers through design reviews, code reviews, and incident retrospectives."
+  - "Define technical milestones and de-risk delivery for high-impact roadmap items."
 requirements:
-  - "5+ years of backend development experience."
-  - "Strong Python and SQL fundamentals."
+  - "5+ years of backend development experience with ownership of production systems."
+  - "Demonstrated expertise in Python application architecture and maintainable API design."
+  - "Ability to communicate tradeoffs clearly with product and non-technical stakeholders."
 nice_to_have:
-  - "Experience with distributed systems."
+  - "Experience with developer tooling ecosystems and packaging workflows."
+  - "Past work on document generation, schema tooling, or content pipelines."
 employment:
   type: full-time
