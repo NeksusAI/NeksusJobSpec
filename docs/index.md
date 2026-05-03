@@ -9,6 +9,12 @@ Neksus JobSpec is an open-source, local-first toolchain for writing, validating,
 
 You write JobSpecs in YAML, validate them with stable model rules, and render them to formats like Markdown, HTML, and JSON.
 
+Install from PyPI:
+
+```bash
+pip install neksus-jobspec
+```
+
 ## Why structured job specifications matter
 
 Structured JobSpecs help teams:
@@ -48,6 +54,8 @@ neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format markd
 ## Next steps
 
 - [Quickstart](quickstart.md)
+- [Python API](python-api.md)
+- [Assistant Usage](assistant-usage.md)
 - [Schema](schema.md)
 - [Examples](examples.md)
 - [MCP Server (planned)](mcp-server.md)

@@ -13,7 +13,11 @@ fi
 cd "$ROOT_DIR"
 
 echo "[smoke] checking CLI version"
-"$CLI_BIN" version >/dev/null
+if "$CLI_BIN" --version >/dev/null 2>&1; then
+  :
+else
+  "$CLI_BIN" version >/dev/null
+fi
 
 echo "[smoke] validating known-valid fixture"
 "$CLI_BIN" spec validate fixtures/valid/backend-engineer.jobspec.yaml >/dev/null
@@ -33,8 +37,15 @@ trap cleanup EXIT
 echo "[smoke] initializing temporary project"
 cd "$tmp_dir"
 "$CLI_BIN" init --empty >/dev/null
-mkdir -p jobspecs
-cp "$ROOT_DIR/fixtures/valid/backend-engineer.jobspec.yaml" jobspecs/backend-engineer.jobspec.yaml
+"$CLI_BIN" spec new backend-engineer >/dev/null
+
+echo "[smoke] validating generated jobspec"
+"$CLI_BIN" spec validate jobspecs/backend-engineer.jobspec.yaml >/dev/null
+
+echo "[smoke] rendering markdown output"
+"$CLI_BIN" spec render jobspecs/backend-engineer.jobspec.yaml \
+  --format markdown \
+  --output dist/backend-engineer.md >/dev/null
 
 echo "[smoke] rendering fixture with custom CSS"
 "$CLI_BIN" spec render jobspecs/backend-engineer.jobspec.yaml \
@@ -47,6 +58,9 @@ echo "[smoke] running project check"
 "$CLI_BIN" check >/dev/null
 
 cd "$ROOT_DIR"
+
+echo "[smoke] checking public Python API import"
+"$ROOT_DIR/.venv/bin/python" -c "from neksus_jobspec import load_jobspec, render_jobspec; print('ok')" >/dev/null
 
 echo "[smoke] building docs in strict mode"
 if [[ -x "$MKDOCS_BIN" ]]; then

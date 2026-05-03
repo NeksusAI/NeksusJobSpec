@@ -13,21 +13,34 @@ Current focus is a stable CLI and reusable core library. Hosted API and MCP serv
 
 ## Installation
 
-Once published:
-
 ```bash
 pip install neksus-jobspec
 ```
 
-## Import example
+## Quickstart
 
-```python
-import neksus_jobspec
-
-print(neksus_jobspec.__version__)
+```bash
+pip install neksus-jobspec
+mkdir neksus-jobspec-demo
+cd neksus-jobspec-demo
+neksus-jobspec init
+neksus-jobspec spec new backend-engineer
+neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format markdown --output dist/backend-engineer.md
 ```
 
-## Basic usage
+## Python API
+
+```python
+from neksus_jobspec import JobSpec, load_jobspec, render_jobspec, validate_jobspec
+
+spec = load_jobspec("jobspecs/backend-engineer.jobspec.yaml")
+validated = validate_jobspec(spec.model_dump())
+markdown = render_jobspec(validated, format="markdown")
+print(markdown[:80])
+```
+
+## Basic CLI usage
 
 ```bash
 neksus-jobspec init
@@ -52,7 +65,7 @@ uv run pytest
 python -m pip install --upgrade build twine
 python -m build
 python -m twine check dist/*
-python -m pip install --force-reinstall dist/neksus_jobspec-0.1.0-py3-none-any.whl
+python -m pip install --force-reinstall dist/neksus_jobspec-*.whl
 python -c "import neksus_jobspec; print(neksus_jobspec.__version__)"
 ```
 

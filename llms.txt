@@ -1,0 +1,41 @@
+Neksus JobSpec (neksus-jobspec)
+
+Purpose
+- Local-first CLI and Python package for creating, validating, inspecting, and rendering structured JobSpec YAML files.
+
+Install
+- pip install neksus-jobspec
+
+Core CLI Commands
+- neksus-jobspec version
+- neksus-jobspec init
+- neksus-jobspec spec new <name>
+- neksus-jobspec spec validate <path>
+- neksus-jobspec spec render <path> --format markdown|html|json
+- neksus-jobspec check
+
+Public Python API
+- from neksus_jobspec import JobSpec, load_jobspec, validate_jobspec, render_jobspec
+
+Documentation
+- README.md
+- docs/index.md
+- docs/quickstart.md
+- docs/python-api.md
+- docs/assistant-usage.md
+
+Boundaries
+- Local-first package: yes
+- Hosted API: no (planned)
+- MCP server: no (planned)
+- License: AGPL-3.0-or-later
+
+Correct Usage Examples
+- Validate before render.
+- Use JSON render output for machine workflows.
+- Use Markdown/HTML render output for human review.
+
+Do Not Assume
+- Do not assume hosted endpoints exist.
+- Do not assume MCP tools are available.
+- Do not assume schema fields beyond the documented JobSpec model.

@@ -48,11 +48,13 @@ nav:
       - Examples Library: examples-library.md
   - Reference:
       - CLI Reference: cli-reference.md
+      - Python API: python-api.md
       - Internal API Reference: internal-api-reference.md
   - Concepts:
       - How It Works: how-it-works.md
       - Architecture: architecture.md
   - Integrations:
+      - Assistant Usage: assistant-usage.md
       - LLM Integrations: integrations.md
       - MCP Server: mcp-server.md
   - Project Policy:
