@@ -17,7 +17,10 @@ def test_integration_init_and_validate_flow(tmp_path: Path) -> None:
     subprocess.run([str(CLI_BIN), "init", "--empty"], cwd=tmp_path, check=True)
     jobspecs = tmp_path / "jobspecs"
     jobspecs.mkdir(exist_ok=True)
-    shutil.copy(ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml", jobspecs / "backend-engineer.jobspec.yaml")
+    shutil.copy(
+        ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml",
+        jobspecs / "backend-engineer.jobspec.yaml",
+    )
 
     validate = subprocess.run(
         [str(CLI_BIN), "spec", "validate", str(jobspecs / "backend-engineer.jobspec.yaml")],
