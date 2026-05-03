@@ -66,6 +66,18 @@ def _resolve_new_path(name: str, output: Path | None) -> Path:
         return Path.cwd() / f"{slug}.jobspec.yaml"
 
 
+def _resolve_default_theme(explicit_theme: str | None) -> str:
+    """Resolve render theme with project-aware fallback."""
+    if explicit_theme:
+        return explicit_theme
+    try:
+        root = find_project_root()
+        config = load_project_config(root)
+        return config.default_theme
+    except ConfigError:
+        return "default"
+
+
 @app.command("new")
 def spec_new(
     name: Annotated[str, typer.Argument(help="Name used to generate JobSpec id and file name.")],
@@ -149,6 +161,13 @@ def spec_validate(
 def spec_render(
     path: Annotated[Path, typer.Argument(help="Path to a JobSpec YAML file.")],
     format: Annotated[str, typer.Option("--format", help="Render format.")] = "markdown",
+    theme: Annotated[str | None, typer.Option("--theme", help="Built-in render theme.")] = None,
+    css: Annotated[
+        Path | None, typer.Option("--css", help="Append custom CSS file (HTML only).")
+    ] = None,
+    no_css: Annotated[
+        bool, typer.Option("--no-css", help="Disable embedded CSS (HTML only).")
+    ] = False,
     output: Annotated[
         Path | None, typer.Option("--output", help="Write output to this path.")
     ] = None,
@@ -160,6 +179,8 @@ def spec_render(
 ) -> None:
     """Render a JobSpec."""
     try:
+        if (css is not None or no_css) and format != "html":
+            raise typer.BadParameter("--css and --no-css are only supported for --format html")
         # Load strongly typed model first.
         spec = load_jobspec(path)
         validation = validate_spec_model(spec)
@@ -177,22 +198,52 @@ def spec_render(
                 print_error(f"Invalid JobSpec: {path}")
             raise typer.Exit(1)
 
+        selected_theme = _resolve_default_theme(theme)
+        custom_css: str | None = None
+        if css is not None:
+            try:
+                custom_css = css.read_text(encoding="utf-8")
+            except OSError as exc:
+                raise FileSystemError(f"Failed to read CSS file: {css}") from exc
+
         # Delegate format-specific rendering to core renderer.
-        rendered = render_jobspec(spec, format=format)
+        rendered = render_jobspec(
+            spec,
+            format=format,
+            theme=selected_theme,
+            embed_css=not no_css,
+            custom_css=custom_css,
+        )
 
         if output:
             # File output mode writes rendered content to disk.
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(rendered, encoding="utf-8")
             if json:
-                print_json({"ok": True, "file": str(path), "format": format, "output": str(output)})
+                print_json(
+                    {
+                        "ok": True,
+                        "file": str(path),
+                        "format": format,
+                        "theme": selected_theme,
+                        "output": str(output),
+                    }
+                )
             else:
                 print_success(f"Rendered JobSpec to {output}")
             return
 
         # Stdout mode prints either JSON metadata/content or raw markdown.
         if json:
-            print_json({"ok": True, "file": str(path), "format": format, "content": rendered})
+            print_json(
+                {
+                    "ok": True,
+                    "file": str(path),
+                    "format": format,
+                    "theme": selected_theme,
+                    "content": rendered,
+                }
+            )
             return
         typer.echo(rendered, nl=False)
     except ValidationError as exc:

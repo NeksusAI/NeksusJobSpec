@@ -38,7 +38,9 @@ neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml
 
 ```bash
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format markdown --output dist/backend-engineer.md
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --output dist/backend-engineer.html
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --theme modern --output dist/backend-engineer.html
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --theme modern --css examples/jobspec.css
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --no-css
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format json --output dist/backend-engineer.json
 ```
 
@@ -53,6 +55,7 @@ neksus-jobspec check --format github
 
 ```bash
 neksus-jobspec render --format markdown
+neksus-jobspec render --format html --theme modern
 ```
 
 ### 7. Export schema

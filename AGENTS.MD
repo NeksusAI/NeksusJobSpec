@@ -1,12 +1,28 @@
 # AGENTS.md
 This file provides guidance to AI coding agents when working with code in this repository.
+
+## First Priority Rules
+
+Before considering any task complete:
+
+1. Documentation must be updated when changes affect behavior, usage, or developer workflow:
+   - `README.md`
+   - `AGENTS.MD` (when agent workflow/policy expectations change)
+   - In-code docs and comments where relevant
+   - `docs/` content for any user-visible change
+2. Temporary artifacts created during development or verification must be deleted:
+   - scratch files
+   - temporary output files
+   - temporary test artifacts not intended to be committed
+   - any other non-source transient files
+
 ## What is Neksus JobSpec?
 Neksus JobSpec is a local-first CLI and Python package for creating, validating, inspecting, and rendering structured job specification files.
 Users write JobSpecs in YAML. The CLI validates them with Pydantic models and renders them into readable formats such as Markdown. Future versions may expose the same core through FastAPI, local MCP servers, and ChatGPT Skills, but the first implementation is focused on the Python CLI and reusable core library.
 The project should remain simple, explicit, and easy to extend.
 ## Core Pipeline
 ```text
-YAML → PyYAML → Python dict → Pydantic → JobSpec model → Renderer → Markdown
+YAML → PyYAML → Python dict → Pydantic → JobSpec model → Renderer → Markdown/HTML/JSON
 
 Pipeline stages:
 
@@ -136,6 +152,8 @@ neksus-jobspec spec schema
 neksus-jobspec spec inspect PATH
 neksus-jobspec spec migrate PATH
 neksus-jobspec render
+neksus-jobspec themes
+neksus-jobspec themes show NAME
 neksus-jobspec check
 neksus-jobspec config get [KEY]
 neksus-jobspec config set KEY VALUE
@@ -252,6 +270,8 @@ spec_directory: jobspecs
 output_directory: dist
 default_format: markdown
 strict_validation: false
+default_theme: default
+render_profiles: {}
 
 Config rules:
 

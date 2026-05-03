@@ -39,3 +39,32 @@ def test_config_set_accepts_default_format_html() -> None:
         payload = json.loads(result.stdout)
         assert payload["ok"] is True
         assert payload["config"]["default_format"] == "html"
+
+
+def test_config_set_accepts_default_theme_modern() -> None:
+    with runner.isolated_filesystem():
+        runner.invoke(app, ["init"])
+        result = runner.invoke(app, ["config", "set", "default_theme", "modern", "--json"])
+        assert result.exit_code == 0
+        payload = json.loads(result.stdout)
+        assert payload["ok"] is True
+        assert payload["config"]["default_theme"] == "modern"
+
+
+def test_config_set_rejects_unknown_theme() -> None:
+    with runner.isolated_filesystem():
+        runner.invoke(app, ["init"])
+        result = runner.invoke(app, ["config", "set", "default_theme", "fancy", "--json"])
+        assert result.exit_code == 4
+        payload = json.loads(result.stdout)
+        assert payload["ok"] is False
+
+
+def test_config_get_default_theme() -> None:
+    with runner.isolated_filesystem():
+        runner.invoke(app, ["init"])
+        result = runner.invoke(app, ["config", "get", "default_theme", "--json"])
+        assert result.exit_code == 0
+        payload = json.loads(result.stdout)
+        assert payload["ok"] is True
+        assert payload["value"] == "default"

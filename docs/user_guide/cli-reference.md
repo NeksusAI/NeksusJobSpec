@@ -7,6 +7,7 @@ Neksus JobSpec provides a command-line interface with these command groups:
 - `neksus-jobspec render`
 - `neksus-jobspec spec ...`
 - `neksus-jobspec check`
+- `neksus-jobspec themes ...`
 - `neksus-jobspec config ...`
 
 ## `neksus-jobspec version`
@@ -46,6 +47,9 @@ Render a spec file.
 
 Options:
 - `--format {markdown,html,json}`
+- `--theme {default,compact,modern}`
+- `--css PATH` (html only)
+- `--no-css` (html only)
 - `--output PATH`
 - `--no-validate`
 - `--json`
@@ -87,6 +91,10 @@ Render all `*.jobspec.yaml` files in the configured project `spec_directory`.
 Options:
 - `--all` (alias/no-op)
 - `--format {markdown,html,json}`
+- `--theme {default,compact,modern}`
+- `--profile NAME`
+- `--css PATH` (html only)
+- `--no-css` (html only)
 - `--clean`
 - `--json`
 
@@ -109,6 +117,21 @@ Options:
 ## `neksus-jobspec config set KEY VALUE`
 
 Update mutable config key.
+
+Options:
+- `--json`
+
+
+## `neksus-jobspec themes`
+
+List built-in render themes.
+
+Options:
+- `--json`
+
+## `neksus-jobspec themes show NAME`
+
+Show metadata for one built-in theme.
 
 Options:
 - `--json`

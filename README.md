@@ -6,6 +6,9 @@ Write a JobSpec in YAML, then run:
 
 ```bash
 neksus-jobspec render --format markdown
+neksus-jobspec render --format html --theme modern
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --theme modern --css examples/jobspec.css
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --no-css
 ```
 
 and get deterministic, human-readable output.
@@ -60,6 +63,9 @@ neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format markd
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --output dist/backend-engineer.html
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format json --output dist/backend-engineer.json
 neksus-jobspec render --format markdown
+neksus-jobspec render --format html --theme modern
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --theme modern --css examples/jobspec.css
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --no-css
 ```
 
 ### 5. Export schema for editor support
@@ -82,6 +88,8 @@ neksus-jobspec spec schema --json
 - `neksus-jobspec spec migrate PATH`
 - `neksus-jobspec render`
 - `neksus-jobspec check`
+- `neksus-jobspec themes`
+- `neksus-jobspec themes show NAME`
 - `neksus-jobspec config get [KEY]`
 - `neksus-jobspec config set KEY VALUE`
 

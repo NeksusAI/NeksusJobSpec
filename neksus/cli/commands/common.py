@@ -19,7 +19,7 @@ stderr = Console(stderr=True)
 
 def print_json(payload: dict) -> None:
     """Print JSON payload to stdout."""
-    stdout.print(to_json(payload))
+    typer.echo(to_json(payload))
 
 
 def print_success(message: str) -> None:
