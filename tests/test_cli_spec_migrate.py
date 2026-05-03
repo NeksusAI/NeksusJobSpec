@@ -89,3 +89,24 @@ components:
         assert result.exit_code == 1
         payload = json.loads(result.stdout)
         assert payload["ok"] is False
+
+
+def test_spec_migrate_reports_removed_legacy_schema() -> None:
+    with runner.isolated_filesystem():
+        path = Path("legacy.jobspec.yaml")
+        path.write_text(
+            """id: role
+title: Role
+summary: Legacy
+responsibilities:
+  - One
+requirements:
+  - Two
+""",
+            encoding="utf-8",
+        )
+
+        result = runner.invoke(app, ["spec", "migrate", str(path), "--json"])
+        assert result.exit_code == 1
+        payload = json.loads(result.stdout)
+        assert payload["status"] == "legacy_schema_removed"

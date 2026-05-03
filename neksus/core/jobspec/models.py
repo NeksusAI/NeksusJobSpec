@@ -6,11 +6,17 @@ import re
 from urllib.parse import urlparse
 from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 SAFE_URL_SCHEMES = {"http", "https", "mailto", "tel"}
 SAFE_ATTRIBUTE_KEYS = {"id", "role", "title"}
 SAFE_ATTRIBUTE_PATTERN = re.compile(r"^(data|aria)-[a-z0-9_.:-]+$")
+
+
+class StrictModel(BaseModel):
+    """Base model that rejects unknown fields."""
+
+    model_config = ConfigDict(extra="forbid")
 
 
 def _is_safe_url(value: str) -> bool:
@@ -20,17 +26,22 @@ def _is_safe_url(value: str) -> bool:
     parsed = urlparse(raw)
     if parsed.scheme:
         return parsed.scheme.lower() in SAFE_URL_SCHEMES
-    return raw.startswith(("/", "./", "../", "#"))
+    if raw.startswith(("/", "./", "../", "#")):
+        return True
+    lowered = raw.lower()
+    if lowered.startswith(("javascript:", "data:", "vbscript:")):
+        return False
+    return bool(raw) and all(not char.isspace() for char in raw)
 
 
-class PageConfig(BaseModel):
+class PageConfig(StrictModel):
     layout: Literal["job_detail"] = "job_detail"
     language: str | None = None
     theme: str | None = None
     component_order: list[str] = Field(default_factory=list)
 
 
-class JobApply(BaseModel):
+class JobApply(StrictModel):
     label: str
     url: str
 
@@ -42,20 +53,23 @@ class JobApply(BaseModel):
         return value
 
 
-class JobConfig(BaseModel):
+class JobConfig(StrictModel):
     title: str
     intro: str | None = None
     apply: JobApply | None = None
 
 
-class RenderingHtmlConfig(BaseModel):
-    facts_position: Literal["sidebar", "topbar", "grid"] = "sidebar"
-    repeat_cta: bool = False
-    show_share_links: bool = False
-    show_print_link: bool = False
+class WebLabels(StrictModel):
+    share: str = "Share"
+    print: str = "Print"
+    phone: str = "Phone"
+    mobile: str = "Mobile"
+    email: str = "Email"
+    open_map: str = "Open map"
+    deadline: str = "Deadline"
 
 
-class RenderingCssTokens(BaseModel):
+class RenderingCssTokens(StrictModel):
     color_primary: str | None = None
     color_background: str | None = None
     font_body: str | None = None
@@ -64,33 +78,49 @@ class RenderingCssTokens(BaseModel):
     spacing_scale: str | None = None
 
 
-class RenderingCssConfig(BaseModel):
+class RenderingCssConfig(StrictModel):
     files: list[str] = Field(default_factory=list)
     inline: str = ""
     tokens: RenderingCssTokens = Field(default_factory=RenderingCssTokens)
 
 
-class RenderingJsConfig(BaseModel):
-    files: list[str] = Field(default_factory=list)
-    inline: str = ""
-    allow_inline: bool = False
+class RenderingWebConfig(StrictModel):
+    template: str = "modern"
+    custom_template_dir: str | None = None
+    facts_position: Literal["sidebar", "topbar", "grid"] = "sidebar"
+    css: RenderingCssConfig = Field(default_factory=RenderingCssConfig)
+    labels: WebLabels = Field(default_factory=WebLabels)
+    asset_base_url: str | None = None
+    show_top_apply: bool = True
+    show_share_links: bool = False
+    show_print_link: bool = False
+    repeat_cta: bool = False
 
-    @field_validator("files")
+    @field_validator("template")
     @classmethod
-    def validate_js_files(cls, value: list[str]) -> list[str]:
-        for item in value:
-            if not _is_safe_url(item):
-                raise ValueError("JS file URLs must use safe schemes or safe relative paths")
+    def validate_template(cls, value: str) -> str:
+        allowed = {"default", "compact", "modern", "classic", "corporate", "minimal"}
+        if value in allowed:
+            return value
+        if value.startswith("custom:"):
+            return value
+        raise ValueError("template must be built-in or start with custom:")
+
+    @field_validator("asset_base_url")
+    @classmethod
+    def validate_asset_base_url(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        if not _is_safe_url(value):
+            raise ValueError("asset_base_url must use a safe scheme or a safe relative path")
         return value
 
 
-class RenderingConfig(BaseModel):
-    html: RenderingHtmlConfig = Field(default_factory=RenderingHtmlConfig)
-    css: RenderingCssConfig = Field(default_factory=RenderingCssConfig)
-    js: RenderingJsConfig = Field(default_factory=RenderingJsConfig)
+class RenderingConfig(StrictModel):
+    web: RenderingWebConfig = Field(default_factory=RenderingWebConfig)
 
 
-class ComponentBase(BaseModel):
+class ComponentBase(StrictModel):
     type: str
     id: str
     variant: str | None = None
@@ -99,6 +129,8 @@ class ComponentBase(BaseModel):
     attributes: dict[str, str] = Field(default_factory=dict)
     visibility: str | None = None
     render_if: dict[str, Any] | None = None
+    placement: Literal["main", "sidebar", "fullwidth"] = "main"
+    container: str | None = None
 
     @field_validator("attributes")
     @classmethod
@@ -114,7 +146,19 @@ class ComponentBase(BaseModel):
         return value
 
 
-class CtaData(BaseModel):
+class CtaData(StrictModel):
+    label: str
+    url: str
+
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, value: str) -> str:
+        if not _is_safe_url(value):
+            raise ValueError("url must use a safe scheme or a safe relative path")
+        return value
+
+
+class LinkItem(StrictModel):
     label: str
     url: str
 
@@ -136,7 +180,7 @@ class HeroComponent(ComponentBase):
     cta: CtaData | None = None
 
 
-class FactsItem(BaseModel):
+class FactsItem(StrictModel):
     label: str
     value: str
 
@@ -233,6 +277,94 @@ class ApplicationProcessComponent(ComponentBase):
     steps: list[str] = Field(default_factory=list)
 
 
+class HeaderBrandComponent(ComponentBase):
+    type: Literal["header_brand"]
+    variant: Literal["simple", "bar"] = "bar"
+    brand_name: str
+    brand_url: str | None = None
+    logo_url: str | None = None
+    strapline: str | None = None
+
+    @field_validator("brand_url", "logo_url")
+    @classmethod
+    def validate_optional_url(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        if not _is_safe_url(value):
+            raise ValueError("url must use a safe scheme or a safe relative path")
+        return value
+
+
+class HeroBannerComponent(ComponentBase):
+    type: Literal["hero_banner"]
+    variant: Literal["image", "cover"] = "cover"
+    image_url: str
+    alt: str | None = None
+    caption: str | None = None
+
+    @field_validator("image_url")
+    @classmethod
+    def validate_url(cls, value: str) -> str:
+        if not _is_safe_url(value):
+            raise ValueError("url must use a safe scheme or a safe relative path")
+        return value
+
+
+class MetaPanelComponent(ComponentBase):
+    type: Literal["meta_panel"]
+    variant: Literal["card", "stacked"] = "card"
+    facts: list[FactsItem] = Field(default_factory=list)
+    contact_name: str | None = None
+    contact_role: str | None = None
+    contact_phone: str | None = None
+    contact_mobile: str | None = None
+    contact_email: str | None = None
+
+    @model_validator(mode="after")
+    def validate_content(self) -> MetaPanelComponent:
+        has_contact = any(
+            [
+                self.contact_name,
+                self.contact_role,
+                self.contact_phone,
+                self.contact_mobile,
+                self.contact_email,
+            ]
+        )
+        if not self.facts and not has_contact:
+            raise ValueError("meta_panel must include at least one fact or contact field")
+        return self
+
+
+class SocialLinksComponent(ComponentBase):
+    type: Literal["social_links"]
+    variant: Literal["icons", "text"] = "icons"
+    links: list[LinkItem] = Field(min_length=1)
+
+
+class LocationMapComponent(ComponentBase):
+    type: Literal["location_map"]
+    variant: Literal["map", "compact"] = "map"
+    map_url: str
+    address: str | None = None
+    caption: str | None = None
+
+    @field_validator("map_url")
+    @classmethod
+    def validate_url(cls, value: str) -> str:
+        if not _is_safe_url(value):
+            raise ValueError("url must use a safe scheme or a safe relative path")
+        return value
+
+
+class FooterBrandComponent(ComponentBase):
+    type: Literal["footer_brand"]
+    variant: Literal["default", "minimal"] = "default"
+    brand_name: str
+    body: str
+    links: list[LinkItem] = Field(default_factory=list)
+
+
 Component = Annotated[
     HeroComponent
     | FactsComponent
@@ -245,13 +377,19 @@ Component = Annotated[
     | LegalComponent
     | CtaComponent
     | MediaComponent
-    | ApplicationProcessComponent,
+    | ApplicationProcessComponent
+    | HeaderBrandComponent
+    | HeroBannerComponent
+    | MetaPanelComponent
+    | SocialLinksComponent
+    | LocationMapComponent
+    | FooterBrandComponent,
     Field(discriminator="type"),
 ]
 
 
-class JobSpec(BaseModel):
-    """Top-level JobSpec model for v0.2.0+ component composition."""
+class JobSpec(StrictModel):
+    """Top-level JobSpec model for v0.2.x component composition."""
 
     schema_version: int = 1
     id: str = Field(pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -270,12 +408,22 @@ class JobSpec(BaseModel):
             raise ValueError("component IDs must be unique")
 
         if self.page.component_order:
+            ordered = self.page.component_order
             component_ids = set(ids)
-            missing = [item for item in self.page.component_order if item not in component_ids]
+            ordered_ids = set(ordered)
+            if len(ordered) != len(ordered_ids):
+                raise ValueError("page.component_order must not contain duplicate IDs")
+            missing = [item for item in ordered if item not in component_ids]
+            extras = [item for item in ids if item not in ordered_ids]
             if missing:
                 missing_csv = ", ".join(missing)
                 raise ValueError(
                     f"page.component_order references missing component IDs: {missing_csv}"
+                )
+            if extras:
+                extras_csv = ", ".join(extras)
+                raise ValueError(
+                    f"page.component_order must include every component ID; missing in order: {extras_csv}"
                 )
 
         return self

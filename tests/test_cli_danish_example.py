@@ -16,24 +16,21 @@ def test_cli_validate_danish_example() -> None:
     assert result.exit_code == 0
 
 
-def test_cli_render_danish_example_markdown() -> None:
+def test_cli_render_danish_example_web() -> None:
     example = ROOT / "examples" / "danish-job-detail.jobspec.yaml"
-    result = runner.invoke(app, ["spec", "render", str(example), "--format", "markdown"])
+    result = runner.invoke(app, ["spec", "render", str(example), "--format", "web"])
     assert result.exit_code == 0
-    assert "Senior IT-Security Manager" in result.stdout
+    assert "Senior Security Engineering Manager" in result.stdout
 
 
-def test_cli_render_danish_example_html() -> None:
+def test_cli_render_danish_example_json_ld() -> None:
     example = ROOT / "examples" / "danish-job-detail.jobspec.yaml"
-    result = runner.invoke(
-        app, ["spec", "render", str(example), "--format", "html", "--theme", "modern"]
-    )
+    result = runner.invoke(app, ["spec", "render", str(example), "--format", "json-ld"])
     assert result.exit_code == 0
-    assert "<!doctype html>" in result.stdout.lower()
+    assert '"@type": "JobPosting"' in result.stdout
 
 
-def test_cli_render_danish_example_json() -> None:
+def test_cli_render_danish_example_removed_pdf_format_fails() -> None:
     example = ROOT / "examples" / "danish-job-detail.jobspec.yaml"
-    result = runner.invoke(app, ["spec", "render", str(example), "--format", "json"])
-    assert result.exit_code == 0
-    assert '"components"' in result.stdout
+    result = runner.invoke(app, ["spec", "render", str(example), "--format", "pdf"])
+    assert result.exit_code == 2

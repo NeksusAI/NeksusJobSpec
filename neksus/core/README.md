@@ -9,7 +9,7 @@ This layer is reusable independently from Typer and terminal output.
 - Define domain models and validation contracts.
 - Parse YAML into typed models.
 - Generate warnings separate from errors.
-- Render JobSpecs to markdown.
+- Render JobSpecs to web and json-ld.
 - Discover/configure/check projects.
 
 ## Subpackages and modules

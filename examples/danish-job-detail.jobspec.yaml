@@ -1,151 +1,229 @@
 schema_version: 1
-id: senior-it-security-manager
+id: nordic-security-manager-demo
 
 page:
   layout: job_detail
   language: da
   theme: modern
   component_order:
+    - brand_header
+    - hero_banner
     - hero
-    - facts
     - about_role
     - responsibilities
     - requirements
-    - competencies
     - colleague_quote
-    - benefits
+    - culture
     - process
-    - contact
     - company
     - legal
+    - apply_footer
+    - meta
+    - social
+    - map
+    - footer_brand
 
 job:
-  title: Senior IT-Security Manager
-  intro: Vil du være med til at styrke vores sikkerhed?
+  title: Senior Security Engineering Manager
+  intro: Bliv en del af et dedikeret IT-sikkerhedsteam med fokus på styring, efterlevelse og risikobaseret sikkerhedsarbejde.
   apply:
     label: Send ansøgning
-    url: https://example.com/jobs/senior-it-security-manager
+    url: https://example.com/jobs/senior-security-engineering-manager
 
 components:
+  - type: header_brand
+    id: brand_header
+    variant: bar
+    placement: fullwidth
+    class_name: brand-header
+    brand_name: Nordwell
+    brand_url: https://example.com/companies/nordwell
+
+  - type: hero_banner
+    id: hero_banner
+    variant: cover
+    placement: fullwidth
+    class_name: hero-banner-image
+    image_url: job-banner-placeholder.svg
+    alt: Neutralt jobbanner
+
   - type: hero
     id: hero
     variant: split
-    title: Senior IT-Security Manager
-    intro: Vil du være med til at styrke vores sikkerhed?
+    class_name: hero-banner
+    title: Senior Security Engineering Manager
+    subtitle: Nordwell · Øresundsregionen · Fuldtid
+    intro: Vi søger en erfaren profil, der kan sætte retning på tværs af IT og forretning og omsætte sikkerhedskrav til praksis.
     cta:
       label: Send ansøgning
-      url: https://example.com/jobs/senior-it-security-manager
+      url: https://example.com/jobs/senior-security-engineering-manager
 
-  - type: facts
-    id: facts
-    variant: sidebar
-    title: Jobdetaljer
+  - type: rich_text
+    id: about_role
+    variant: highlighted
+    class_name: intro-card
+    title: Om jobbet
+    body: Du bliver en del af en mindre enhed med høj faglighed, hvor overvågning og test er outsourcet, og hvor dit ansvar bliver at drive opfølgning, implementering og efterlevelse.
+
+  - type: list
+    id: responsibilities
+    variant: numbered
+    class_name: section-list
+    title: Dine primære opgaver bliver
     items:
+      - Forankre IT-sikkerhed i organisationen og deltage tæt i forretningsprojekter.
+      - Lede tekniske IT-sikkerhedsprojekter fra plan til gennemførsel.
+      - Videreudvikle leverandørstyring med tydelige sikkerhedskrav.
+      - Rapportere sikkerhedsstatus og risici til ledelse og relevante fora.
+
+  - type: list
+    id: requirements
+    variant: bullets
+    class_name: section-list
+    title: Du har forudsætningerne
+    items:
+      - Erfaring med governance- og compliancearbejde inden for IT-sikkerhed.
+      - Praktisk forståelse for risikovurderinger og sikkerhedsdiscipliner.
+      - Stærke samarbejds- og kommunikationsevner på tværs af niveauer.
+      - Relevant videregående uddannelse, gerne suppleret med certificeringer.
+
+  - type: quote
+    id: colleague_quote
+    variant: pullquote
+    class_name: quote-feature
+    quote: Her får du stor selvstændighed, tæt sparring i teamet og reel indflydelse på sikkerhedsarbejdet.
+    author: Kollegaprofil
+    author_title: IT Security Manager
+
+  - type: benefits
+    id: culture
+    variant: cards
+    class_name: benefits-grid
+    title: Arbejdsmiljø og kultur
+    items:
+      - Høj grad af tillid, fleksibilitet og faglig autonomi.
+      - Onboarding med buddy og tydelig lederstøtte.
+      - Stærkt socialt miljø med aktiviteter på tværs af interesser.
+
+  - type: application_process
+    id: process
+    variant: steps
+    class_name: process-box
+    title: Sådan søger du
+    deadline: 04-05-2026
+    body: Vi holder samtaler løbende. Send CV og en kort motiveret ansøgning.
+    steps:
+      - Indsend ansøgning via jobportalen.
+      - Første samtale med leder og relevante interessenter.
+      - Eventuel opfølgende dialog og endelig tilbagemelding.
+
+  - type: company_profile
+    id: company
+    variant: card
+    class_name: company-card
+    title: Om virksomheden
+    body: Nordwell er en nordisk finansvirksomhed med fokus på ansvarlighed, langsigtede relationer og høj kvalitet i rådgivning og digitale løsninger.
+
+  - type: legal
+    id: legal
+    variant: muted
+    class_name: legal-note
+    title: Lige muligheder og databeskyttelse
+    body: Vi opfordrer alle kvalificerede kandidater til at søge. Persondata behandles i henhold til gældende regler.
+
+  - type: cta
+    id: apply_footer
+    variant: full_width
+    class_name: apply-strip
+    title: Klar til næste skridt?
+    label: Send ansøgning
+    url: https://example.com/jobs/senior-security-engineering-manager
+
+  - type: meta_panel
+    id: meta
+    variant: card
+    placement: sidebar
+    class_name: meta-panel
+    title: Jobdetaljer
+    facts:
       - label: Referencenummer
-        value: IT-Sikkerhed
+        value: SEC-2026-042
       - label: Region
-        value: Region Hovedstaden
+        value: Øresundsregionen
       - label: Jobtype
         value: Fast
       - label: Arbejdstid
         value: Fuldtid
       - label: Ansøgningsfrist
         value: 04-05-2026
+      - label: Tiltrædelse
+        value: 01-07-2026
+      - label: Arbejdssted
+        value: Havnekaj 12
+    contact_name: Hiring Team
+    contact_role: Hiring Manager
+    contact_phone: +45 70 10 20 30
+    contact_mobile: +45 31 23 45 67
+    contact_email: job@example.com
 
-  - type: rich_text
-    id: about_role
+  - type: social_links
+    id: social
+    variant: icons
+    placement: sidebar
+    class_name: social-panel
+    title: Del på
+    links:
+      - label: LinkedIn
+        url: https://www.linkedin.com
+      - label: Facebook
+        url: https://www.facebook.com
+      - label: X
+        url: https://x.com
+
+  - type: location_map
+    id: map
+    variant: map
+    placement: sidebar
+    class_name: map-panel
+    title: Lokation
+    address: Havnekaj 12, 2100 København
+    caption: Se lokationen på kort
+    map_url: https://maps.google.com/?q=Havnekaj+12+2100+K%C3%B8benhavn
+
+  - type: footer_brand
+    id: footer_brand
     variant: default
-    title: Om jobbet
-    body: Du får ansvar for at modne og drifte vores sikkerhedsinitiativer.
-
-  - type: list
-    id: responsibilities
-    variant: bullets
-    title: Dine primære opgaver bliver
-    items:
-      - Udvikle og implementere sikkerhedsstandarder.
-      - Rådgive teams om risikovurdering og compliance.
-
-  - type: list
-    id: requirements
-    variant: bullets
-    title: Du har forudsætningerne
-    items:
-      - Erfaring med informationssikkerhed i komplekse organisationer.
-      - God forståelse for risiko- og compliancearbejde.
-
-  - type: list
-    id: competencies
-    variant: bullets
-    title: Dine personlige kompetencer
-    items:
-      - Du kommunikerer klart og samarbejder bredt.
-      - Du arbejder struktureret og tager ansvar.
-
-  - type: quote
-    id: colleague_quote
-    variant: card
-    quote: Vi arbejder tæt sammen om sikkerhed i hele organisationen.
-    author: Mette Jensen
-    author_title: Head of Technology
-
-  - type: benefits
-    id: benefits
-    variant: cards
-    title: Det får du
-    items:
-      - Fleksible arbejdsforhold.
-      - Kompetenceudvikling og fagligt netværk.
-
-  - type: application_process
-    id: process
-    variant: steps
-    title: Sådan søger du
-    deadline: 04-05-2026
-    body: Vi behandler ansøgninger løbende.
-    steps:
-      - Send CV og ansøgning.
-      - Første samtale med hiring manager.
-      - Afsluttende samtale og tilbud.
-
-  - type: contact
-    id: contact
-    variant: card
-    title: Har du spørgsmål?
-    name: Anna Hansen
-    role: IT Security Lead
-    phone: +45 33 33 33 33
-    email: anna.hansen@example.com
-
-  - type: company_profile
-    id: company
-    variant: default
-    title: Om virksomheden
-    body: Vi bygger finansielle løsninger med fokus på stabil drift og høj tillid.
-
-  - type: legal
-    id: legal
-    variant: muted
-    title: Lige muligheder og databeskyttelse
-    body: Vi opfordrer alle kvalificerede kandidater til at søge. Vi behandler persondata i henhold til gældende regler.
+    placement: fullwidth
+    class_name: footer-brand
+    brand_name: Nordwell
+    body: Nordwell leverer finansielle løsninger til både private og virksomheder. Som kundefokuseret selskab arbejder vi med omtanke, ordentlighed og langsigtet værdi for kunder og samfund.
+    links:
+      - label: Læs mere
+        url: https://example.com/companies/nordwell
 
 rendering:
-  html:
-    facts_position: sidebar
-    repeat_cta: true
+  web:
+    template: classic
+    css:
+      files: []
+      inline: ""
+      tokens:
+        color_primary: ""
+        color_background: ""
+        font_body: ""
+        font_heading: ""
+        border_radius: ""
+        spacing_scale: ""
+    labels:
+      share: Del
+      print: Printvenlig version
+      phone: Telefon
+      mobile: Mobil
+      email: E-mail
+      open_map: Åbn kort
+      deadline: Ansøgningsfrist
+    asset_base_url: ../examples/assets
+    show_top_apply: false
     show_share_links: true
     show_print_link: true
-  css:
-    files: []
-    inline: ""
-    tokens:
-      color_primary: ""
-      color_background: ""
-      font_body: ""
-      font_heading: ""
-      border_radius: ""
-      spacing_scale: ""
-  js:
-    files: []
-    inline: ""
-    allow_inline: false
+    repeat_cta: false

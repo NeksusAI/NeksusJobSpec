@@ -54,19 +54,19 @@ def test_validate_jobspec_accepts_mapping() -> None:
     assert spec.id == "api-test"
 
 
-def test_render_jobspec_markdown_from_path() -> None:
+def test_render_jobspec_web_from_path() -> None:
     from neksus_jobspec import render_jobspec
 
     content = render_jobspec(ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml")
-    assert "# Backend Engineer" in content
+    assert "<!doctype html>" in content.lower()
 
 
-def test_render_jobspec_html_with_builtin_theme() -> None:
+def test_render_jobspec_web_with_builtin_theme() -> None:
     from neksus_jobspec import render_jobspec
 
     content = render_jobspec(
         ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml",
-        format="html",
+        format="web",
         theme="modern",
     )
     assert "<!doctype html>" in content.lower()
@@ -78,7 +78,7 @@ def test_render_jobspec_writes_output_file(tmp_path: Path) -> None:
     out = tmp_path / "dist" / "backend-engineer.html"
     render_jobspec(
         ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml",
-        format="html",
+        format="web",
         theme="modern",
         output=out,
     )

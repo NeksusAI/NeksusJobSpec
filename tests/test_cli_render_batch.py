@@ -10,16 +10,16 @@ from neksus.cli.main import app
 runner = CliRunner()
 
 
-def test_render_batch_markdown_renders_all_specs() -> None:
+def test_render_batch_web_renders_all_specs() -> None:
     with runner.isolated_filesystem():
         assert runner.invoke(app, ["init"]).exit_code == 0
         assert runner.invoke(app, ["spec", "new", "backend-engineer"]).exit_code == 0
 
-        result = runner.invoke(app, ["render", "--format", "markdown", "--theme", "compact"])
+        result = runner.invoke(app, ["render", "--format", "web", "--theme", "compact"])
         assert result.exit_code == 0
-        assert Path("dist/example.md").exists()
-        assert Path("dist/backend-engineer.md").exists()
-        assert "### Summary" in Path("dist/example.md").read_text(encoding="utf-8")
+        assert Path("dist/example.html").exists()
+        assert Path("dist/backend-engineer.html").exists()
+        assert "<!doctype html>" in Path("dist/example.html").read_text(encoding="utf-8").lower()
 
 
 def test_render_batch_uses_jobspec_id_for_output_file() -> None:
@@ -49,13 +49,13 @@ components:
             encoding="utf-8",
         )
 
-        result = runner.invoke(app, ["render", "--format", "markdown"])
+        result = runner.invoke(app, ["render", "--format", "web"])
         assert result.exit_code == 0
-        assert Path("dist/canonical-id.md").exists()
-        assert not Path("dist/weird-name.md").exists()
+        assert Path("dist/canonical-id.html").exists()
+        assert not Path("dist/weird-name.html").exists()
 
 
-def test_render_batch_json_summary_and_invalid_spec_exit_one() -> None:
+def test_render_batch_web_summary_and_invalid_spec_exit_one() -> None:
     with runner.isolated_filesystem():
         assert runner.invoke(app, ["init"]).exit_code == 0
         Path("jobspecs/invalid.jobspec.yaml").write_text(
@@ -75,13 +75,11 @@ components:
             encoding="utf-8",
         )
 
-        result = runner.invoke(
-            app, ["render", "--format", "markdown", "--theme", "modern", "--json"]
-        )
+        result = runner.invoke(app, ["render", "--format", "web", "--theme", "modern", "--json"])
         assert result.exit_code == 1
         payload = json.loads(result.stdout)
         assert payload["ok"] is False
-        assert payload["format"] == "markdown"
+        assert payload["format"] == "web"
         assert payload["theme"] == "modern"
         assert isinstance(payload["rendered"], list)
         assert isinstance(payload["errors"], list)
@@ -114,16 +112,16 @@ components:
 """,
             encoding="utf-8",
         )
-        Path("dist/old-file.md").parent.mkdir(parents=True, exist_ok=True)
-        Path("dist/old-file.md").write_text("old", encoding="utf-8")
+        Path("dist/old-file.html").parent.mkdir(parents=True, exist_ok=True)
+        Path("dist/old-file.html").write_text("old", encoding="utf-8")
 
-        result = runner.invoke(app, ["render", "--format", "markdown", "--clean"])
+        result = runner.invoke(app, ["render", "--format", "web", "--clean"])
         assert result.exit_code == 0
-        assert not Path("dist/old-file.md").exists()
-        assert Path("dist/role.md").exists()
+        assert not Path("dist/old-file.html").exists()
+        assert Path("dist/role.html").exists()
 
 
-def test_render_batch_html_custom_css_and_no_css() -> None:
+def test_render_batch_web_custom_css_and_no_css() -> None:
     with runner.isolated_filesystem():
         assert runner.invoke(app, ["init", "--empty"]).exit_code == 0
         Path("jobspecs/role.jobspec.yaml").write_text(
@@ -154,13 +152,13 @@ components:
 
         with_css = runner.invoke(
             app,
-            ["render", "--format", "html", "--theme", "modern", "--css", str(css_path)],
+            ["render", "--format", "web", "--theme", "modern", "--css", str(css_path)],
         )
         assert with_css.exit_code == 0
         content = Path("dist/role.html").read_text(encoding="utf-8")
         assert "body { outline: 0; }" in content
 
-        no_css = runner.invoke(app, ["render", "--format", "html", "--no-css"])
+        no_css = runner.invoke(app, ["render", "--format", "web", "--no-css"])
         assert no_css.exit_code == 0
         content_no_css = Path("dist/role.html").read_text(encoding="utf-8")
         assert "<style>" not in content_no_css
@@ -189,8 +187,6 @@ components:
     title: Responsibilities
     items:
       - One
-nice_to_have:
-  - Bonus
 """,
             encoding="utf-8",
         )
@@ -198,12 +194,12 @@ nice_to_have:
             """version: 1
 spec_directory: jobspecs
 output_directory: dist
-default_format: markdown
+default_format: web
 strict_validation: false
 default_theme: default
 render_profiles:
   public:
-    format: html
+    format: web
     theme: modern
     output_directory: dist/public
     sections:
@@ -227,11 +223,11 @@ render_profiles:
 
         override_result = runner.invoke(
             app,
-            ["render", "--profile", "public", "--format", "markdown", "--theme", "compact"],
+            ["render", "--profile", "public", "--format", "web", "--theme", "compact"],
         )
         assert override_result.exit_code == 0
-        md = Path("dist/public/role.md").read_text(encoding="utf-8")
-        assert "### Responsibilities" in md
+        html = Path("dist/public/role.html").read_text(encoding="utf-8")
+        assert "<!doctype html>" in html.lower()
 
 
 def test_render_batch_unknown_profile_fails_with_config_error() -> None:

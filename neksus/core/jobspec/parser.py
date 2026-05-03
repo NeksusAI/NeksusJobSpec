@@ -16,6 +16,13 @@ from neksus.core.errors import FileSystemError, JobSpecParseError, JobSpecValida
 from neksus.core.jobspec.models import JobSpec
 
 
+def _looks_like_legacy_schema(data: dict[str, Any]) -> bool:
+    legacy_markers = {"title", "summary", "responsibilities", "requirements"}
+    has_legacy = any(key in data for key in legacy_markers)
+    has_components_model = "job" in data or "components" in data
+    return has_legacy and not has_components_model
+
+
 def load_yaml_file(path: Path) -> dict[str, Any]:
     """Read a YAML file into a dictionary."""
     # Explicitly fail with a domain-specific error for missing files.
@@ -41,4 +48,9 @@ def load_jobspec(path: Path) -> JobSpec:
     try:
         return JobSpec.model_validate(data)
     except ValidationError as exc:
+        if _looks_like_legacy_schema(data):
+            raise JobSpecValidationError(
+                f"Invalid JobSpec data in file: {path}. "
+                "Legacy schema removed in 0.2.x; use component schema or migrate."
+            ) from exc
         raise JobSpecValidationError(f"Invalid JobSpec data in file: {path}") from exc

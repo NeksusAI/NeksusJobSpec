@@ -9,11 +9,12 @@ from neksus.core.jobspec.rendering import RenderOptions, RenderSections, render_
 
 def render_jobspec(
     spec: JobSpec,
-    format: str = "markdown",
+    format: str = "web",
     *,
     theme: str = "default",
     embed_css: bool = True,
     custom_css: str | None = None,
+    asset_base_url: str | None = None,
     sections: RenderSections | dict[str, bool] | None = None,
 ) -> str:
     """Render a JobSpec in a supported output format.
@@ -21,7 +22,7 @@ def render_jobspec(
     This wrapper preserves the historical import and signature compatibility
     while allowing optional render customization.
     """
-    if format not in {"markdown", "html", "json"}:
+    if format not in {"web", "json-ld"}:
         raise UnsupportedFormatError(f"Unsupported render format: {format}")
 
     section_options = RenderSections()
@@ -35,6 +36,7 @@ def render_jobspec(
         theme=theme,
         embed_css=embed_css,
         custom_css=custom_css,
+        asset_base_url=asset_base_url,
         sections=section_options,
     )
     return render_jobspec_with_options(spec, options)

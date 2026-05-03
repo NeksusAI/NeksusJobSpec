@@ -9,12 +9,18 @@ from neksus.core.jobspec.models import (
     ContactComponent,
     CtaComponent,
     FactsComponent,
+    FooterBrandComponent,
+    HeaderBrandComponent,
+    HeroBannerComponent,
     HeroComponent,
     LegalComponent,
     ListComponent,
+    LocationMapComponent,
     MediaComponent,
+    MetaPanelComponent,
     QuoteComponent,
     RichTextComponent,
+    SocialLinksComponent,
 )
 from neksus.core.jobspec.rendering.normalize import normalize_jobspec_for_render
 from neksus.core.jobspec.rendering.options import RenderOptions
@@ -128,5 +134,57 @@ def render_markdown(spec, options: RenderOptions) -> str:
             if component.steps:
                 for index, step in enumerate(component.steps, start=1):
                     lines.append(f"{index}. {step}")
+            continue
+
+        if isinstance(component, HeaderBrandComponent):
+            _append_heading(lines, component.title or "Brand", heading)
+            lines.append(f"- Brand: {component.brand_name}")
+            if component.strapline:
+                lines.append(f"- Strapline: {component.strapline}")
+            if component.brand_url:
+                lines.append(f"- Website: {component.brand_url}")
+            continue
+
+        if isinstance(component, HeroBannerComponent):
+            _append_heading(lines, component.title or "Banner", heading)
+            lines.append(f"- Image: {component.image_url}")
+            if component.caption:
+                lines.append(f"- Caption: {component.caption}")
+            continue
+
+        if isinstance(component, MetaPanelComponent):
+            _append_heading(lines, component.title or "Job details", heading)
+            for item in component.facts:
+                lines.append(f"- {item.label}: {item.value}")
+            if component.contact_name:
+                lines.append(f"- Contact: {component.contact_name}")
+            if component.contact_role:
+                lines.append(f"- Contact role: {component.contact_role}")
+            if component.contact_phone:
+                lines.append(f"- Contact phone: {component.contact_phone}")
+            if component.contact_mobile:
+                lines.append(f"- Contact mobile: {component.contact_mobile}")
+            if component.contact_email:
+                lines.append(f"- Contact email: {component.contact_email}")
+            continue
+
+        if isinstance(component, SocialLinksComponent):
+            _append_heading(lines, component.title or "Share", heading)
+            for link in component.links:
+                lines.append(f"- [{link.label}]({link.url})")
+            continue
+
+        if isinstance(component, LocationMapComponent):
+            _append_heading(lines, component.title or "Location", heading)
+            if component.address:
+                lines.append(f"- Address: {component.address}")
+            lines.append(f"- Map: {component.map_url}")
+            continue
+
+        if isinstance(component, FooterBrandComponent):
+            _append_heading(lines, component.title or component.brand_name, heading)
+            lines.append(component.body)
+            for link in component.links:
+                lines.append(f"- [{link.label}]({link.url})")
 
     return "\n".join(lines).strip() + "\n"

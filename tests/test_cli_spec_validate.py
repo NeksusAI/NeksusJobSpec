@@ -48,3 +48,25 @@ def test_spec_validate_json_output_shape() -> None:
         assert payload["ok"] is True
         assert payload["valid"] is True
         assert payload["errors"] == []
+
+
+def test_spec_validate_legacy_schema_reports_migration_guidance() -> None:
+    with runner.isolated_filesystem():
+        target = Path("legacy.jobspec.yaml")
+        target.write_text(
+            """schema_version: 1
+id: backend-engineer
+title: Backend Engineer
+summary: Build systems.
+responsibilities:
+  - Build APIs
+requirements:
+  - Python
+""",
+            encoding="utf-8",
+        )
+        result = runner.invoke(app, ["spec", "validate", str(target), "--json"])
+        assert result.exit_code == 1
+        payload = json.loads(result.stdout)
+        assert payload["ok"] is False
+        assert payload["errors"][0]["code"] == "legacy_schema_removed"

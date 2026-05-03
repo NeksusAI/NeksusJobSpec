@@ -13,11 +13,13 @@ Current focus is a stable CLI and reusable core library. Hosted API and MCP serv
 
 ## Job page composition
 
-v0.2.0 introduces controlled, Lego-brick-like job-detail page components.
-You can compose validated page blocks such as hero, facts, CTA, responsibilities, requirements, benefits, quote, contact, application process, company profile, and legal blocks without defaulting to arbitrary HTML.
+v0.2.x uses controlled, Lego-brick-like job-detail page components.
+You can compose validated page blocks such as header_brand, hero_banner, hero, meta_panel, CTA, responsibilities, requirements, benefits, quote, social_links, location_map, company profile, and legal blocks without defaulting to arbitrary HTML.
 
 - Example: [`examples/danish-job-detail.jobspec.yaml`](examples/danish-job-detail.jobspec.yaml)
-- Docs: [`docs/specification.md`](docs/specification.md), [`docs/rendering.md`](docs/rendering.md), [`docs/examples.md`](docs/examples.md)
+- Docs: [`docs/specification.md`](docs/specification.md), [`docs/rendering.md`](docs/rendering.md), [`docs/themes.md`](docs/themes.md), [`docs/examples.md`](docs/examples.md)
+
+For portable web output paths, use `rendering.web.asset_base_url` in spec files or `--asset-base-url` in CLI rendering commands.
 
 ## Installation
 
@@ -34,7 +36,7 @@ cd neksus-jobspec-demo
 neksus-jobspec init
 neksus-jobspec spec new backend-engineer
 neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format markdown --output dist/backend-engineer.md
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web --output dist/backend-engineer.html
 ```
 
 ## Python API
@@ -44,8 +46,8 @@ from neksus_jobspec import JobSpec, load_jobspec, render_jobspec, validate_jobsp
 
 spec = load_jobspec("jobspecs/backend-engineer.jobspec.yaml")
 validated = validate_jobspec(spec.model_dump())
-markdown = render_jobspec(validated, format="markdown")
-print(markdown[:80])
+web = render_jobspec(validated, format="web")
+print(web[:80])
 ```
 
 ## Basic CLI usage
@@ -54,7 +56,9 @@ print(markdown[:80])
 neksus-jobspec init
 neksus-jobspec spec new backend-engineer
 neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format markdown
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web
+neksus-jobspec themes
+neksus-jobspec themes show classic
 ```
 
 ## Development

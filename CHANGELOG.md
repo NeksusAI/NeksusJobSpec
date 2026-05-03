@@ -8,13 +8,25 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 
 ### Added
 - Controlled composable job-detail page components (`components`) with typed validation.
-- Page/component-based rendering support across markdown, html, and json.
+- Page/component-based rendering support across web and json-ld.
 - Danish/Nordic job-detail example at `examples/danish-job-detail.jobspec.yaml`.
+- New built-in `classic` web theme for production-style vacancy-page presentation.
+- New theme guide: `docs/themes.md` (built-ins, overrides, and custom-template directory usage).
+- New structural components: `header_brand`, `hero_banner`, `meta_panel`, `social_links`, `location_map`, and `footer_brand`.
+- Placement-aware composition fields on all components: `placement` and `container`.
+- Configurable web asset URL prefixing via `rendering.web.asset_base_url` and CLI `--asset-base-url`.
+- Configurable top apply CTA visibility via `rendering.web.show_top_apply`.
+- Configurable localized web labels via `rendering.web.labels` (`share`, `print`, `phone`, `mobile`, `email`, `open_map`, `deadline`).
 
 ### Changed
 - JobSpec model is now component-first (`page`, `job`, `components`, `rendering`) and removes legacy v0.1.0 content compatibility.
 - Documentation expanded for assistant usage, compatibility policy, specification, rendering, and examples.
 - `spec render --no-validate` now explicitly describes warning-check behavior.
+- BREAKING: legacy/simple schema compatibility paths were removed in `0.2.x`; validation now explicitly reports migration guidance.
+- BREAKING: rendering contract is now `web | json-ld` only; removed render formats are rejected with migration guidance.
+- BREAKING: when `page.component_order` is provided, it must include every component ID exactly once.
+- Web renderer now emits explicit layout regions (`jobspec-fullwidth`, `jobspec-main`, `jobspec-sidebar`) and respects per-component `placement`.
+- Danish demo example content is anonymized (company, contacts, location, and visual asset) for safe redistribution/deployment.
 
 ### Fixed
 - Release hygiene updates across docs and agent guidance.
@@ -22,6 +34,7 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
   - blocks unsafe URL schemes in component and JS file URLs
   - blocks unsafe component attribute keys (including event-handler attributes)
   - removes hardcoded inline print click handler
+- Web renderer now preserves fullwidth component flow (top fullwidth region vs trailing fullwidth region), fixing misplaced fullwidth footer composition.
 
 ## [0.2.0]
 

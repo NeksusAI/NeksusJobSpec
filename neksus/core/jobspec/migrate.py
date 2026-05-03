@@ -14,6 +14,16 @@ CURRENT_SCHEMA_VERSION = 1
 def inspect_schema_version(path: Path) -> dict[str, Any]:
     """Inspect a JobSpec file schema version and migration status."""
     data = load_yaml_file(path)
+    if "schema_version" not in data:
+        legacy_markers = {"title", "summary", "responsibilities", "requirements"}
+        if any(key in data for key in legacy_markers):
+            return {
+                "schema_version": None,
+                "current_schema_version": CURRENT_SCHEMA_VERSION,
+                "status": "legacy_schema_removed",
+                "message": "legacy schema removed in 0.2.x; migrate to page/job/components",
+                "upgradable": False,
+            }
     version = data.get("schema_version")
     if not isinstance(version, int):
         raise JobSpecParseError("schema_version must be an integer")

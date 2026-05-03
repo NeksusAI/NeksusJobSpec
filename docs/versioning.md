@@ -26,18 +26,22 @@ Documented CLI commands are part of the compatibility contract.
 
 Documented JobSpec schema fields are part of the compatibility contract.
 
-Documented component types and variants are part of the compatibility contract once released.
+Documented component types, variants, and placement fields are part of the compatibility contract once released.
 
-## Non-stable internals
+## Breaking changes and cleanup
 
-Internal modules under `neksus.core.*` and `neksus.cli.*` are implementation details and not stable contracts.
+`0.2.x` contains a breaking cleanup relative to early/transitional `0.2.0` compatibility behavior.
 
-## Breaking changes and deprecations
+Legacy simple-schema payloads are removed and component schema is authoritative.
 
 Breaking changes must be documented in `CHANGELOG.md`.
 
 Deprecations should be preferred before removals when practical.
 
-## Out of scope for v0.2.0 contract
+## Non-stable internals
 
-Hosted API and MCP capabilities are planned but are not part of the v0.2.0 compatibility contract.
+Internal modules under `neksus.core.*` and `neksus.cli.*` are implementation details and not stable contracts.
+
+## Out of scope for v0.2.x contract
+
+Hosted API and MCP capabilities are planned but are not part of the v0.2.x compatibility contract.

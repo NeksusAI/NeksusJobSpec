@@ -42,17 +42,22 @@ cd "$tmp_dir"
 echo "[smoke] validating generated jobspec"
 "$CLI_BIN" spec validate jobspecs/backend-engineer.jobspec.yaml >/dev/null
 
-echo "[smoke] rendering markdown output"
+echo "[smoke] rendering web output"
 "$CLI_BIN" spec render jobspecs/backend-engineer.jobspec.yaml \
-  --format markdown \
-  --output dist/backend-engineer.md >/dev/null
+  --format web \
+  --output dist/backend-engineer.html >/dev/null
 
-echo "[smoke] rendering fixture with custom CSS"
+echo "[smoke] rendering web output with custom CSS"
 "$CLI_BIN" spec render jobspecs/backend-engineer.jobspec.yaml \
-  --format html \
+  --format web \
   --theme modern \
   --css "$ROOT_DIR/examples/jobspec.css" \
-  --output dist/backend-engineer.html >/dev/null
+  --output dist/backend-engineer-custom.html >/dev/null
+
+echo "[smoke] rendering json-ld output"
+"$CLI_BIN" spec render jobspecs/backend-engineer.jobspec.yaml \
+  --format json-ld \
+  --output dist/backend-engineer.json >/dev/null
 
 echo "[smoke] running project check"
 "$CLI_BIN" check >/dev/null

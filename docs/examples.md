@@ -6,16 +6,14 @@ Use `examples/danish-job-detail.jobspec.yaml` in the repository root as a full c
 
 It demonstrates:
 
+- branded header and hero banner
 - title and intro hero
 - apply CTA
-- facts block (region, job type, working time, deadline)
-- responsibilities, requirements, and competencies lists
+- meta sidebar (`meta_panel`) with Nordic job facts and contact details
+- responsibilities and requirements lists
 - quote and benefits blocks
 - application process steps
-- contact, company profile, and legal/privacy block
-
-## Legacy examples
-
-Legacy JobSpec examples remain supported and are still valid for validation and rendering.
+- social links and map sidebar blocks
+- company profile, legal/privacy block, and branded footer
 
 For more scenarios, see [Examples Library](examples-library.md).

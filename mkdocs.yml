@@ -55,6 +55,7 @@ nav:
       - How It Works: how-it-works.md
       - Architecture: architecture.md
       - Rendering: rendering.md
+      - Themes: themes.md
   - Integrations:
       - Assistant Usage: assistant-usage.md
       - LLM Integrations: integrations.md

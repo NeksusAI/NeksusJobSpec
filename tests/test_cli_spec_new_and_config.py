@@ -31,14 +31,14 @@ def test_config_set_rejects_unknown_key() -> None:
         assert payload["ok"] is False
 
 
-def test_config_set_accepts_default_format_html() -> None:
+def test_config_set_accepts_default_format_web() -> None:
     with runner.isolated_filesystem():
         runner.invoke(app, ["init"])
-        result = runner.invoke(app, ["config", "set", "default_format", "html", "--json"])
+        result = runner.invoke(app, ["config", "set", "default_format", "web", "--json"])
         assert result.exit_code == 0
         payload = json.loads(result.stdout)
         assert payload["ok"] is True
-        assert payload["config"]["default_format"] == "html"
+        assert payload["config"]["default_format"] == "web"
 
 
 def test_config_set_accepts_default_theme_modern() -> None:

@@ -33,10 +33,11 @@ def validate_jobspec(path_or_data: str | Path | Mapping[str, Any]) -> JobSpec:
 
 def render_jobspec(
     spec_or_path: JobSpec | str | Path,
-    format: str = "markdown",
+    format: str = "web",
     theme: str | None = None,
     output: str | Path | None = None,
     css: str | None = None,
+    asset_base_url: str | None = None,
 ) -> str:
     """Render a JobSpec to a string, optionally writing to a file."""
     spec = load_jobspec(spec_or_path) if isinstance(spec_or_path, (str, Path)) else spec_or_path
@@ -45,6 +46,7 @@ def render_jobspec(
         format=format,
         theme=theme or "default",
         custom_css=css,
+        asset_base_url=asset_base_url,
     )
     if output is not None:
         output_path = Path(output)

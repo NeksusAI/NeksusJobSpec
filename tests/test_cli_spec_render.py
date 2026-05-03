@@ -12,7 +12,7 @@ runner = CliRunner()
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_spec_render_prints_markdown() -> None:
+def test_spec_render_prints_web_html_by_default() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
@@ -20,52 +20,52 @@ def test_spec_render_prints_markdown() -> None:
 
         result = runner.invoke(app, ["spec", "render", str(target)])
         assert result.exit_code == 0
-        assert "# Backend Engineer" in result.stdout
-        assert "## Summary" in result.stdout
+        assert "<!doctype html>" in result.stdout.lower()
+        assert "Backend Engineer" in result.stdout
 
 
 def test_spec_render_output_writes_file() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
-        out_path = Path("dist/out.md")
+        out_path = Path("dist/out.html")
         shutil.copy(src, target)
 
         result = runner.invoke(app, ["spec", "render", str(target), "--output", str(out_path)])
         assert result.exit_code == 0
         assert out_path.exists()
-        assert "# Backend Engineer" in out_path.read_text(encoding="utf-8")
+        assert "<!doctype html>" in out_path.read_text(encoding="utf-8").lower()
 
 
-def test_spec_render_html_stdout() -> None:
+def test_spec_render_web_stdout() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
-        result = runner.invoke(app, ["spec", "render", str(target), "--format", "html"])
+        result = runner.invoke(app, ["spec", "render", str(target), "--format", "web"])
         assert result.exit_code == 0
         assert "<!doctype html>" in result.stdout.lower()
-        assert "<h1>Backend Engineer</h1>" in result.stdout
+        assert "Backend Engineer" in result.stdout
         assert "<style>" in result.stdout
 
 
-def test_spec_render_html_each_theme_works() -> None:
+def test_spec_render_web_each_theme_works() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
-        for theme in ["default", "compact", "modern"]:
+        for theme in ["default", "compact", "modern", "classic"]:
             result = runner.invoke(
                 app,
-                ["spec", "render", str(target), "--format", "html", "--theme", theme],
+                ["spec", "render", str(target), "--format", "web", "--theme", theme],
             )
             assert result.exit_code == 0
             assert "<!doctype html>" in result.stdout.lower()
 
 
-def test_spec_render_markdown_theme_compact() -> None:
+def test_spec_render_web_theme_compact() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
@@ -73,13 +73,13 @@ def test_spec_render_markdown_theme_compact() -> None:
 
         result = runner.invoke(
             app,
-            ["spec", "render", str(target), "--format", "markdown", "--theme", "compact"],
+            ["spec", "render", str(target), "--format", "web", "--theme", "compact"],
         )
         assert result.exit_code == 0
-        assert "### Summary" in result.stdout
+        assert "<!doctype html>" in result.stdout.lower()
 
 
-def test_spec_render_html_output_writes_file() -> None:
+def test_spec_render_web_output_writes_file() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
@@ -87,14 +87,14 @@ def test_spec_render_html_output_writes_file() -> None:
         shutil.copy(src, target)
 
         result = runner.invoke(
-            app, ["spec", "render", str(target), "--format", "html", "--output", str(out_path)]
+            app, ["spec", "render", str(target), "--format", "web", "--output", str(out_path)]
         )
         assert result.exit_code == 0
         assert out_path.exists()
         assert "<!doctype html>" in out_path.read_text(encoding="utf-8").lower()
 
 
-def test_spec_render_html_custom_css_appended() -> None:
+def test_spec_render_web_custom_css_appended() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
@@ -109,7 +109,7 @@ def test_spec_render_html_custom_css_appended() -> None:
                 "render",
                 str(target),
                 "--format",
-                "html",
+                "web",
                 "--theme",
                 "modern",
                 "--css",
@@ -120,18 +120,44 @@ def test_spec_render_html_custom_css_appended() -> None:
         assert "main { border-width: 3px; }" in result.stdout
 
 
-def test_spec_render_html_no_css_has_no_style_block() -> None:
+def test_spec_render_web_no_css_has_no_style_block() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
-        result = runner.invoke(app, ["spec", "render", str(target), "--format", "html", "--no-css"])
+        result = runner.invoke(app, ["spec", "render", str(target), "--format", "web", "--no-css"])
         assert result.exit_code == 0
         assert "<style>" not in result.stdout
 
 
-def test_spec_render_css_flags_rejected_for_non_html() -> None:
+def test_spec_render_web_no_css_keeps_custom_css() -> None:
+    with runner.isolated_filesystem():
+        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        target = Path("valid.jobspec.yaml")
+        css = Path("brand.css")
+        css.write_text("main { border-width: 3px; }", encoding="utf-8")
+        shutil.copy(src, target)
+
+        result = runner.invoke(
+            app,
+            [
+                "spec",
+                "render",
+                str(target),
+                "--format",
+                "web",
+                "--no-css",
+                "--css",
+                str(css),
+            ],
+        )
+        assert result.exit_code == 0
+        assert "<style>" in result.stdout
+        assert "main { border-width: 3px; }" in result.stdout
+
+
+def test_spec_render_css_flags_rejected_for_non_web() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
@@ -141,7 +167,31 @@ def test_spec_render_css_flags_rejected_for_non_html() -> None:
 
         result = runner.invoke(
             app,
-            ["spec", "render", str(target), "--format", "markdown", "--css", str(css), "--json"],
+            ["spec", "render", str(target), "--format", "json-ld", "--css", str(css), "--json"],
+        )
+        assert result.exit_code == 2
+        payload = json.loads(result.stdout)
+        assert payload["ok"] is False
+
+
+def test_spec_render_asset_base_url_rejected_for_non_web() -> None:
+    with runner.isolated_filesystem():
+        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        target = Path("valid.jobspec.yaml")
+        shutil.copy(src, target)
+
+        result = runner.invoke(
+            app,
+            [
+                "spec",
+                "render",
+                str(target),
+                "--format",
+                "json-ld",
+                "--asset-base-url",
+                "../assets",
+                "--json",
+            ],
         )
         assert result.exit_code == 2
         payload = json.loads(result.stdout)
@@ -156,7 +206,7 @@ def test_spec_render_css_missing_file_fails() -> None:
 
         result = runner.invoke(
             app,
-            ["spec", "render", str(target), "--format", "html", "--css", "missing.css", "--json"],
+            ["spec", "render", str(target), "--format", "web", "--css", "missing.css", "--json"],
         )
         assert result.exit_code == 3
         payload = json.loads(result.stdout)
@@ -171,22 +221,22 @@ def test_spec_render_invalid_theme_is_controlled() -> None:
 
         result = runner.invoke(
             app,
-            ["spec", "render", str(target), "--format", "html", "--theme", "unknown", "--json"],
+            ["spec", "render", str(target), "--format", "web", "--theme", "unknown", "--json"],
         )
         assert result.exit_code == 1
         payload = json.loads(result.stdout)
         assert payload["ok"] is False
 
 
-def test_spec_render_unsupported_format_fails() -> None:
+def test_spec_render_removed_format_fails_with_migration_message() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
-        result = runner.invoke(app, ["spec", "render", str(target), "--format", "pdf"])
-        assert result.exit_code == 1
-        assert "Unsupported render format" in result.output
+        result = runner.invoke(app, ["spec", "render", str(target), "--format", "html"])
+        assert result.exit_code == 2
+        assert "Use: web or json-ld" in result.output
 
 
 def test_spec_render_json_stdout() -> None:
@@ -195,15 +245,17 @@ def test_spec_render_json_stdout() -> None:
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
-        result = runner.invoke(app, ["spec", "render", str(target), "--format", "json", "--json"])
+        result = runner.invoke(
+            app, ["spec", "render", str(target), "--format", "json-ld", "--json"]
+        )
         assert result.exit_code == 0
         payload = json.loads(result.stdout)
         assert payload["theme"] == "default"
         content = json.loads(payload["content"])
-        assert content["id"] == "backend-engineer"
+        assert content["@type"] == "JobPosting"
 
 
-def test_spec_render_html_escapes_content() -> None:
+def test_spec_render_web_escapes_content() -> None:
     with runner.isolated_filesystem():
         target = Path("unsafe.jobspec.yaml")
         target.write_text(
@@ -225,7 +277,7 @@ components:
             encoding="utf-8",
         )
 
-        result = runner.invoke(app, ["spec", "render", str(target), "--format", "html"])
+        result = runner.invoke(app, ["spec", "render", str(target), "--format", "web"])
         assert result.exit_code == 0
         assert "<script>" not in result.stdout
         assert "&lt;script&gt;alert(1)&lt;/script&gt;" in result.stdout

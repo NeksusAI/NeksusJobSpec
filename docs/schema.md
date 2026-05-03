@@ -1,10 +1,10 @@
 # Schema
 
-Neksus JobSpec v0.2.0 uses a component-based schema (`schema_version: 1`).
+Neksus JobSpec v0.2.x uses a component-based schema (`schema_version: 1`).
 
 ## Breaking compatibility
 
-v0.2.0 is not backward compatible with legacy v0.1.0 top-level content fields.
+v0.2.x is not backward compatible with legacy simple top-level content fields.
 
 ## Required fields
 
@@ -43,7 +43,7 @@ job:
 - Unknown component types fail validation.
 - Unknown variants fail validation.
 - Component IDs must be unique.
-- `page.component_order` must reference existing component IDs.
+- `page.component_order`, when set, must include every component ID exactly once.
 
 ## Versioning
 

@@ -40,8 +40,8 @@ class RenderProfile(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    format: Literal["markdown", "html", "json"] | None = None
-    theme: Literal["default", "compact", "modern"] | None = None
+    format: Literal["web", "json-ld"] | None = None
+    theme: Literal["default", "compact", "modern", "classic"] | None = None
     output_directory: str | None = None
     sections: RenderSections | None = None
 
@@ -50,9 +50,9 @@ class ProjectConfig(BaseModel):
     version: int = 1
     spec_directory: str = "jobspecs"
     output_directory: str = "dist"
-    default_format: Literal["markdown", "html", "json"] = "markdown"
+    default_format: Literal["web", "json-ld"] = "web"
     strict_validation: bool = False
-    default_theme: Literal["default", "compact", "modern"] = "default"
+    default_theme: Literal["default", "compact", "modern", "classic"] = "default"
     render_profiles: dict[str, RenderProfile] = Field(default_factory=dict)
 
 

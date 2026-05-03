@@ -29,9 +29,8 @@ neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml --strict
 ## 4. Render
 
 ```bash
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format markdown --output dist/backend-engineer.md
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --theme modern --output dist/backend-engineer.html
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format json --output dist/backend-engineer.json
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web --output dist/backend-engineer.html
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format json-ld --output dist/backend-engineer.json
 ```
 
 ## 5. Project checks
@@ -45,8 +44,8 @@ neksus-jobspec check --strict
 ## 6. Batch render
 
 ```bash
-neksus-jobspec render --format markdown
-neksus-jobspec render --format html --theme modern
+neksus-jobspec render --format web
+neksus-jobspec render --format web --theme modern
 ```
 
 For all commands and options, see [CLI Reference](cli-reference.md).

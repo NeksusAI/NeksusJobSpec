@@ -34,7 +34,7 @@ def test_integration_init_and_validate_flow(tmp_path: Path) -> None:
 
 
 @pytest.mark.integration
-def test_integration_render_html_with_css_flow(tmp_path: Path) -> None:
+def test_integration_render_web_with_css_flow(tmp_path: Path) -> None:
     subprocess.run([str(CLI_BIN), "init", "--empty"], cwd=tmp_path, check=True)
     jobspec = tmp_path / "jobspecs" / "backend-engineer.jobspec.yaml"
     jobspec.parent.mkdir(exist_ok=True)
@@ -48,7 +48,7 @@ def test_integration_render_html_with_css_flow(tmp_path: Path) -> None:
             "render",
             str(jobspec),
             "--format",
-            "html",
+            "web",
             "--theme",
             "modern",
             "--css",
@@ -164,12 +164,12 @@ components:
         """version: 1
 spec_directory: jobspecs
 output_directory: dist
-default_format: markdown
+default_format: web
 strict_validation: false
 default_theme: default
 render_profiles:
   public:
-    format: html
+    format: web
     theme: modern
     output_directory: dist/public
     sections:

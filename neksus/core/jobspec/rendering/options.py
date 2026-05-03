@@ -6,8 +6,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-RenderFormat = Literal["markdown", "html", "json"]
-RenderTheme = Literal["default", "compact", "modern"]
+RenderFormat = Literal["web", "json-ld"]
+RenderTheme = Literal["default", "compact", "modern", "classic"]
 
 
 class RenderSections(BaseModel):
@@ -23,8 +23,9 @@ class RenderSections(BaseModel):
 class RenderOptions(BaseModel):
     """Normalized render options for format renderers."""
 
-    format: RenderFormat = "markdown"
+    format: RenderFormat = "web"
     theme: RenderTheme = "default"
     embed_css: bool = True
     custom_css: str | None = None
+    asset_base_url: str | None = None
     sections: RenderSections = Field(default_factory=RenderSections)

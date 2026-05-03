@@ -1,10 +1,11 @@
 # JobSpec Format
 
-Neksus v0.2.0 uses a component-based JobSpec schema for job-detail pages.
+Neksus v0.2.x uses a component-based JobSpec schema for job-detail pages.
 
 ## Breaking compatibility note
 
-`0.2.0` is not backward compatible with `0.1.0` JobSpec files that use legacy top-level content fields as the primary model.
+`0.2.x` is not backward compatible with `0.1.0` or transitional early `0.2.0` legacy-style payloads.
+Legacy top-level content fields are removed from the accepted schema.
 
 ## Required top-level fields
 
@@ -29,6 +30,8 @@ Shared fields:
 - optional `attributes`
 - optional `visibility`
 - optional `render_if`
+- `placement`: `main | sidebar | fullwidth`
+- optional `container`
 
 Supported component types:
 
@@ -44,11 +47,17 @@ Supported component types:
 - `cta`
 - `media`
 - `application_process`
+- `header_brand`
+- `hero_banner`
+- `meta_panel`
+- `social_links`
+- `location_map`
+- `footer_brand`
 
 ## Ordering rules
 
 - Component IDs must be unique per file.
-- `page.component_order` must only reference existing component IDs.
+- If `page.component_order` is set, it must include each component ID exactly once.
 
 ## Security notes
 
@@ -58,3 +67,16 @@ Supported component types:
 - JS config is trusted/local-only and inline JS requires explicit allow.
 - URL fields accept only safe schemes (`http`, `https`, `mailto`, `tel`) or safe relative paths.
 - Component `attributes` are restricted to safe keys (`data-*`, `aria-*`, `id`, `role`, `title`).
+
+## Web rendering knobs
+
+`rendering.web` supports:
+
+- `facts_position`: `sidebar | topbar | grid`
+- `repeat_cta`: boolean
+- `show_top_apply`: boolean
+- `show_share_links`: boolean
+- `show_print_link`: boolean
+- `asset_base_url`: optional URL/path prefix for relative component asset URLs
+- `labels`: optional localized UI labels:
+  - `share`, `print`, `phone`, `mobile`, `email`, `open_map`, `deadline`

@@ -14,6 +14,9 @@ class NormalizedJobPage:
     apply_label: str | None
     apply_url: str | None
     components: list[Component]
+    fullwidth_components: list[Component]
+    main_components: list[Component]
+    sidebar_components: list[Component]
 
 
 def normalize_jobspec_for_render(spec: JobSpec) -> NormalizedJobPage:
@@ -28,12 +31,19 @@ def normalize_jobspec_for_render(spec: JobSpec) -> NormalizedJobPage:
         }
         components = sorted(components, key=lambda item: order.get(item.id, len(order) + 1000))
 
+    fullwidth_components = [item for item in components if item.placement == "fullwidth"]
+    sidebar_components = [item for item in components if item.placement == "sidebar"]
+    main_components = [item for item in components if item.placement == "main"]
+
     return NormalizedJobPage(
         title=spec.job.title,
         intro=spec.job.intro,
         apply_label=apply_label,
         apply_url=apply_url,
         components=components,
+        fullwidth_components=fullwidth_components,
+        main_components=main_components,
+        sidebar_components=sidebar_components,
     )
 
 

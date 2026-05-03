@@ -11,18 +11,20 @@ Core CLI Commands
 - neksus-jobspec init
 - neksus-jobspec spec new <name>
 - neksus-jobspec spec validate <path>
-- neksus-jobspec spec render <path> --format markdown|html|json
+- neksus-jobspec spec render <path> --format web|json-ld
 - neksus-jobspec check
 
 Public Python API
 - from neksus_jobspec import JobSpec, load_jobspec, validate_jobspec, render_jobspec
 
-v0.2.0 Composition Model
-- Job-detail pages can be composed from controlled, typed components.
-- Assistants should use documented `components` types and variants only.
-- Assistants should not invent new component types or variants.
+v0.2.x Composition Model
+- Job-detail pages are composed from controlled, typed components.
+- Assistants must use documented `components` types, variants, and placement values only.
+- Assistants must not invent unsupported component types or variants.
 - Validate before render.
-- Prefer JSON render output for automation.
+- Prefer JSON-LD render output for automation.
+- Legacy simple-schema JobSpec payloads are removed in v0.2.x.
+- For web output portability, assistants may set `rendering.web.asset_base_url` (or CLI `--asset-base-url`) when relative media paths are used.
 
 Security and boundaries
 - Custom CSS is supported.

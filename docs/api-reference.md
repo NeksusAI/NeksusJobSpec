@@ -10,7 +10,7 @@ See [Versioning and Compatibility Policy](versioning.md).
 
 ## `JobSpec`
 
-Purpose: validated v0.2.0 component-based JobSpec model.
+Purpose: validated v0.2.x component-based JobSpec model.
 
 ## `load_jobspec(path)`
 
@@ -56,16 +56,17 @@ spec = validate_jobspec(
 )
 ```
 
-## `render_jobspec(spec_or_path, format="markdown", theme=None, output=None, css=None)`
+## `render_jobspec(spec_or_path, format="web", theme=None, output=None, css=None, asset_base_url=None)`
 
-Purpose: render validated JobSpec as markdown/html/json.
+Purpose: render validated JobSpec as web/json-ld.
 
 Arguments:
 - `spec_or_path: JobSpec | str | pathlib.Path`
-- `format: "markdown" | "html" | "json"`
+- `format: "web" | "json-ld"`
 - `theme: str | None`
 - `output: str | pathlib.Path | None`
 - `css: str | None`
+- `asset_base_url: str | None`
 
 Returns: `str`
 

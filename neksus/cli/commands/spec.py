@@ -169,14 +169,29 @@ def spec_validate(
 @app.command("render")
 def spec_render(
     path: Annotated[Path, typer.Argument(help="Path to a JobSpec YAML file.")],
-    format: Annotated[str, typer.Option("--format", help="Render format.")] = "markdown",
+    format: Annotated[str, typer.Option("--format", help="Render format.")] = "web",
     theme: Annotated[str | None, typer.Option("--theme", help="Built-in render theme.")] = None,
+    template: Annotated[
+        str | None,
+        typer.Option("--template", help="Web template preset (e.g. modern, corporate, minimal)."),
+    ] = None,
+    custom_template_dir: Annotated[
+        Path | None,
+        typer.Option("--custom-template-dir", help="Path to a custom template directory."),
+    ] = None,
     css: Annotated[
-        Path | None, typer.Option("--css", help="Append custom CSS file (HTML only).")
+        Path | None, typer.Option("--css", help="Append custom CSS file (web only).")
     ] = None,
     no_css: Annotated[
-        bool, typer.Option("--no-css", help="Disable embedded CSS (HTML only).")
+        bool, typer.Option("--no-css", help="Disable embedded CSS (web only).")
     ] = False,
+    asset_base_url: Annotated[
+        str | None,
+        typer.Option(
+            "--asset-base-url",
+            help="Prefix relative component asset URLs in web output (e.g. ../examples/assets).",
+        ),
+    ] = None,
     output: Annotated[
         Path | None, typer.Option("--output", help="Write output to this path.")
     ] = None,
@@ -188,8 +203,15 @@ def spec_render(
 ) -> None:
     """Render a JobSpec."""
     try:
-        if (css is not None or no_css) and format != "html":
-            raise typer.BadParameter("--css and --no-css are only supported for --format html")
+        if (css is not None or no_css or asset_base_url is not None) and format != "web":
+            raise typer.BadParameter(
+                "--css, --no-css, and --asset-base-url are only supported for --format web"
+            )
+        if format not in {"web", "json-ld"}:
+            raise typer.BadParameter(
+                "Unsupported render format. Use: web or json-ld",
+                param_hint="--format",
+            )
         # Load strongly typed model first.
         spec = load_jobspec(path)
         validation = validate_spec_model(spec)
@@ -208,6 +230,17 @@ def spec_render(
             raise typer.Exit(1)
 
         selected_theme = _resolve_default_theme(theme)
+        if theme is not None:
+            spec.rendering.web.template = theme
+        if template is not None:
+            spec.rendering.web.template = template
+        if custom_template_dir is not None:
+            if not custom_template_dir.exists() or not custom_template_dir.is_dir():
+                raise FileSystemError(f"Custom template directory not found: {custom_template_dir}")
+            manifest = custom_template_dir / "template.yaml"
+            if not manifest.exists():
+                raise FileSystemError(f"Custom template missing manifest: {manifest}")
+            spec.rendering.web.custom_template_dir = str(custom_template_dir)
         custom_css: str | None = None
         if css is not None:
             try:
@@ -222,12 +255,24 @@ def spec_render(
             theme=selected_theme,
             embed_css=not no_css,
             custom_css=custom_css,
+            asset_base_url=asset_base_url,
         )
 
         if output:
             # File output mode writes rendered content to disk.
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(rendered, encoding="utf-8")
+            if format == "web":
+                output.with_suffix(".js").write_text(
+                    "document.addEventListener('click',(e)=>{const t=e.target;"
+                    "if(t&&t.matches('[data-action=\"print\"]'))window.print();"
+                    "if(t&&t.matches('[data-action=\"share\"]')){"
+                    "if(navigator.share){navigator.share({url:location.href});}}});",
+                    encoding="utf-8",
+                )
+                output.with_suffix(".css").write_text(
+                    spec.rendering.web.css.inline, encoding="utf-8"
+                )
             if json:
                 print_json(
                     {
@@ -236,6 +281,7 @@ def spec_render(
                         "format": format,
                         "theme": selected_theme,
                         "output": str(output),
+                        "source_format": format,
                     }
                 )
             else:

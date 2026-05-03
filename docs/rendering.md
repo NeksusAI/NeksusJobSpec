@@ -1,29 +1,29 @@
 # Rendering
 
-Neksus v0.2.0 renders component-based JobSpecs to `markdown`, `html`, and `json`.
+Neksus v0.2.x renders component-based JobSpecs to `web` and `json-ld`.
 
 ## Input model
 
-Rendering expects a v0.2.0 component-based JobSpec (`job` + `components`).
+Rendering expects a v0.2.x component JobSpec (`page` + `job` + `components`).
 
-## Markdown
+## Web
 
-- Renders title/intro and component content in resolved order.
-- Ignores visual-only styling variants.
-- Does not render CSS or JS.
-
-## HTML
-
-- Renders component layout and preserves component order.
-- Supports facts positioning via layout classes.
+- Renders component order with explicit regions:
+  - `.jobspec-fullwidth`
+  - `.jobspec-main`
+  - `.jobspec-sidebar`
+- Maps components by `placement` (`fullwidth`, `main`, `sidebar`).
 - Supports apply CTA, optional repeated CTA, share links, and print link.
-- Supports CSS tokens, inline CSS, JS file includes.
-- Inline JS is emitted only when `rendering.js.allow_inline: true`.
+- Supports `rendering.web.show_top_apply` to hide/show the top-level apply button.
+- Supports CSS tokens and inline CSS.
+- Supports `rendering.web.asset_base_url` (or CLI `--asset-base-url`) to prefix relative component media/asset URLs in generated HTML.
+- Supports `rendering.web.labels` for localized action/contact labels (`share`, `print`, `phone`, `mobile`, `email`, `open_map`, `deadline`).
+- Inline JS is not part of the default v0.2.x rendering contract.
 - Print links are rendered without inline event-handler JavaScript.
 
-## JSON
+## JSON-LD
 
-- Outputs normalized validated payload with `page`, `job`, `components`, and `rendering`.
+- Outputs `schema.org` `JobPosting` JSON-LD from the validated model.
 
 ## Security boundaries
 

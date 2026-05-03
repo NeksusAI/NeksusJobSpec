@@ -30,7 +30,7 @@ Before considering any task complete:
 - During release preparation, move relevant entries from `[Unreleased]` into the target release section.
 - Release notes should be concise and grouped under Added, Changed, Deprecated, Removed, Fixed, and Security when relevant.
 - Do not claim a release date unless it is intentionally set for the release.
-- v0.2.0 introduces controlled page components for job-detail composition and removes v0.1.0 legacy schema compatibility.
+- v0.2.x introduces controlled page components for job-detail composition and removes legacy schema compatibility.
 
 ## What is Neksus JobSpec?
 Neksus JobSpec is a local-first CLI and Python package for creating, validating, inspecting, and rendering structured job specification files.
@@ -258,7 +258,7 @@ Default config:
 version: 1
 spec_directory: jobspecs
 output_directory: dist
-default_format: markdown
+default_format: web
 strict_validation: false
 default_theme: default
 render_profiles: {}
@@ -282,13 +282,12 @@ Rendering Rules
 
 Supported formats:
 
-markdown
-html
-json
+web
+json-ld
 
 Renderer function:
 
-def render_jobspec(spec: JobSpec, format: str = "markdown") -> str:
+def render_jobspec(spec: JobSpec, format: str = "web") -> str:
     ...
 
 Markdown output should be clean and human-readable.
@@ -302,7 +301,7 @@ Do not render:
 
 Unknown formats must raise UnsupportedFormatError.
 
-Do not add PDF, DOCX, ATS, or web rendering in the initial CLI implementation.
+For v0.2.x, supported rendering formats are web and json-ld.
 
 Error Handling
 
