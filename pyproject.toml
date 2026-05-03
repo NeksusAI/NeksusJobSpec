@@ -1,10 +1,10 @@
 [project]
 name = "neksus-jobspec"
 version = "0.1.0"
-description = "Local-first CLI for Neksus JobSpec files"
+description = "Local-first CLI and Python package for Neksus JobSpec files"
 readme = "README.md"
 license = "AGPL-3.0-or-later"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 authors = [
   { name = "Neksus Team" },
 ]
@@ -13,6 +13,7 @@ classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -31,6 +32,7 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/NeksusAI/NeksusJobSpec"
 Repository = "https://github.com/NeksusAI/NeksusJobSpec"
+Documentation = "https://docs.jobspec.neksusai.com"
 Issues = "https://github.com/NeksusAI/NeksusJobSpec/issues"
 
 [project.optional-dependencies]
@@ -38,27 +40,35 @@ dev = [
   "pytest>=8.0.0",
   "ruff>=0.5.0",
   "mypy>=1.10.0",
+  "build>=1.2.0",
+  "twine>=5.0.0",
 ]
 
 [project.scripts]
 neksus-jobspec = "neksus.cli.main:app"
 
 [build-system]
-requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
 
-[tool.setuptools]
-include-package-data = true
+[tool.hatch.build.targets.wheel]
+packages = ["neksus", "src/neksus_jobspec"]
 
-[tool.setuptools.packages.find]
-include = ["neksus*"]
+[tool.hatch.build.targets.sdist]
+include = [
+  "/neksus",
+  "/src/neksus_jobspec",
+  "/README.md",
+  "/LICENSE",
+  "/pyproject.toml",
+]
 
-[tool.setuptools.package-data]
-neksus = ["py.typed"]
+[tool.hatch.build.targets.wheel.force-include]
+"neksus/py.typed" = "neksus/py.typed"
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py310"
 
 [tool.pytest.ini_options]
 addopts = "-q"

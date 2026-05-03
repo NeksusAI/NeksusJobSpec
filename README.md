@@ -7,13 +7,25 @@
 
 Neksus JobSpec is an open-source, local-first CLI and Python package for creating, validating, and rendering structured job specifications written in YAML.
 
-Documentation: https://docs.jobspec.neksusai.com/
-
-Documentation can later be mapped to a custom domain through GitHub Pages settings and DNS.
-
 ## Status
 
 Current focus is a stable CLI and reusable core library. Hosted API and MCP server capabilities are planned, not yet implemented.
+
+## Installation
+
+Once published:
+
+```bash
+pip install neksus-jobspec
+```
+
+## Import example
+
+```python
+import neksus_jobspec
+
+print(neksus_jobspec.__version__)
+```
 
 ## Basic usage
 
@@ -34,6 +46,32 @@ uv run pytest
 ./scripts/smoke.sh
 ```
 
+## Development build commands
+
+```bash
+python -m pip install --upgrade build twine
+python -m build
+python -m twine check dist/*
+python -m pip install --force-reinstall dist/neksus_jobspec-0.1.0-py3-none-any.whl
+python -c "import neksus_jobspec; print(neksus_jobspec.__version__)"
+```
+
+## Release process
+
+Create and push a semantic version tag to trigger publishing:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+You can also run the publish workflow manually from GitHub Actions (`workflow_dispatch`).
+
+## PyPI publishing notes
+
+Publishing is configured through GitHub Actions Trusted Publishing (OIDC) in `.github/workflows/publish-pypi.yml`.
+No PyPI API token is used by the workflow.
+
 ## License
 
 Licensed under AGPL-3.0-or-later. See [LICENSE](LICENSE).
@@ -41,7 +79,6 @@ Licensed under AGPL-3.0-or-later. See [LICENSE](LICENSE).
 ## Contribution policy
 
 This repository is owner-maintained and does not use a public external contribution workflow.
-
 
 ## Testing Strategy
 
