@@ -4,102 +4,185 @@ from __future__ import annotations
 
 import html
 
-from neksus.core.jobspec.models import JobSpec
+from neksus.core.jobspec.models import (
+    ApplicationProcessComponent,
+    BenefitsComponent,
+    CompanyProfileComponent,
+    ContactComponent,
+    CtaComponent,
+    FactsComponent,
+    HeroComponent,
+    LegalComponent,
+    ListComponent,
+    MediaComponent,
+    QuoteComponent,
+    RichTextComponent,
+)
+from neksus.core.jobspec.rendering.normalize import normalize_jobspec_for_render
 from neksus.core.jobspec.rendering.options import RenderOptions
 from neksus.core.jobspec.rendering.themes import get_theme_css
 
 
-def _human_location(spec: JobSpec) -> str | None:
-    if spec.location is None:
-        return None
-    base = spec.location.type.capitalize()
-    parts = [item for item in [spec.location.city, spec.location.country] if item]
-    if parts:
-        return f"{base} ({', '.join(parts)})"
-    return base
+def _render_attrs(class_name: str | None, attrs: dict[str, str]) -> str:
+    parts: list[str] = []
+    if class_name:
+        parts.append(f'class="{html.escape(class_name)}"')
+    for key, value in attrs.items():
+        parts.append(f'{html.escape(key)}="{html.escape(value)}"')
+    return (" " + " ".join(parts)) if parts else ""
 
 
-def _human_employment(spec: JobSpec) -> str | None:
-    if spec.employment is None:
-        return None
-    return spec.employment.type.replace("-", " ").title()
-
-
-def _html_list(items: list[str]) -> str:
-    rendered_items = "\n".join(f"      <li>{html.escape(item)}</li>" for item in items)
-    return "<ul>\n" + rendered_items + "\n    </ul>"
-
-
-def _style_block(options: RenderOptions) -> str:
+def _style_block(spec, options: RenderOptions) -> str:
     if not options.embed_css:
         return ""
     css = get_theme_css(options.theme)
+    css_tokens = spec.rendering.css.tokens.model_dump()
+    token_lines = [
+        f"  --{key.replace('_', '-')}: {value};" for key, value in css_tokens.items() if value
+    ]
+    token_block = ""
+    if token_lines:
+        token_block = ":root {\n" + "\n".join(token_lines) + "\n}\n\n"
+
+    composed_css = spec.rendering.css.inline.strip()
     if options.custom_css:
-        css = f"{css}\n\n{options.custom_css.strip()}"
-    return "  <style>\n" + "\n".join(f"    {line}" for line in css.splitlines()) + "\n  </style>\n"
+        composed_css = f"{composed_css}\n{options.custom_css.strip()}".strip()
+    merged = f"{token_block}{css}"
+    if composed_css:
+        merged = f"{merged}\n\n{composed_css}"
+    return (
+        "  <style>\n" + "\n".join(f"    {line}" for line in merged.splitlines()) + "\n  </style>\n"
+    )
 
 
-def render_html(spec: JobSpec, options: RenderOptions) -> str:
+def _render_component(component) -> str:
+    attrs = _render_attrs(component.class_name, component.attributes)
+    classes = (
+        f"component component--{component.type} component--{component.type}-{component.variant}"
+    )
+    if component.class_name:
+        classes = f"{classes} {component.class_name}"
+    opening = f'<section class="{html.escape(classes)}" data-component-id="{html.escape(component.id)}"{attrs}>'
+
+    head = f"<h2>{html.escape(component.title)}</h2>" if component.title else ""
+
+    if isinstance(component, FactsComponent):
+        items = "".join(
+            f"<li><strong>{html.escape(item.label)}:</strong> {html.escape(item.value)}</li>"
+            for item in component.items
+        )
+        return f"{opening}{head}<ul>{items}</ul></section>"
+    if isinstance(component, HeroComponent):
+        title = f"<h2>{html.escape(component.title)}</h2>" if component.title else ""
+        subtitle = f"<p>{html.escape(component.subtitle)}</p>" if component.subtitle else ""
+        intro = f"<p>{html.escape(component.intro)}</p>" if component.intro else ""
+        cta = ""
+        if component.cta:
+            cta = (
+                f'<p><a class="cta-link" href="{html.escape(component.cta.url)}">'
+                f"{html.escape(component.cta.label)}</a></p>"
+            )
+        return f"{opening}{title}{subtitle}{intro}{cta}</section>"
+    if isinstance(component, RichTextComponent):
+        return f"{opening}{head}<p>{html.escape(component.body)}</p></section>"
+    if isinstance(component, ListComponent):
+        tag = "ol" if component.variant == "numbered" else "ul"
+        items = "".join(
+            f"<li>{('[ ] ' if component.variant == 'checklist' else '')}{html.escape(item)}</li>"
+            for item in component.items
+        )
+        return f"{opening}{head}<{tag}>{items}</{tag}></section>"
+    if isinstance(component, QuoteComponent):
+        author = ""
+        if component.author:
+            suffix = f", {component.author_title}" if component.author_title else ""
+            author = f"<cite>{html.escape(component.author + suffix)}</cite>"
+        return f"{opening}<blockquote>{html.escape(component.quote)}</blockquote>{author}</section>"
+    if isinstance(component, BenefitsComponent):
+        items = "".join(f"<li>{html.escape(item)}</li>" for item in component.items)
+        return f"{opening}{head}<ul>{items}</ul></section>"
+    if isinstance(component, ContactComponent):
+        body = [f"<p><strong>{html.escape(component.name)}</strong></p>"]
+        if component.role:
+            body.append(f"<p>{html.escape(component.role)}</p>")
+        if component.phone:
+            body.append(f"<p>Phone: {html.escape(component.phone)}</p>")
+        if component.mobile:
+            body.append(f"<p>Mobile: {html.escape(component.mobile)}</p>")
+        if component.email:
+            body.append(f"<p>Email: {html.escape(component.email)}</p>")
+        return f"{opening}{head}{''.join(body)}</section>"
+    if isinstance(component, CompanyProfileComponent):
+        return f"{opening}{head}<p>{html.escape(component.body)}</p></section>"
+    if isinstance(component, LegalComponent):
+        return f"{opening}{head}<p>{html.escape(component.body)}</p></section>"
+    if isinstance(component, CtaComponent):
+        return (
+            f'{opening}{head}<p><a class="cta-link" href="{html.escape(component.url)}">'
+            f"{html.escape(component.label)}</a></p></section>"
+        )
+    if isinstance(component, MediaComponent):
+        caption = f"<p>{html.escape(component.caption)}</p>" if component.caption else ""
+        return (
+            f'{opening}{head}<p><a href="{html.escape(component.url)}">{html.escape(component.url)}</a></p>'
+            f"{caption}</section>"
+        )
+    if isinstance(component, ApplicationProcessComponent):
+        deadline = (
+            f"<p><strong>Deadline:</strong> {html.escape(component.deadline)}</p>"
+            if component.deadline
+            else ""
+        )
+        body = f"<p>{html.escape(component.body)}</p>" if component.body else ""
+        steps = ""
+        if component.steps:
+            steps = (
+                "<ol>"
+                + "".join(f"<li>{html.escape(step)}</li>" for step in component.steps)
+                + "</ol>"
+            )
+        return f"{opening}{head}{deadline}{body}{steps}</section>"
+
+    return f"{opening}{head}</section>"
+
+
+def render_html(spec, options: RenderOptions) -> str:
     """Render a JobSpec into semantic single-file HTML."""
-    title = html.escape(spec.title)
-    summary = html.escape(spec.summary)
+    normalized = normalize_jobspec_for_render(spec)
+    html_settings = spec.rendering.html
 
-    details_items: list[str] = []
-    if spec.department:
-        details_items.append(f"<strong>Department:</strong> {html.escape(spec.department)}")
-    if spec.level:
-        details_items.append(f"<strong>Level:</strong> {html.escape(spec.level)}")
-    location = _human_location(spec)
-    if location:
-        details_items.append(f"<strong>Location:</strong> {html.escape(location)}")
-    employment = _human_employment(spec)
-    if employment:
-        details_items.append(f"<strong>Employment:</strong> {html.escape(employment)}")
+    title = html.escape(normalized.title)
+    intro = f"<p>{html.escape(normalized.intro)}</p>" if normalized.intro else ""
 
-    details_section = ""
-    if options.sections.details and details_items:
-        details_lines = "\n".join(f"      <li>{item}</li>" for item in details_items)
-        details_section = (
-            "  <section>\n"
-            "    <h2>Details</h2>\n"
-            "    <ul>\n"
-            f"{details_lines}\n"
-            "    </ul>\n"
-            "  </section>\n"
+    apply = ""
+    if normalized.apply_label and normalized.apply_url:
+        apply = (
+            f'<p><a class="cta-link" href="{html.escape(normalized.apply_url)}">'
+            f"{html.escape(normalized.apply_label)}</a></p>"
         )
 
-    nice_to_have_section = ""
-    if options.sections.nice_to_have and spec.nice_to_have:
-        nice_to_have_section = (
-            "  <section>\n"
-            "    <h2>Nice to Have</h2>\n"
-            f"    {_html_list(spec.nice_to_have)}\n"
-            "  </section>\n"
-        )
+    share_links = ""
+    if html_settings.show_share_links:
+        share_links = '<p class="share-links"><a href="#">Share</a></p>'
 
-    summary_section = ""
-    if options.sections.summary:
-        summary_section = (
-            f"    <section>\n      <h2>Summary</h2>\n      <p>{summary}</p>\n    </section>\n"
-        )
+    print_link = ""
+    if html_settings.show_print_link:
+        print_link = '<p class="print-link"><a href="#" onclick="window.print(); return false;">Print</a></p>'
 
-    responsibilities_section = ""
-    if options.sections.responsibilities:
-        responsibilities_section = (
-            "    <section>\n"
-            "      <h2>Responsibilities</h2>\n"
-            f"    {_html_list(spec.responsibilities)}\n"
-            "    </section>\n"
-        )
+    component_html = "\n".join(_render_component(component) for component in normalized.components)
 
-    requirements_section = ""
-    if options.sections.requirements:
-        requirements_section = (
-            "    <section>\n"
-            "      <h2>Requirements</h2>\n"
-            f"    {_html_list(spec.requirements)}\n"
-            "    </section>\n"
-        )
+    repeated_cta = ""
+    if html_settings.repeat_cta and apply:
+        repeated_cta = f'<footer class="repeat-cta">{apply}</footer>'
+
+    js_files = "\n".join(
+        f'  <script src="{html.escape(path)}"></script>' for path in spec.rendering.js.files
+    )
+    inline_js = ""
+    if spec.rendering.js.allow_inline and spec.rendering.js.inline.strip():
+        inline_js = f"  <script>\n{spec.rendering.js.inline.strip()}\n  </script>"
+
+    layout_class = f"layout-facts-{html.escape(html_settings.facts_position)}"
 
     return (
         "<!doctype html>\n"
@@ -108,17 +191,20 @@ def render_html(spec: JobSpec, options: RenderOptions) -> str:
         '  <meta charset="utf-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1">\n'
         f"  <title>{title}</title>\n"
-        f"{_style_block(options)}"
+        f"{_style_block(spec, options)}"
         "</head>\n"
-        "<body>\n"
+        f'<body class="{layout_class}">\n'
         "  <main>\n"
         f"    <h1>{title}</h1>\n"
-        f"{summary_section}"
-        f"{details_section}"
-        f"{responsibilities_section}"
-        f"{requirements_section}"
-        f"{nice_to_have_section}"
+        f"    {intro}\n"
+        f"    {apply}\n"
+        f"    {share_links}\n"
+        f"    {print_link}\n"
+        f"    {component_html}\n"
+        f"    {repeated_cta}\n"
         "  </main>\n"
+        f"{js_files}\n"
+        f"{inline_js}\n"
         "</body>\n"
         "</html>\n"
     )

@@ -1,53 +1,34 @@
 # Python API
 
-## Installation
-
-```bash
-pip install neksus-jobspec
-```
-
-## Stable imports
+Stable public API is exposed from `neksus_jobspec`:
 
 ```python
-from neksus_jobspec import JobSpec, load_jobspec, render_jobspec, validate_jobspec
+from neksus_jobspec import JobSpec, load_jobspec, validate_jobspec, render_jobspec
 ```
 
-For detailed function contracts, see the [Public API Reference](api-reference.md).
-For compatibility guarantees, see [Versioning and Compatibility Policy](versioning.md).
+See [API Reference](api-reference.md) and [Versioning and Compatibility Policy](versioning.md).
 
-## Load and validate
+## Component page example
 
 ```python
-from neksus_jobspec import load_jobspec, validate_jobspec
+from neksus_jobspec import validate_jobspec, render_jobspec
 
-spec = load_jobspec("jobspecs/backend-engineer.jobspec.yaml")
-validated = validate_jobspec(spec.model_dump())
+data = {
+    "schema_version": 1,
+    "id": "backend-engineer",
+    "page": {"layout": "job_detail"},
+    "job": {"title": "Backend Engineer", "intro": "Build reliable systems."},
+    "components": [
+        {
+            "type": "list",
+            "id": "requirements",
+            "variant": "bullets",
+            "title": "Requirements",
+            "items": ["Python"],
+        }
+    ],
+}
+
+spec = validate_jobspec(data)
+print(render_jobspec(spec, format="json"))
 ```
-
-## Render to string
-
-```python
-from neksus_jobspec import render_jobspec
-
-markdown = render_jobspec("jobspecs/backend-engineer.jobspec.yaml", format="markdown")
-html = render_jobspec("jobspecs/backend-engineer.jobspec.yaml", format="html", theme="modern")
-```
-
-## Render to file
-
-```python
-from neksus_jobspec import render_jobspec
-
-render_jobspec(
-    "jobspecs/backend-engineer.jobspec.yaml",
-    format="html",
-    theme="modern",
-    output="dist/backend-engineer.html",
-)
-```
-
-## Workflow note
-
-The CLI remains the primary workflow. The Python API is stable for scripts, local automation, assistant tooling, and future MCP integration work.
-
-Hosted API and MCP server implementations are planned, not available yet.

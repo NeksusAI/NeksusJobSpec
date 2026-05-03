@@ -28,12 +28,23 @@ def test_render_batch_uses_jobspec_id_for_output_file() -> None:
         Path("jobspecs/weird-name.jobspec.yaml").write_text(
             """schema_version: 1
 id: canonical-id
-title: Canonical Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
+page:
+  layout: job_detail
+job:
+  title: Canonical Role
+  intro: Summary
+components:
+  - type: hero
+    id: hero
+    variant: default
+    title: Canonical Role
+    intro: Summary
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - One
 """,
             encoding="utf-8",
         )
@@ -50,11 +61,16 @@ def test_render_batch_json_summary_and_invalid_spec_exit_one() -> None:
         Path("jobspecs/invalid.jobspec.yaml").write_text(
             """schema_version: 1
 id: invalid
-title: Invalid
-summary: Summary
-responsibilities:
-  - One
-requirements: []
+page:
+  layout: job_detail
+job:
+  title: Invalid
+components:
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items: []
 """,
             encoding="utf-8",
         )
@@ -78,12 +94,23 @@ def test_render_batch_clean_removes_old_outputs() -> None:
         Path("jobspecs/role.jobspec.yaml").write_text(
             """schema_version: 1
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
+page:
+  layout: job_detail
+job:
+  title: Role
+  intro: Summary
+components:
+  - type: hero
+    id: hero
+    variant: default
+    title: Role
+    intro: Summary
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - One
 """,
             encoding="utf-8",
         )
@@ -102,12 +129,23 @@ def test_render_batch_html_custom_css_and_no_css() -> None:
         Path("jobspecs/role.jobspec.yaml").write_text(
             """schema_version: 1
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
+page:
+  layout: job_detail
+job:
+  title: Role
+  intro: Summary
+components:
+  - type: hero
+    id: hero
+    variant: default
+    title: Role
+    intro: Summary
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - One
 """,
             encoding="utf-8",
         )
@@ -134,12 +172,23 @@ def test_render_batch_profile_and_cli_overrides() -> None:
         Path("jobspecs/role.jobspec.yaml").write_text(
             """schema_version: 1
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
+page:
+  layout: job_detail
+job:
+  title: Role
+  intro: Summary
+components:
+  - type: hero
+    id: hero
+    variant: default
+    title: Role
+    intro: Summary
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - One
 nice_to_have:
   - Bonus
 """,

@@ -2,64 +2,131 @@
 
 from __future__ import annotations
 
-from neksus.core.jobspec.models import JobSpec
+from neksus.core.jobspec.models import (
+    ApplicationProcessComponent,
+    BenefitsComponent,
+    CompanyProfileComponent,
+    ContactComponent,
+    CtaComponent,
+    FactsComponent,
+    HeroComponent,
+    LegalComponent,
+    ListComponent,
+    MediaComponent,
+    QuoteComponent,
+    RichTextComponent,
+)
+from neksus.core.jobspec.rendering.normalize import normalize_jobspec_for_render
 from neksus.core.jobspec.rendering.options import RenderOptions
 
 
-def _human_location(spec: JobSpec) -> str | None:
-    if spec.location is None:
-        return None
-    base = spec.location.type.capitalize()
-    parts = [item for item in [spec.location.city, spec.location.country] if item]
-    if parts:
-        return f"{base} ({', '.join(parts)})"
-    return base
+def _append_heading(lines: list[str], title: str | None, heading: str) -> None:
+    if title:
+        lines.extend(["", f"{heading} {title}", ""])
 
 
-def _human_employment(spec: JobSpec) -> str | None:
-    if spec.employment is None:
-        return None
-    return spec.employment.type.replace("-", " ").title()
+def render_markdown(spec, options: RenderOptions) -> str:
+    """Render a JobSpec to markdown."""
+    normalized = normalize_jobspec_for_render(spec)
+    heading = "###" if options.theme == "compact" else "##"
 
+    lines: list[str] = [f"# {normalized.title}"]
+    if normalized.intro and options.sections.summary:
+        lines.extend(["", f"{heading} Summary", "", normalized.intro])
 
-def render_markdown(spec: JobSpec, options: RenderOptions) -> str:
-    """Render a JobSpec to markdown with theme-aware spacing."""
-    heading = "##" if options.theme != "compact" else "###"
-    spacer = "" if options.theme == "compact" else ""
+    if normalized.apply_label and normalized.apply_url:
+        lines.extend(["", f"[{normalized.apply_label}]({normalized.apply_url})"])
 
-    lines: list[str] = [f"# {spec.title}"]
+    for component in normalized.components:
+        if isinstance(component, HeroComponent):
+            if component.title and component.title != normalized.title:
+                lines.extend(["", f"{heading} {component.title}"])
+            if component.subtitle:
+                lines.extend(["", component.subtitle])
+            if component.intro and component.intro != normalized.intro:
+                lines.extend(["", component.intro])
+            if component.cta:
+                lines.extend(["", f"[{component.cta.label}]({component.cta.url})"])
+            continue
 
-    if options.sections.summary:
-        lines.extend(["", f"{heading} Summary", "", spec.summary])
+        if isinstance(component, FactsComponent):
+            _append_heading(lines, component.title or "Facts", heading)
+            for item in component.items:
+                lines.append(f"- {item.label}: {item.value}")
+            continue
 
-    details: list[str] = []
-    if spec.department:
-        details.append(f"- Department: {spec.department}")
-    if spec.level:
-        details.append(f"- Level: {spec.level}")
-    location = _human_location(spec)
-    if location:
-        details.append(f"- Location: {location}")
-    employment = _human_employment(spec)
-    if employment:
-        details.append(f"- Employment: {employment}")
+        if isinstance(component, RichTextComponent):
+            _append_heading(lines, component.title, heading)
+            lines.append(component.body)
+            continue
 
-    if options.sections.details and details:
-        lines.extend(["", f"{heading} Details", ""])
-        lines.extend(details)
+        if isinstance(component, ListComponent):
+            _append_heading(lines, component.title, heading)
+            if component.variant == "numbered":
+                for index, item in enumerate(component.items, start=1):
+                    lines.append(f"{index}. {item}")
+            elif component.variant == "checklist":
+                for item in component.items:
+                    lines.append(f"- [ ] {item}")
+            else:
+                for item in component.items:
+                    lines.append(f"- {item}")
+            continue
 
-    if options.sections.responsibilities:
-        lines.extend(["", f"{heading} Responsibilities", ""])
-        lines.extend(f"- {item}" for item in spec.responsibilities)
+        if isinstance(component, QuoteComponent):
+            lines.extend(["", f"> {component.quote}"])
+            if component.author:
+                suffix = f", {component.author_title}" if component.author_title else ""
+                lines.append(f"> — {component.author}{suffix}")
+            continue
 
-    if options.sections.requirements:
-        lines.extend(["", f"{heading} Requirements", ""])
-        lines.extend(f"- {item}" for item in spec.requirements)
+        if isinstance(component, BenefitsComponent):
+            _append_heading(lines, component.title or "Benefits", heading)
+            lines.extend(f"- {item}" for item in component.items)
+            continue
 
-    if options.sections.nice_to_have and spec.nice_to_have:
-        lines.extend(["", f"{heading} Nice to Have", ""])
-        lines.extend(f"- {item}" for item in spec.nice_to_have)
+        if isinstance(component, ContactComponent):
+            _append_heading(lines, component.title or "Contact", heading)
+            lines.append(f"- Name: {component.name}")
+            if component.role:
+                lines.append(f"- Role: {component.role}")
+            if component.phone:
+                lines.append(f"- Phone: {component.phone}")
+            if component.mobile:
+                lines.append(f"- Mobile: {component.mobile}")
+            if component.email:
+                lines.append(f"- Email: {component.email}")
+            continue
 
-    if spacer:
-        lines.append(spacer)
+        if isinstance(component, CompanyProfileComponent):
+            _append_heading(lines, component.title or "Company", heading)
+            lines.append(component.body)
+            continue
+
+        if isinstance(component, LegalComponent):
+            _append_heading(lines, component.title or "Legal", heading)
+            lines.append(component.body)
+            continue
+
+        if isinstance(component, CtaComponent):
+            _append_heading(lines, component.title, heading)
+            lines.append(f"[{component.label}]({component.url})")
+            continue
+
+        if isinstance(component, MediaComponent):
+            _append_heading(lines, component.title, heading)
+            label = component.alt or component.caption or "Media"
+            lines.append(f"- {label}: {component.url}")
+            continue
+
+        if isinstance(component, ApplicationProcessComponent):
+            _append_heading(lines, component.title or "Application process", heading)
+            if component.deadline:
+                lines.append(f"- Deadline: {component.deadline}")
+            if component.body:
+                lines.extend(["", component.body])
+            if component.steps:
+                for index, step in enumerate(component.steps, start=1):
+                    lines.append(f"{index}. {step}")
+
     return "\n".join(lines).strip() + "\n"

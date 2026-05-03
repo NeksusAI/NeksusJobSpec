@@ -1,36 +1,58 @@
 # JobSpec Format
 
-This page explains the human-facing JobSpec format and how to think about it when authoring role definitions.
+Neksus v0.2.0 uses a component-based JobSpec schema for job-detail pages.
 
-Neksus currently validates the `JobSpec` core model fields in `schema_version: 1`. Some broader hiring-document sections listed below are currently modeled directly, while others are planned structure layers for future schema revisions.
+## Breaking compatibility note
 
-## Current core sections (available now)
+`0.2.0` is not backward compatible with `0.1.0` JobSpec files that use legacy top-level content fields as the primary model.
 
-- role identity (`id`, `title`, optional `department`, optional `level`)
-- location (`location`)
-- employment (`employment`)
-- role summary (`summary`)
-- responsibilities (`responsibilities`)
-- requirements (`requirements`)
-- optional preferences (`nice_to_have`)
+## Required top-level fields
 
-## Extended sections (planned)
+- `schema_version`
+- `id`
+- `page`
+- `job`
+- `components`
+- optional `rendering`
 
-These sections are commonly needed in production hiring workflows and are candidates for future schema expansion:
+## Components model
 
-- company
-- compensation
-- benefits
-- application process
-- metadata
+`components` are typed, validated building blocks.
 
-Planned means these are not first-class schema fields in the current stable model unless represented in existing free-text sections.
+Shared fields:
 
-## Authoring guidelines
+- `type`
+- `id`
+- optional `variant`
+- optional `title`
+- optional `class_name`
+- optional `attributes`
+- optional `visibility`
+- optional `render_if`
 
-- Keep each responsibility and requirement as a single clear statement.
-- Prefer concise bullet items over long paragraphs.
-- Keep role identity stable over time to preserve diff quality.
-- Use explicit location and employment type where applicable.
+Supported component types:
 
-For exact field definitions and constraints, see [Schema](schema.md).
+- `hero`
+- `facts`
+- `rich_text`
+- `list`
+- `quote`
+- `benefits`
+- `contact`
+- `company_profile`
+- `legal`
+- `cta`
+- `media`
+- `application_process`
+
+## Ordering rules
+
+- Component IDs must be unique per file.
+- `page.component_order` must only reference existing component IDs.
+
+## Security notes
+
+- Typed components are the default authoring model.
+- Arbitrary HTML is not the default model.
+- Custom CSS is supported.
+- JS config is trusted/local-only and inline JS requires explicit allow.

@@ -11,6 +11,14 @@ Neksus JobSpec is an open-source, local-first CLI and Python package for creatin
 
 Current focus is a stable CLI and reusable core library. Hosted API and MCP server capabilities are planned, not yet implemented.
 
+## Job page composition
+
+v0.2.0 introduces controlled, Lego-brick-like job-detail page components.
+You can compose validated page blocks such as hero, facts, CTA, responsibilities, requirements, benefits, quote, contact, application process, company profile, and legal blocks without defaulting to arbitrary HTML.
+
+- Example: [`examples/danish-job-detail.jobspec.yaml`](examples/danish-job-detail.jobspec.yaml)
+- Docs: [`docs/specification.md`](docs/specification.md), [`docs/rendering.md`](docs/rendering.md), [`docs/examples.md`](docs/examples.md)
+
 ## Installation
 
 ```bash
@@ -81,6 +89,7 @@ git push origin v0.2.0
 You can also run the publish workflow manually from GitHub Actions (`workflow_dispatch`).
 
 Release notes are maintained in [`docs/release-notes.md`](docs/release-notes.md), with compatibility expectations defined in [`docs/versioning.md`](docs/versioning.md).
+See full change history in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## PyPI publishing notes
 

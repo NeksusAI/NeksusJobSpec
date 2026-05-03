@@ -1,6 +1,6 @@
 """JobSpec domain public API."""
 
-from neksus.core.jobspec.models import Employment, JobSpec, Location
+from neksus.core.jobspec.models import JobSpec
 from neksus.core.jobspec.migrate import inspect_schema_version
 from neksus.core.jobspec.parser import load_jobspec, load_yaml_file
 from neksus.core.jobspec.renderer import render_jobspec
@@ -14,9 +14,7 @@ from neksus.core.jobspec.validator import (
 )
 
 __all__ = [
-    "Employment",
     "JobSpec",
-    "Location",
     "collect_warnings",
     "inspect_schema_version",
     "load_jobspec",

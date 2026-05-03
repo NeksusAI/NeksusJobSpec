@@ -1,25 +1,31 @@
 schema_version: 1
 id: backend-engineer
-title: Backend Engineer
-department: Engineering
-level: Mid/Senior
-location:
-  type: remote
-  city: null
-  country: null
-summary: "Build reliable backend services for employer-side hiring workflows, including job publishing, candidate tracking, and role analytics."
-responsibilities:
-  - "Design and maintain Python services that expose internal and public APIs for job specification workflows."
-  - "Own data modeling and query performance for job templates, role metadata, and validation results."
-  - "Collaborate with product and design to deliver recruiter-facing features with clear acceptance criteria."
-  - "Improve observability by adding structured logging, health checks, and actionable runbook notes."
-requirements:
-  - "3+ years of backend software engineering experience in production environments."
-  - "Strong Python fundamentals, including testing, packaging, and type-hinted codebases."
-  - "Practical SQL experience and confidence optimizing query patterns."
-  - "Experience designing and operating REST-style APIs."
-nice_to_have:
-  - "Experience building CLI-first developer tools."
-  - "Familiarity with Pydantic, Typer, or comparable Python frameworks."
-employment:
-  type: full-time
+page:
+  layout: job_detail
+  language: en
+  theme: default
+  component_order:
+    - hero
+    - responsibilities
+    - requirements
+job:
+  title: Backend Engineer
+  intro: Role overview.
+components:
+  - type: hero
+    id: hero
+    variant: default
+    title: Backend Engineer
+    intro: Role overview.
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - Define key ownership areas.
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items:
+      - Relevant professional experience.

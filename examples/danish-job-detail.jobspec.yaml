@@ -1,0 +1,151 @@
+schema_version: 1
+id: senior-it-security-manager
+
+page:
+  layout: job_detail
+  language: da
+  theme: modern
+  component_order:
+    - hero
+    - facts
+    - about_role
+    - responsibilities
+    - requirements
+    - competencies
+    - colleague_quote
+    - benefits
+    - process
+    - contact
+    - company
+    - legal
+
+job:
+  title: Senior IT-Security Manager
+  intro: Vil du være med til at styrke vores sikkerhed?
+  apply:
+    label: Send ansøgning
+    url: https://example.com/jobs/senior-it-security-manager
+
+components:
+  - type: hero
+    id: hero
+    variant: split
+    title: Senior IT-Security Manager
+    intro: Vil du være med til at styrke vores sikkerhed?
+    cta:
+      label: Send ansøgning
+      url: https://example.com/jobs/senior-it-security-manager
+
+  - type: facts
+    id: facts
+    variant: sidebar
+    title: Jobdetaljer
+    items:
+      - label: Referencenummer
+        value: IT-Sikkerhed
+      - label: Region
+        value: Region Hovedstaden
+      - label: Jobtype
+        value: Fast
+      - label: Arbejdstid
+        value: Fuldtid
+      - label: Ansøgningsfrist
+        value: 04-05-2026
+
+  - type: rich_text
+    id: about_role
+    variant: default
+    title: Om jobbet
+    body: Du får ansvar for at modne og drifte vores sikkerhedsinitiativer.
+
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Dine primære opgaver bliver
+    items:
+      - Udvikle og implementere sikkerhedsstandarder.
+      - Rådgive teams om risikovurdering og compliance.
+
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Du har forudsætningerne
+    items:
+      - Erfaring med informationssikkerhed i komplekse organisationer.
+      - God forståelse for risiko- og compliancearbejde.
+
+  - type: list
+    id: competencies
+    variant: bullets
+    title: Dine personlige kompetencer
+    items:
+      - Du kommunikerer klart og samarbejder bredt.
+      - Du arbejder struktureret og tager ansvar.
+
+  - type: quote
+    id: colleague_quote
+    variant: card
+    quote: Vi arbejder tæt sammen om sikkerhed i hele organisationen.
+    author: Mette Jensen
+    author_title: Head of Technology
+
+  - type: benefits
+    id: benefits
+    variant: cards
+    title: Det får du
+    items:
+      - Fleksible arbejdsforhold.
+      - Kompetenceudvikling og fagligt netværk.
+
+  - type: application_process
+    id: process
+    variant: steps
+    title: Sådan søger du
+    deadline: 04-05-2026
+    body: Vi behandler ansøgninger løbende.
+    steps:
+      - Send CV og ansøgning.
+      - Første samtale med hiring manager.
+      - Afsluttende samtale og tilbud.
+
+  - type: contact
+    id: contact
+    variant: card
+    title: Har du spørgsmål?
+    name: Anna Hansen
+    role: IT Security Lead
+    phone: +45 33 33 33 33
+    email: anna.hansen@example.com
+
+  - type: company_profile
+    id: company
+    variant: default
+    title: Om virksomheden
+    body: Vi bygger finansielle løsninger med fokus på stabil drift og høj tillid.
+
+  - type: legal
+    id: legal
+    variant: muted
+    title: Lige muligheder og databeskyttelse
+    body: Vi opfordrer alle kvalificerede kandidater til at søge. Vi behandler persondata i henhold til gældende regler.
+
+rendering:
+  html:
+    facts_position: sidebar
+    repeat_cta: true
+    show_share_links: true
+    show_print_link: true
+  css:
+    files: []
+    inline: ""
+    tokens:
+      color_primary: ""
+      color_background: ""
+      font_body: ""
+      font_heading: ""
+      border_radius: ""
+      spacing_scale: ""
+  js:
+    files: []
+    inline: ""
+    allow_inline: false

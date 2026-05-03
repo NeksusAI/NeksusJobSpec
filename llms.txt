@@ -17,25 +17,26 @@ Core CLI Commands
 Public Python API
 - from neksus_jobspec import JobSpec, load_jobspec, validate_jobspec, render_jobspec
 
+v0.2.0 Composition Model
+- Job-detail pages can be composed from controlled, typed components.
+- Assistants should use documented `components` types and variants only.
+- Assistants should not invent new component types or variants.
+- Validate before render.
+- Prefer JSON render output for automation.
+
+Security and boundaries
+- Custom CSS is supported.
+- JS config is trusted/local-only output configuration.
+- Inline JS must not be emitted unless explicitly enabled.
+- Rendering produces output only and does not execute scripts.
+- Hosted API: planned, not implemented.
+- MCP server: planned, not implemented.
+
 Documentation
 - README.md
-- docs/index.md
-- docs/quickstart.md
+- CHANGELOG.md
+- docs/specification.md
+- docs/rendering.md
 - docs/python-api.md
-- docs/assistant-usage.md
-
-Boundaries
-- Local-first package: yes
-- Hosted API: no (planned)
-- MCP server: no (planned)
-- License: AGPL-3.0-or-later
-
-Correct Usage Examples
-- Validate before render.
-- Use JSON render output for machine workflows.
-- Use Markdown/HTML render output for human review.
-
-Do Not Assume
-- Do not assume hosted endpoints exist.
-- Do not assume MCP tools are available.
-- Do not assume schema fields beyond the documented JobSpec model.
+- docs/api-reference.md
+- docs/versioning.md

@@ -1,48 +1,26 @@
-# Assistant Usage
+# Assistant Usage Guidance
 
-## Source of truth
+## Preferred workflow
 
-Neksus JobSpec YAML is the source of truth. Assistants should not invent schema fields or skip validation.
+1. Produce typed JobSpec data.
+2. Validate before render.
+3. Render to JSON for automation and Markdown/HTML for presentation.
 
-## Recommended assistant flow
+## Components-first guidance
 
-1. Load or generate YAML.
-2. Validate before rendering or transforming.
-3. Use JSON output for automation.
-4. Use Markdown or HTML output for human review.
+For v0.2.0 job-detail pages, assistants should prefer typed `components` over arbitrary HTML.
 
-## CLI examples
+- Use only documented component types and variants.
+- Do not invent unknown component types or variant names.
+- Keep `page.component_order` aligned with declared component IDs.
 
-Validate a JobSpec:
+## Security and trust boundaries
 
-```bash
-neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml
-```
+- Custom CSS is supported.
+- JS settings are trusted/local-only output controls.
+- Inline JS must remain disabled unless explicitly allowed.
+- Rendering emits text output; it does not execute scripts.
 
-Render Markdown for chat/review:
+## Automation recommendation
 
-```bash
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format markdown
-```
-
-Render JSON for automation:
-
-```bash
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format json --json
-```
-
-## Python API example
-
-```python
-from neksus_jobspec import load_jobspec, render_jobspec, validate_jobspec
-
-spec = load_jobspec("jobspecs/backend-engineer.jobspec.yaml")
-validated = validate_jobspec(spec.model_dump())
-json_output = render_jobspec(validated, format="json")
-```
-
-## Current boundaries
-
-- Local-first package and CLI: available now
-- Hosted API: planned, not implemented
-- MCP server: planned, not implemented
+Prefer `--format json` output for deterministic machine workflows.

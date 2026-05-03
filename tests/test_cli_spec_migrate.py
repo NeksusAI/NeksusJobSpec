@@ -16,12 +16,17 @@ def test_spec_migrate_reports_already_current() -> None:
         path.write_text(
             """schema_version: 1
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
+page:
+  layout: job_detail
+job:
+  title: Role
+components:
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items:
+      - One
 """,
             encoding="utf-8",
         )
@@ -38,12 +43,17 @@ def test_spec_migrate_refuses_future_schema_version() -> None:
         path.write_text(
             """schema_version: 2
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
+page:
+  layout: job_detail
+job:
+  title: Role
+components:
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items:
+      - One
 """,
             encoding="utf-8",
         )
@@ -60,12 +70,17 @@ def test_spec_migrate_write_not_implemented() -> None:
         path.write_text(
             """schema_version: 1
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
+page:
+  layout: job_detail
+job:
+  title: Role
+components:
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items:
+      - One
 """,
             encoding="utf-8",
         )

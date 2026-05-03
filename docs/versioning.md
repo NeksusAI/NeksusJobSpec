@@ -1,39 +1,43 @@
 # Versioning and Compatibility Policy
 
-## Versioning approach
+## Semantic versioning
 
-Neksus JobSpec follows semantic versioning after the initial `0.1.0` release.
+Neksus JobSpec follows semantic versioning.
 
-During `0.x` releases, public APIs are intended to be usable but may still evolve.
+During `0.x`, public APIs are intended to be usable but may still evolve between minor releases.
 
-## Compatibility contract
+## Compatibility surface
 
 ### Stable public Python API
 
-Compatibility applies to top-level imports from `neksus_jobspec`:
+Stable imports are exposed from `neksus_jobspec`:
 
 ```python
 from neksus_jobspec import JobSpec, load_jobspec, validate_jobspec, render_jobspec
 ```
 
+`__version__` is also stable for tooling and diagnostics.
+
 ### Stable CLI surface
 
-CLI compatibility applies to documented commands in the [CLI Reference](cli-reference.md).
+Documented CLI commands are part of the compatibility contract.
 
-### Stable JobSpec schema surface
+### Stable schema surface
 
-Schema compatibility applies to documented fields in [JobSpec Format](specification.md) and generated schema output.
+Documented JobSpec schema fields are part of the compatibility contract.
+
+Documented component types and variants are part of the compatibility contract once released.
 
 ## Non-stable internals
 
-Internal modules under `neksus.core.*` and `neksus.cli.*` are not guaranteed stable.
+Internal modules under `neksus.core.*` and `neksus.cli.*` are implementation details and not stable contracts.
 
 ## Breaking changes and deprecations
 
-Breaking changes should be documented in release notes.
+Breaking changes must be documented in `CHANGELOG.md`.
 
-When practical, deprecations should be used before removals.
+Deprecations should be preferred before removals when practical.
 
-## Out of current contract
+## Out of scope for v0.2.0 contract
 
-Hosted API and MCP capabilities are planned but are not part of the current compatibility contract.
+Hosted API and MCP capabilities are planned but are not part of the v0.2.0 compatibility contract.

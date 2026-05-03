@@ -21,6 +21,17 @@ Before considering any task complete:
    - temporary test artifacts not intended to be committed
    - any other non-source transient files
 
+## Release and changelog policy
+
+- `CHANGELOG.md` must be updated for all user-visible changes.
+- Any task or run that changes public behavior, CLI commands, schema, rendering output, public Python API, docs, examples, packaging, release metadata, or compatibility/security policy must include a changelog update.
+- Internal-only refactors may skip changelog entries only when they do not affect users.
+- New work must be added under `[Unreleased]`.
+- During release preparation, move relevant entries from `[Unreleased]` into the target release section.
+- Release notes should be concise and grouped under Added, Changed, Deprecated, Removed, Fixed, and Security when relevant.
+- Do not claim a release date unless it is intentionally set for the release.
+- v0.2.0 introduces controlled page components for job-detail composition and removes v0.1.0 legacy schema compatibility.
+
 ## What is Neksus JobSpec?
 Neksus JobSpec is a local-first CLI and Python package for creating, validating, inspecting, and rendering structured job specification files.
 Users write JobSpecs in YAML. The CLI validates them with Pydantic models and renders them into readable formats such as Markdown. Future versions may expose the same core through FastAPI, local MCP servers, and ChatGPT Skills, but the first implementation is focused on the Python CLI and reusable core library.
@@ -118,7 +129,7 @@ fixtures/
   valid/
     backend-engineer.jobspec.yaml
   invalid/
-    missing-title.jobspec.yaml
+    missing-job-title.jobspec.yaml
     empty-requirements.jobspec.yaml
 
 Architecture Rules
@@ -187,55 +198,28 @@ Do not introduce new exit codes unless there is a clear need.
 
 JobSpec Model
 
-The core model is defined with Pydantic v2.
+The core model is defined with Pydantic v2 and is component-based in v0.2.0.
 
 Required top-level model:
 
 class JobSpec(BaseModel):
     schema_version: int = 1
     id: str
-    title: str
-    department: str | None = None
-    level: str | None = None
-    location: Location | None = None
-    summary: str
-    responsibilities: list[str]
-    requirements: list[str]
-    nice_to_have: list[str] = []
-    employment: Employment | None = None
+    page: PageConfig
+    job: JobConfig
+    components: list[Component]
+    rendering: RenderingConfig | None = None
 
-Location model:
-
-class Location(BaseModel):
-    type: Literal["remote", "hybrid", "onsite"]
-    city: str | None = None
-    country: str | None = None
-
-Employment model:
-
-class Employment(BaseModel):
-    type: Literal["full-time", "part-time", "contract", "internship"]
-
-Validation rules:
+Core rules:
 
 * schema_version must currently be 1.
 * id must match ^[a-z0-9]+(?:-[a-z0-9]+)*$.
-* title must not be empty.
-* summary must not be empty.
-* responsibilities must contain at least one non-empty string.
-* requirements must contain at least one non-empty string.
-* nice_to_have must contain only non-empty strings when present.
-* location.type must be one of remote, hybrid, or onsite.
-* employment.type must be one of full-time, part-time, contract, or internship.
+* components must contain at least one component.
+* component IDs must be unique.
+* page.component_order, if present, must reference existing component IDs.
+* Unknown component types/variants must fail validation.
 
-Warnings should be separate from validation errors.
-
-Examples of warnings:
-
-* Very short title.
-* Duplicate responsibilities.
-* Duplicate requirements.
-* Hybrid or onsite role without city/country.
+v0.2.0 is not backward compatible with the v0.1.0 legacy top-level content schema.
 
 Validation Result Types
 
@@ -396,7 +380,7 @@ fixtures/
   valid/
     backend-engineer.jobspec.yaml
   invalid/
-    missing-title.jobspec.yaml
+    missing-job-title.jobspec.yaml
     empty-requirements.jobspec.yaml
 
 Keep fixtures small and focused.

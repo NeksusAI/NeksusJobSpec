@@ -38,10 +38,17 @@ def test_validate_jobspec_accepts_mapping() -> None:
         {
             "schema_version": 1,
             "id": "api-test",
-            "title": "API Test",
-            "summary": "Test summary",
-            "responsibilities": ["Build things"],
-            "requirements": ["Know Python"],
+            "page": {"layout": "job_detail"},
+            "job": {"title": "API Test", "intro": "Test summary"},
+            "components": [
+                {
+                    "type": "list",
+                    "id": "requirements",
+                    "variant": "bullets",
+                    "title": "Requirements",
+                    "items": ["Know Python"],
+                }
+            ],
         }
     )
     assert spec.id == "api-test"

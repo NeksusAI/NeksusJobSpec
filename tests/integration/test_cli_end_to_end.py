@@ -74,15 +74,19 @@ def test_integration_check_and_strict_behavior_flow(tmp_path: Path) -> None:
     jobspec.write_text(
         """schema_version: 1
 id: warning-role
-title: Dev
-summary: Summary
-responsibilities:
-  - Build APIs.
-  - build apis.
-requirements:
-  - One
-location:
-  type: hybrid
+page:
+  layout: job_detail
+job:
+  title: Dev
+  intro: Summary
+components:
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - Build APIs.
+      - build apis.
 """,
         encoding="utf-8",
     )
@@ -134,14 +138,23 @@ def test_integration_batch_render_profile_flow(tmp_path: Path) -> None:
     jobspec.write_text(
         """schema_version: 1
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
-nice_to_have:
-  - Bonus
+page:
+  layout: job_detail
+job:
+  title: Role
+  intro: Summary
+components:
+  - type: hero
+    id: hero
+    variant: default
+    title: Role
+    intro: Summary
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - One
 """,
         encoding="utf-8",
     )

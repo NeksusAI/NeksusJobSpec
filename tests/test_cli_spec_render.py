@@ -209,12 +209,18 @@ def test_spec_render_html_escapes_content() -> None:
         target.write_text(
             """schema_version: 1
 id: unsafe
-title: "<script>alert(1)</script>"
-summary: "Hello <b>world</b>"
-responsibilities:
-  - "Own <tag>"
-requirements:
-  - "Ship > 1 feature"
+page:
+  layout: job_detail
+job:
+  title: "<script>alert(1)</script>"
+  intro: "Hello <b>world</b>"
+components:
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - "Own <tag>"
 """,
             encoding="utf-8",
         )
