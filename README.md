@@ -26,6 +26,7 @@ uv sync
 uv run ruff check .
 uv run ruff format --check .
 uv run pytest
+./scripts/smoke.sh
 ```
 
 ## License
@@ -35,3 +36,20 @@ Licensed under AGPL-3.0-or-later. See [LICENSE](LICENSE).
 ## Contribution policy
 
 This repository is owner-maintained and does not use a public external contribution workflow.
+
+
+## Testing Strategy
+
+Three required layers:
+
+- Unit/CLI layer: `uv run pytest -m "not integration"`
+- Smoke layer: `./scripts/smoke.sh`
+- Integration layer: `uv run pytest -m integration`
+
+Recommended local sequence:
+
+```bash
+uv run pytest -m "not integration"
+./scripts/smoke.sh
+uv run pytest -m integration
+```

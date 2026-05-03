@@ -59,6 +59,7 @@ uv run neksus-jobspec check
 uv run pytest
 uv run ruff check .
 uv run ruff format .
+./scripts/smoke.sh
 
 Run a single test:
 
@@ -579,6 +580,18 @@ For documentation site work, use MkDocs + Material:
 pip install -r requirements-docs.txt
 mkdocs serve
 mkdocs build --strict
+./scripts/smoke.sh
 ```
 
 Documentation deploys to GitHub Pages through `.github/workflows/deploy-docs.yml`.
+
+
+## Testing Layers
+
+Run three layers before completion:
+
+```bash
+uv run pytest -m "not integration"
+./scripts/smoke.sh
+uv run pytest -m integration
+```

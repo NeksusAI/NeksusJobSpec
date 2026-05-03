@@ -49,3 +49,19 @@ uv run pytest tests/test_cli_spec_validate.py -x
 uv run neksus-jobspec init
 uv run neksus-jobspec check
 ```
+
+
+## Smoke test
+
+```bash
+./scripts/smoke.sh
+```
+
+
+## 3-layer local test run
+
+```bash
+uv run pytest -m "not integration"
+./scripts/smoke.sh
+uv run pytest -m integration
+```

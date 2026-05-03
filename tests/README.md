@@ -34,3 +34,10 @@ Pytest suite for CLI and core behaviors.
 - Typer `CliRunner` for CLI-level tests.
 - Temporary/isolated filesystem contexts.
 - Explicit assertions on exit code + meaningful output.
+
+
+## Test layers
+
+- Unit/CLI tests: `pytest -m "not integration"`
+- Integration tests: `pytest -m integration` (real CLI + filesystem)
+- Smoke tests: `./scripts/smoke.sh` (fast end-to-end gate)

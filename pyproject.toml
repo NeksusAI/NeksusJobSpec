@@ -62,3 +62,6 @@ target-version = "py311"
 
 [tool.pytest.ini_options]
 addopts = "-q"
+markers = [
+  "integration: end-to-end integration tests using real CLI and filesystem",
+]
