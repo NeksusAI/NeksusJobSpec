@@ -1,6 +1,11 @@
 # AGENTS.md
 This file provides guidance to AI coding agents when working with code in this repository.
 
+## Agent Policy: Owner-Maintained Repository
+
+This repository is owner-maintained and does not use a public external contribution workflow.
+When updating docs or README, do not reintroduce generic contribution language such as "Contributions are welcome."
+
 ## First Priority Rules
 
 Before considering any task complete:
@@ -565,3 +570,15 @@ uv run ruff check .
 uv run ruff format --check .
 
 all succeed.
+
+## Documentation Site Workflow
+
+For documentation site work, use MkDocs + Material:
+
+```bash
+pip install -r requirements-docs.txt
+mkdocs serve
+mkdocs build --strict
+```
+
+Documentation deploys to GitHub Pages through `.github/workflows/deploy-docs.yml`.

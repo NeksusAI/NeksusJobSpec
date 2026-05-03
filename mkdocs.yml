@@ -1,0 +1,59 @@
+site_name: Neksus JobSpec
+site_description: Open-source job specification schema and CLI tooling for structured, portable job descriptions.
+site_url: https://docs.jobspec.neksusai.com/
+repo_name: NeksusAI/NeksusJobSpec
+repo_url: https://github.com/NeksusAI/NeksusJobSpec
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+plugins:
+  - search
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tasklist:
+      custom_checkbox: true
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Overview: getting-started.md
+      - Installation: installation.md
+      - Quickstart: quickstart.md
+  - Specification:
+      - JobSpec Format: specification.md
+      - Schema: schema.md
+      - Schema Editor Integration: schema-editor-integration.md
+      - Model Reference: model-reference.md
+      - Examples: examples.md
+      - Examples Library: examples-library.md
+  - Reference:
+      - CLI Reference: cli-reference.md
+      - Internal API Reference: internal-api-reference.md
+  - Concepts:
+      - How It Works: how-it-works.md
+      - Architecture: architecture.md
+  - Integrations:
+      - LLM Integrations: integrations.md
+      - MCP Server: mcp-server.md
+  - Project Policy:
+      - Contributing: contributing.md
