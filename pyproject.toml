@@ -1,6 +1,6 @@
 [project]
 name = "neksus-jobspec"
-version = "0.1.0"
+version = "0.2.0"
 description = "Local-first CLI and Python package for Neksus JobSpec files"
 readme = "README.md"
 license = "AGPL-3.0-or-later"

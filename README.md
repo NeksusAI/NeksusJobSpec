@@ -74,11 +74,13 @@ python -c "import neksus_jobspec; print(neksus_jobspec.__version__)"
 Create and push a semantic version tag to trigger publishing:
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.2.0
+git push origin v0.2.0
 ```
 
 You can also run the publish workflow manually from GitHub Actions (`workflow_dispatch`).
+
+Release notes are maintained in [`docs/release-notes.md`](docs/release-notes.md), with compatibility expectations defined in [`docs/versioning.md`](docs/versioning.md).
 
 ## PyPI publishing notes
 

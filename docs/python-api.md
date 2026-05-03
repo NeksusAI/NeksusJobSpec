@@ -12,6 +12,9 @@ pip install neksus-jobspec
 from neksus_jobspec import JobSpec, load_jobspec, render_jobspec, validate_jobspec
 ```
 
+For detailed function contracts, see the [Public API Reference](api-reference.md).
+For compatibility guarantees, see [Versioning and Compatibility Policy](versioning.md).
+
 ## Load and validate
 
 ```python

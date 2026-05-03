@@ -49,6 +49,7 @@ nav:
   - Reference:
       - CLI Reference: cli-reference.md
       - Python API: python-api.md
+      - API Reference: api-reference.md
       - Internal API Reference: internal-api-reference.md
   - Concepts:
       - How It Works: how-it-works.md
@@ -59,3 +60,5 @@ nav:
       - MCP Server: mcp-server.md
   - Project Policy:
       - Contributing: contributing.md
+      - Versioning and Compatibility: versioning.md
+      - Release Notes: release-notes.md
