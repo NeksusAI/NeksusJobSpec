@@ -1,0 +1,23 @@
+schema_version: 1
+id: hybrid-sales-executive
+title: Hybrid Sales Executive
+department: Sales
+level: Mid
+location:
+  type: hybrid
+  city: London
+  country: United Kingdom
+summary: "Drive qualified pipeline growth and close employer-side platform subscriptions for mid-market and enterprise accounts."
+responsibilities:
+  - "Manage full-cycle B2B sales from discovery through negotiation and close."
+  - "Build account plans and coordinate technical demos with product specialists."
+  - "Maintain accurate forecast data and opportunity notes in CRM workflows."
+requirements:
+  - "Proven quota attainment in B2B SaaS or adjacent enterprise software environments."
+  - "Strong discovery and consultative selling skills with multi-stakeholder buyers."
+  - "Clear written and verbal communication across technical and business audiences."
+nice_to_have:
+  - "Experience selling recruiting, HR-tech, or workflow automation products."
+  - "Familiarity with procurement and legal review cycles in enterprise deals."
+employment:
+  type: full-time

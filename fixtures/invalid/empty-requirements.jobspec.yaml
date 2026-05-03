@@ -1,0 +1,8 @@
+schema_version: 1
+id: backend-engineer
+title: Backend Engineer
+summary: "Build reliable backend services for employer-side hiring workflows."
+responsibilities:
+  - "Design and maintain Python services that expose internal and public APIs."
+requirements: []
+nice_to_have: []

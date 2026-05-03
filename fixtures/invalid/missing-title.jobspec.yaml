@@ -1,0 +1,14 @@
+schema_version: 1
+id: backend-engineer
+department: Engineering
+level: Mid/Senior
+location:
+  type: remote
+summary: "Build reliable backend services for employer-side hiring workflows."
+responsibilities:
+  - "Design and maintain Python services that expose internal and public APIs."
+requirements:
+  - "3+ years of backend software engineering experience in production environments."
+nice_to_have: []
+employment:
+  type: full-time
