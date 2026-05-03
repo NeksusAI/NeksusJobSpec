@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
+import click
 import typer
 from rich.table import Table
 
@@ -17,6 +18,9 @@ from neksus.cli.commands.common import (
 )
 from neksus.core.project.checks import run_project_checks
 from neksus.core.project.discovery import find_project_root
+from neksus.core.errors import NeksusError
+
+EXPECTED_COMMAND_ERRORS = (typer.BadParameter, click.UsageError, NeksusError, OSError, ValueError)
 
 
 def app(
@@ -37,7 +41,7 @@ def app(
         # Discover project root then execute all configured checks.
         root = find_project_root()
         result = run_project_checks(root, strict=strict)
-    except Exception as exc:  # noqa: BLE001
+    except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 

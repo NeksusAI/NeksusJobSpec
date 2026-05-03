@@ -6,7 +6,9 @@ import shutil
 from pathlib import Path
 from typing import Annotated
 
+import click
 import typer
+from pydantic import ValidationError
 
 from neksus.cli.commands.common import (
     handle_expected_error,
@@ -14,7 +16,7 @@ from neksus.cli.commands.common import (
     print_json,
     print_success,
 )
-from neksus.core.errors import ConfigError, FileSystemError
+from neksus.core.errors import ConfigError, FileSystemError, NeksusError
 from neksus.core.jobspec.models import JobSpec
 from neksus.core.jobspec.parser import load_yaml_file
 from neksus.core.jobspec.renderer import render_jobspec
@@ -27,6 +29,14 @@ EXTENSIONS_BY_FORMAT = {
     "html": ".html",
     "json": ".json",
 }
+EXPECTED_COMMAND_ERRORS = (
+    typer.BadParameter,
+    click.UsageError,
+    NeksusError,
+    OSError,
+    ValidationError,
+    ValueError,
+)
 
 
 def _output_name_for_data(data: dict, source: Path) -> str:
@@ -170,5 +180,5 @@ def render_command(
         raise typer.Exit(1)
     except typer.Exit:
         raise
-    except Exception as exc:  # noqa: BLE001
+    except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)

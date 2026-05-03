@@ -167,7 +167,7 @@ def render_html(spec, options: RenderOptions) -> str:
 
     print_link = ""
     if html_settings.show_print_link:
-        print_link = '<p class="print-link"><a href="#" onclick="window.print(); return false;">Print</a></p>'
+        print_link = '<p class="print-link"><a href="#" data-action="print">Print</a></p>'
 
     component_html = "\n".join(_render_component(component) for component in normalized.components)
 

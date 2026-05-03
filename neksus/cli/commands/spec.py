@@ -9,6 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Annotated
 
+import click
 import typer
 from pydantic import ValidationError
 
@@ -20,7 +21,7 @@ from neksus.cli.commands.common import (
     print_success,
     print_warning,
 )
-from neksus.core.errors import ConfigError, FileSystemError
+from neksus.core.errors import ConfigError, FileSystemError, NeksusError
 from neksus.core.jobspec.inspect import inspect_jobspec
 from neksus.core.jobspec.migrate import inspect_schema_version
 from neksus.core.jobspec.models import JobSpec
@@ -43,6 +44,14 @@ from neksus.core.project.config import load_project_config
 from neksus.core.project.discovery import find_project_root
 
 app = typer.Typer(help="JobSpec commands")
+EXPECTED_COMMAND_ERRORS = (
+    typer.BadParameter,
+    click.UsageError,
+    NeksusError,
+    OSError,
+    ValidationError,
+    ValueError,
+)
 
 
 def _resolve_new_path(name: str, output: Path | None) -> Path:
@@ -103,7 +112,7 @@ def spec_new(
         template_data = build_jobspec_template(name, template=template)
         JobSpec.model_validate(template_data)
         target.write_text(dump_jobspec_yaml(template_data), encoding="utf-8")
-    except Exception as exc:  # noqa: BLE001
+    except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 
@@ -124,7 +133,7 @@ def spec_validate(
         # Parse and validate raw YAML file into structured result.
         data = load_yaml_file(path)
         result = validate_spec_data(data)
-    except Exception as exc:  # noqa: BLE001
+    except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 
@@ -174,7 +183,7 @@ def spec_render(
     json: Annotated[bool, typer.Option("--json", help="Output machine-readable JSON.")] = False,
     no_validate: Annotated[
         bool,
-        typer.Option("--no-validate", help="Skip validation before rendering."),
+        typer.Option("--no-validate", help="Skip warning checks before rendering."),
     ] = False,
 ) -> None:
     """Render a JobSpec."""
@@ -262,7 +271,7 @@ def spec_render(
             for issue in issues:
                 print_error(f"Error [{issue.path}] {issue.message}")
         raise typer.Exit(1)
-    except Exception as exc:  # noqa: BLE001
+    except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
 
 
@@ -277,7 +286,7 @@ def spec_inspect(
         spec = load_jobspec(path)
         validation = validate_spec_model(spec)
         metadata = inspect_jobspec(spec, validation)
-    except Exception as exc:  # noqa: BLE001
+    except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 
@@ -330,7 +339,7 @@ def spec_schema(
             print_json({"ok": True, "format": "json-schema", "schema_version": 1, "schema": schema})
             return
         typer.echo(to_json(schema))
-    except Exception as exc:  # noqa: BLE001
+    except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
 
 
@@ -358,7 +367,7 @@ def spec_migrate(
     """Inspect schema migration status for a JobSpec."""
     try:
         result = inspect_schema_version(path)
-    except Exception as exc:  # noqa: BLE001
+    except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 

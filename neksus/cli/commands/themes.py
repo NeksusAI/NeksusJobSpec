@@ -4,12 +4,15 @@ from __future__ import annotations
 
 from typing import Annotated
 
+import click
 import typer
 
 from neksus.cli.commands.common import handle_expected_error, print_json, print_kv_table
 from neksus.core.jobspec.rendering import get_theme_metadata, list_theme_metadata
+from neksus.core.errors import NeksusError
 
 app = typer.Typer(help="Built-in render theme commands")
+EXPECTED_COMMAND_ERRORS = (typer.BadParameter, click.UsageError, NeksusError, OSError, ValueError)
 
 
 @app.callback(invoke_without_command=True)
@@ -35,7 +38,7 @@ def themes_show(
     """Show one theme metadata record."""
     try:
         theme = get_theme_metadata(name).model_dump()
-    except Exception as exc:  # noqa: BLE001
+    except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 

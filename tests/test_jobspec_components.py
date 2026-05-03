@@ -143,6 +143,20 @@ def test_custom_class_name_and_attributes_validate() -> None:
     assert contact.attributes["data-region"] == "dk"
 
 
+def test_event_handler_attributes_are_rejected() -> None:
+    data = _component_spec()
+    data["components"][3]["attributes"] = {"onclick": "alert(1)"}
+    with pytest.raises(ValidationError):
+        JobSpec.model_validate(data)
+
+
+def test_javascript_scheme_urls_are_rejected() -> None:
+    data = _component_spec()
+    data["components"][0]["cta"] = {"label": "Apply", "url": "javascript:alert(1)"}
+    with pytest.raises(ValidationError):
+        JobSpec.model_validate(data)
+
+
 def test_component_markdown_render_includes_facts_and_process() -> None:
     spec = JobSpec.model_validate(_component_spec())
     output = render_jobspec(spec, format="markdown")
@@ -172,6 +186,12 @@ def test_inline_js_not_rendered_without_explicit_allow() -> None:
     spec = JobSpec.model_validate(_component_spec())
     output = render_jobspec(spec, format="html")
     assert "console.log('x')" not in output
+
+
+def test_print_link_does_not_use_inline_event_handler() -> None:
+    spec = JobSpec.model_validate(_component_spec())
+    output = render_jobspec(spec, format="html")
+    assert "onclick=" not in output
 
 
 def test_inline_js_rendered_when_allow_inline_true() -> None:

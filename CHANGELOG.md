@@ -14,9 +14,14 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 ### Changed
 - JobSpec model is now component-first (`page`, `job`, `components`, `rendering`) and removes legacy v0.1.0 content compatibility.
 - Documentation expanded for assistant usage, compatibility policy, specification, rendering, and examples.
+- `spec render --no-validate` now explicitly describes warning-check behavior.
 
 ### Fixed
 - Release hygiene updates across docs and agent guidance.
+- Security hardening for rendered HTML:
+  - blocks unsafe URL schemes in component and JS file URLs
+  - blocks unsafe component attribute keys (including event-handler attributes)
+  - removes hardcoded inline print click handler
 
 ## [0.2.0]
 

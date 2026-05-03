@@ -2,9 +2,25 @@
 
 from __future__ import annotations
 
+import re
+from urllib.parse import urlparse
 from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
+
+SAFE_URL_SCHEMES = {"http", "https", "mailto", "tel"}
+SAFE_ATTRIBUTE_KEYS = {"id", "role", "title"}
+SAFE_ATTRIBUTE_PATTERN = re.compile(r"^(data|aria)-[a-z0-9_.:-]+$")
+
+
+def _is_safe_url(value: str) -> bool:
+    raw = value.strip()
+    if not raw:
+        return False
+    parsed = urlparse(raw)
+    if parsed.scheme:
+        return parsed.scheme.lower() in SAFE_URL_SCHEMES
+    return raw.startswith(("/", "./", "../", "#"))
 
 
 class PageConfig(BaseModel):
@@ -17,6 +33,13 @@ class PageConfig(BaseModel):
 class JobApply(BaseModel):
     label: str
     url: str
+
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, value: str) -> str:
+        if not _is_safe_url(value):
+            raise ValueError("url must use a safe scheme or a safe relative path")
+        return value
 
 
 class JobConfig(BaseModel):
@@ -52,6 +75,14 @@ class RenderingJsConfig(BaseModel):
     inline: str = ""
     allow_inline: bool = False
 
+    @field_validator("files")
+    @classmethod
+    def validate_js_files(cls, value: list[str]) -> list[str]:
+        for item in value:
+            if not _is_safe_url(item):
+                raise ValueError("JS file URLs must use safe schemes or safe relative paths")
+        return value
+
 
 class RenderingConfig(BaseModel):
     html: RenderingHtmlConfig = Field(default_factory=RenderingHtmlConfig)
@@ -69,10 +100,30 @@ class ComponentBase(BaseModel):
     visibility: str | None = None
     render_if: dict[str, Any] | None = None
 
+    @field_validator("attributes")
+    @classmethod
+    def validate_attributes(cls, value: dict[str, str]) -> dict[str, str]:
+        for key in value:
+            lowered = key.lower()
+            if lowered.startswith("on"):
+                raise ValueError("event handler attributes are not allowed")
+            if lowered in SAFE_ATTRIBUTE_KEYS:
+                continue
+            if not SAFE_ATTRIBUTE_PATTERN.match(lowered):
+                raise ValueError("attributes keys must be id/role/title or start with data-/aria-")
+        return value
+
 
 class CtaData(BaseModel):
     label: str
     url: str
+
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, value: str) -> str:
+        if not _is_safe_url(value):
+            raise ValueError("url must use a safe scheme or a safe relative path")
+        return value
 
 
 class HeroComponent(ComponentBase):
@@ -151,6 +202,13 @@ class CtaComponent(ComponentBase):
     label: str
     url: str
 
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, value: str) -> str:
+        if not _is_safe_url(value):
+            raise ValueError("url must use a safe scheme or a safe relative path")
+        return value
+
 
 class MediaComponent(ComponentBase):
     type: Literal["media"]
@@ -158,6 +216,13 @@ class MediaComponent(ComponentBase):
     url: str
     alt: str | None = None
     caption: str | None = None
+
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, value: str) -> str:
+        if not _is_safe_url(value):
+            raise ValueError("url must use a safe scheme or a safe relative path")
+        return value
 
 
 class ApplicationProcessComponent(ComponentBase):

@@ -5,10 +5,14 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Annotated
 
+import click
 import typer
 
 from neksus.cli.commands.common import handle_expected_error, print_json, print_success
+from neksus.core.errors import NeksusError
 from neksus.core.project.init_project import init_project
+
+EXPECTED_COMMAND_ERRORS = (typer.BadParameter, click.UsageError, NeksusError, OSError, ValueError)
 
 
 def init_command(
@@ -24,7 +28,7 @@ def init_command(
     try:
         # Initialize from current working directory.
         created = init_project(Path.cwd(), empty=empty, force=force)
-    except Exception as exc:  # noqa: BLE001
+    except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 

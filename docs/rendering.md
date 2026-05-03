@@ -19,6 +19,7 @@ Rendering expects a v0.2.0 component-based JobSpec (`job` + `components`).
 - Supports apply CTA, optional repeated CTA, share links, and print link.
 - Supports CSS tokens, inline CSS, JS file includes.
 - Inline JS is emitted only when `rendering.js.allow_inline: true`.
+- Print links are rendered without inline event-handler JavaScript.
 
 ## JSON
 

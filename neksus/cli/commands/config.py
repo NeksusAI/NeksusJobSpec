@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
+import click
 import typer
 
 from neksus.cli.commands.common import (
@@ -15,8 +16,10 @@ from neksus.cli.commands.common import (
 )
 from neksus.core.project.config import load_project_config, set_config_key
 from neksus.core.project.discovery import find_project_root
+from neksus.core.errors import NeksusError
 
 app = typer.Typer(help="Project config commands")
+EXPECTED_COMMAND_ERRORS = (typer.BadParameter, click.UsageError, NeksusError, OSError, ValueError)
 
 
 @app.command("get")
@@ -29,7 +32,7 @@ def config_get(
         # Config commands require project discovery first.
         root = find_project_root()
         config = load_project_config(root)
-    except Exception as exc:  # noqa: BLE001
+    except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 
@@ -63,7 +66,7 @@ def config_set(
         # Validation and mutability checks happen in core layer.
         root = find_project_root()
         updated = set_config_key(root, key, value)
-    except Exception as exc:  # noqa: BLE001
+    except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 

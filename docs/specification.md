@@ -56,3 +56,5 @@ Supported component types:
 - Arbitrary HTML is not the default model.
 - Custom CSS is supported.
 - JS config is trusted/local-only and inline JS requires explicit allow.
+- URL fields accept only safe schemes (`http`, `https`, `mailto`, `tel`) or safe relative paths.
+- Component `attributes` are restricted to safe keys (`data-*`, `aria-*`, `id`, `role`, `title`).
