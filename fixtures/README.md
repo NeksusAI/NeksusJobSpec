@@ -12,14 +12,8 @@ Small, focused YAML fixtures used by tests.
 
 ## Current files
 
-- `valid/backend-engineer.jobspec.yaml`
+- `valid/minimal-valid.jobspec.yaml`
   - Baseline valid JobSpec.
-- `valid/remote-software-engineer.jobspec.yaml`
-  - Employer-focused remote software role.
-- `valid/onsite-operations-manager.jobspec.yaml`
-  - Employer-focused onsite operations role.
-- `valid/hybrid-sales-executive.jobspec.yaml`
-  - Employer-focused hybrid sales role with location details.
 
 - `invalid/missing-title.jobspec.yaml`
   - Missing required `title` field.

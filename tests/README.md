@@ -40,4 +40,4 @@ Pytest suite for CLI and core behaviors.
 
 - Unit/CLI tests: `pytest -m "not integration"`
 - Integration tests: `pytest -m integration` (real CLI + filesystem)
-- Smoke tests: `./scripts/smoke.sh` (fast end-to-end gate)
+- Smoke tests: `uv run pytest -m integration && uv run python -m mkdocs build --strict` (fast end-to-end gate)

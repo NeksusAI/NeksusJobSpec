@@ -1,0 +1,312 @@
+:root {
+  --teal: #0b7a77;
+  --teal-dark: #04504f;
+  --bg: #e3e3e3;
+  --surface: #f2f2f2;
+  --text: #2a2f36;
+  --muted: #5c6672;
+  --sidebar: #dcebe8;
+  --accent: #f6a033;
+  --line: #d2d2d2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Nunito Sans", "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.jobspec-page {
+  width: min(1120px, 100% - 28px);
+  margin: 0 auto 36px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.jobspec-page > h1 {
+  margin: 0;
+  padding: 26px 28px 10px;
+  color: var(--teal);
+  font-size: clamp(2rem, 3.2vw, 2.9rem);
+  letter-spacing: -0.015em;
+}
+
+.jobspec-page > p {
+  margin: 0;
+  padding: 8px 28px 18px;
+}
+
+.jobspec-fullwidth .component {
+  padding: 0;
+  margin: 0;
+}
+
+.jobspec-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+
+.jobspec-main .component {
+  padding: 0 28px 18px;
+}
+
+.jobspec-sidebar .component {
+  margin: 0 16px 16px 0;
+  padding: 14px 16px 18px;
+  background: var(--sidebar);
+}
+
+.component h2 {
+  margin: 0 0 10px;
+  color: #1e2d3d;
+  font-size: 1.95rem;
+}
+
+.component p,
+.component li,
+.component blockquote,
+.component cite {
+  color: #24323d;
+  font-size: 1.02rem;
+}
+
+.brand-header {
+  background: #efefef;
+  border-bottom: 1px solid #c8c8c8;
+  padding: 16px 28px;
+}
+
+.brand-header .brand-row {
+  display: flex;
+  align-items: center;
+}
+
+.brand-header .brand-name,
+.brand-header .brand-name-link {
+  color: var(--teal);
+  font-size: 3rem;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: -0.03em;
+}
+
+.hero-banner-image {
+  border-top: 1px solid #95a5a5;
+  border-bottom: 1px solid #b1c0bf;
+}
+
+.hero-banner-image figure {
+  margin: 0;
+}
+
+.hero-banner-image img {
+  width: 100%;
+  display: block;
+}
+
+.hero-banner {
+  padding-top: 14px;
+}
+
+.hero-banner h2 {
+  display: none;
+}
+
+.hero-banner p {
+  margin: 0;
+}
+
+.hero-banner .cta-link,
+.apply-strip .cta-link,
+.repeat-cta .cta-link,
+.jobspec-page > p .cta-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #111;
+  border-radius: 999px;
+  min-width: 245px;
+  padding: 10px 22px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.intro-card,
+.section-list,
+.quote-feature,
+.benefits-grid,
+.process-box,
+.company-card,
+.legal-note,
+.apply-strip {
+  background: transparent;
+}
+
+.section-list ol,
+.section-list ul,
+.process-box ol {
+  margin: 8px 0 0;
+  padding-left: 1.5rem;
+}
+
+.quote-feature blockquote {
+  margin: 0;
+  font-style: italic;
+  border-left: 3px solid #a7b8c7;
+  padding-left: 10px;
+}
+
+.quote-feature cite {
+  margin-top: 8px;
+  display: block;
+  color: var(--muted);
+}
+
+.benefits-grid ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.benefits-grid li::before {
+  content: "• ";
+  color: #39566f;
+}
+
+.meta-panel ul,
+.social-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.meta-panel li {
+  padding: 6px 0;
+}
+
+.social-panel li {
+  display: inline-block;
+  margin: 0 10px 8px 0;
+}
+
+.social-panel a,
+.map-panel a,
+.share-links a,
+.print-link a,
+.share-trigger,
+.print-trigger {
+  color: #2f617f;
+  text-decoration: none;
+  font: inherit;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.social-panel a:hover,
+.map-panel a:hover,
+.share-links a:hover,
+.print-link a:hover,
+.share-trigger:hover,
+.print-trigger:hover {
+  text-decoration: underline;
+}
+
+.footer-brand {
+  background: #024b4a;
+  padding: 22px 28px 26px;
+}
+
+.footer-brand h2,
+.footer-brand h3,
+.footer-brand p,
+.footer-brand a {
+  color: #e8f5f4;
+}
+
+.footer-brand ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+}
+
+.share-links,
+.print-link {
+  margin: 0 28px 8px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+@media (min-width: 980px) {
+  .jobspec-layout {
+    grid-template-columns: minmax(0, 1fr) 290px;
+    column-gap: 10px;
+  }
+
+  .jobspec-sidebar .component {
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 760px) {
+  .jobspec-page {
+    width: 100%;
+    border-left: 0;
+    border-right: 0;
+  }
+
+  .jobspec-page > h1 {
+    padding: 18px 16px 8px;
+    font-size: 1.9rem;
+  }
+
+  .jobspec-page > p,
+  .jobspec-main .component,
+  .brand-header,
+  .footer-brand,
+  .share-links,
+  .print-link {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .jobspec-sidebar .component {
+    margin: 0 16px 14px;
+  }
+
+  .brand-header .brand-name,
+  .brand-header .brand-name-link {
+    font-size: 2.2rem;
+  }
+
+  .hero-banner .cta-link,
+  .apply-strip .cta-link,
+  .repeat-cta .cta-link,
+  .jobspec-page > p .cta-link {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media print {
+  .share-links,
+  .print-link,
+  .cta-link {
+    display: none !important;
+  }
+}

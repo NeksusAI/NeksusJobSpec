@@ -5,7 +5,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from neksus.cli.main import app
+from neksus_jobspec_cli.main import app
 
 runner = CliRunner()
 
@@ -16,12 +16,17 @@ def test_spec_migrate_reports_already_current() -> None:
         path.write_text(
             """schema_version: 1
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
+page:
+  layout: job_detail
+job:
+  title: Role
+components:
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items:
+      - One
 """,
             encoding="utf-8",
         )
@@ -38,12 +43,17 @@ def test_spec_migrate_refuses_future_schema_version() -> None:
         path.write_text(
             """schema_version: 2
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
+page:
+  layout: job_detail
+job:
+  title: Role
+components:
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items:
+      - One
 """,
             encoding="utf-8",
         )
@@ -60,12 +70,17 @@ def test_spec_migrate_write_not_implemented() -> None:
         path.write_text(
             """schema_version: 1
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
+page:
+  layout: job_detail
+job:
+  title: Role
+components:
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items:
+      - One
 """,
             encoding="utf-8",
         )
@@ -74,3 +89,24 @@ requirements:
         assert result.exit_code == 1
         payload = json.loads(result.stdout)
         assert payload["ok"] is False
+
+
+def test_spec_migrate_reports_removed_legacy_schema() -> None:
+    with runner.isolated_filesystem():
+        path = Path("legacy.jobspec.yaml")
+        path.write_text(
+            """id: role
+title: Role
+summary: Legacy
+responsibilities:
+  - One
+requirements:
+  - Two
+""",
+            encoding="utf-8",
+        )
+
+        result = runner.invoke(app, ["spec", "migrate", str(path), "--json"])
+        assert result.exit_code == 1
+        payload = json.loads(result.stdout)
+        assert payload["status"] == "legacy_schema_removed"

@@ -46,14 +46,26 @@ nav:
       - Model Reference: model-reference.md
       - Examples: examples.md
       - Examples Library: examples-library.md
+      - Migration 0.1.0 to 0.2.x: migration-0.1-to-0.2.md
   - Reference:
       - CLI Reference: cli-reference.md
+      - Python API: python-api.md
+      - API Reference: api-reference.md
       - Internal API Reference: internal-api-reference.md
   - Concepts:
       - How It Works: how-it-works.md
       - Architecture: architecture.md
+      - Rendering: rendering.md
+      - Themes: themes.md
+      - Soft-Professional Guide: soft-professional-guide.md
+      - Content vs Theme: content-vs-theme.md
+      - Render Troubleshooting: render-troubleshooting.md
   - Integrations:
+      - Assistant Usage: assistant-usage.md
       - LLM Integrations: integrations.md
       - MCP Server: mcp-server.md
   - Project Policy:
       - Contributing: contributing.md
+      - Security: security.md
+      - Versioning and Compatibility: versioning.md
+      - Release Notes: release-notes.md

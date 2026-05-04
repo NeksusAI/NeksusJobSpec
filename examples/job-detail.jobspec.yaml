@@ -1,0 +1,231 @@
+schema_version: 1
+id: isolated-jobspec-output
+
+page:
+  layout: job_detail
+  layout_mode: stitch_job_detail
+  language: en
+  theme: soft-professional
+  component_order:
+    - brand_header
+    - top_nav
+    - header_actions
+    - hero_banner
+    - hero
+    - hero_meta
+    - about_role
+    - responsibilities_cards
+    - requirements
+    - colleague_quote
+    - culture
+    - process
+    - company
+    - legal
+    - sidebar_meta
+    - sidebar_social
+    - sidebar_map
+
+job:
+  title: Senior Systems Architect
+  intro: We are seeking a Senior Systems Architect to lead the design and evolution of our containerized CLI ecosystem.
+  apply:
+    label: Apply Now
+    url: https://example.com/jobs/senior-systems-architect
+
+components:
+  - type: header_brand
+    id: brand_header
+    variant: bar
+    placement: fullwidth
+    region: header
+    brand_name: Codex Systems
+
+  - type: nav_links
+    id: top_nav
+    variant: top
+    placement: fullwidth
+    region: header
+    links:
+      - label: Jobs
+        url: https://example.com/jobs
+      - label: Teams
+        url: https://example.com/teams
+      - label: Company
+        url: https://example.com/company
+        active: true
+
+  - type: header_actions
+    id: header_actions
+    variant: buttons
+    placement: fullwidth
+    region: header
+    actions:
+      - label: Apply Now
+        url: https://example.com/jobs/senior-systems-architect
+        variant: primary
+        size: md
+        intent: primary
+
+  - type: hero_banner
+    id: hero_banner
+    variant: cover
+    placement: fullwidth
+    region: hero
+    image_url: https://lh3.googleusercontent.com/aida-public/AB6AXuBP7eiY08JzrrHzVBNG0b8cSa2T8AYepZGIzOqEG3IThlXtGYg7jZ1GKMw8NfMQB5eYFiZtXfAaKealTDv44YaN5uDMWIIamTqBS2mnvSyQYp4wd86_d0EKUbsonXAanZ-B7BGX5A3R85JBXMRTXMtujqjO3LeXDN7z4Zot5YRLbpJZf5_Ln9x7mP2y-IDGT11jB7xbIiBvu1D4o3lj1-hwtbjWAn1_E6ZmrS8aWWDhyBK1EMBIWqa-EBAumbiO43oBtKZaEUk0MNcI
+    alt: A detailed, high-contrast black and white map of San Francisco showing the dense urban grid and coastal outlines. The image has a clean, technical aesthetic with sharp lines and minimalist labeling, fitting a modern developer environment. The lighting is bright and even, reinforcing a professional light-mode UI design. The overall mood is precise and focused.
+
+  - type: hero
+    id: hero
+    variant: split
+    region: hero
+    title: Senior Systems Architect
+    subtitle: San Francisco, CA · Full-time
+    intro: We are seeking a Senior Systems Architect to lead the design and evolution of our containerized CLI ecosystem.
+
+  - type: meta_chips
+    id: hero_meta
+    variant: pills
+    region: hero
+    items:
+      - label: Location
+        value: San Francisco, CA
+        icon: location_on
+      - label: Salary
+        value: $180k – $240k
+        icon: payments
+      - label: Type
+        value: Full-time
+        icon: work
+
+  - type: rich_text
+    id: about_role
+    variant: highlighted
+    region: main
+    title: About the Role
+    body: We are seeking a Senior Systems Architect to lead the design and evolution of our containerized CLI ecosystem. In this role, you will bridge the gap between high-level architectural vision and low-level technical execution. You will be responsible for ensuring our distributed systems are resilient, scalable, and maintain the highest standards of technical professionalism.
+
+  - type: feature_grid
+    id: responsibilities_cards
+    variant: cards
+    region: main
+    columns_mobile: 1
+    columns_desktop: 2
+    title: Key Responsibilities
+    items:
+      - title: System Design
+        body: Design end-to-end microservices architectures optimized for low-latency terminal interactions.
+        icon: architecture
+      - title: Cloud Orchestration
+        body: Manage complex Kubernetes clusters and automated CI/CD pipelines for CLI binary distributions.
+        icon: cloud_sync
+      - title: Security & Reliability
+        body: Implement zero-trust security models and 99.99% uptime strategies across our entire CLI-to-Cloud infrastructure.
+        icon: security
+
+  - type: list
+    id: requirements
+    variant: bullets
+    region: main
+    title: Requirements
+    items:
+      - 8+ years of experience in distributed systems and backend engineering.
+      - Deep expertise in Rust, Go, or C++ with a focus on high-performance binaries.
+      - Proven track record of deploying containerized workloads at scale (K8s, Nomad).
+      - Strong understanding of networking protocols (gRPC, WebSockets, TLS 1.3).
+      - Experience with CLI design patterns and developer experience (DX) best practices.
+
+  - type: quote
+    id: colleague_quote
+    variant: pullquote
+    region: main
+    quote: This role is where architecture strategy becomes measurable production impact.
+    author: Hiring Team
+
+  - type: benefits
+    id: culture
+    variant: cards
+    region: main
+    title: Our Benefits
+    items:
+      - text: Unlimited PTO
+        icon: check_circle
+      - text: Equity Options
+        icon: check_circle
+      - text: Health/Dental
+        icon: check_circle
+      - text: Tech Stipend
+        icon: check_circle
+      - text: Annual Retreats
+        icon: check_circle
+
+  - type: application_process
+    id: process
+    variant: steps
+    region: main
+    title: Process
+    body: We review applications quickly and move qualified candidates through interview loops.
+    steps:
+      - Submit application
+      - Recruiter intro
+      - Technical interviews
+
+  - type: company_profile
+    id: company
+    variant: card
+    region: main
+    title: Company
+    body: We build developer-first systems that combine local CLI ergonomics with resilient cloud primitives.
+
+  - type: legal
+    id: legal
+    variant: muted
+    region: main
+    title: Equal Opportunity
+    body: We are an equal opportunity employer and consider all qualified applicants.
+
+  - type: meta_panel
+    id: sidebar_meta
+    variant: card
+    placement: sidebar
+    region: sidebar
+    title: Job Details
+    facts:
+      - label: Industry
+        value: FinTech / CLI Tech
+        icon: groups
+      - label: Team Size
+        value: 12 Engineers
+        icon: groups
+      - label: Remote Policy
+        value: Hybrid (3 Days)
+        icon: groups
+      - label: Reports to
+        value: CTO
+        icon: sell
+    contact_name: Recruiting
+    contact_email: jobs@example.com
+
+  - type: social_links
+    id: sidebar_social
+    variant: icons
+    placement: sidebar
+    region: sidebar
+    title: Share
+    links:
+      - label: LinkedIn
+        url: https://www.linkedin.com
+        icon: share
+
+  - type: location_map
+    id: sidebar_map
+    variant: map
+    placement: sidebar
+    region: sidebar
+    title: Location
+    map_url: https://maps.google.com/?q=San+Francisco
+    address: 450 Mission St, San Francisco
+    embed: false
+
+rendering:
+  web:
+    template: soft-professional

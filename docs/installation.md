@@ -6,6 +6,13 @@
 pip install neksus-jobspec
 ```
 
+## Verify installation
+
+```bash
+neksus-jobspec version
+python -c "import neksus_jobspec; print(neksus_jobspec.__version__)"
+```
+
 ## Local development setup
 
 ```bash
@@ -54,7 +61,7 @@ uv run neksus-jobspec check
 ## Smoke test
 
 ```bash
-./scripts/smoke.sh
+uv run pytest -m integration && uv run python -m mkdocs build --strict
 ```
 
 
@@ -62,6 +69,6 @@ uv run neksus-jobspec check
 
 ```bash
 uv run pytest -m "not integration"
-./scripts/smoke.sh
+uv run pytest -m integration && uv run python -m mkdocs build --strict
 uv run pytest -m integration
 ```

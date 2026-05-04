@@ -1,8 +1,0 @@
-/* Example brand overrides appended after built-in theme CSS */
-main {
-  border-top: 6px solid #1d4ed8;
-}
-
-h1 {
-  letter-spacing: 0.02em;
-}

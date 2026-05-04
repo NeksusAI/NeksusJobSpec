@@ -6,7 +6,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from neksus.cli.main import app
+from neksus_jobspec_cli.main import app
 
 runner = CliRunner()
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_spec_validate_returns_zero_for_valid_jobspec() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
@@ -36,7 +36,7 @@ def test_spec_validate_fails_for_missing_title() -> None:
 
 def test_spec_validate_json_output_shape() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
@@ -48,3 +48,25 @@ def test_spec_validate_json_output_shape() -> None:
         assert payload["ok"] is True
         assert payload["valid"] is True
         assert payload["errors"] == []
+
+
+def test_spec_validate_legacy_schema_reports_migration_guidance() -> None:
+    with runner.isolated_filesystem():
+        target = Path("legacy.jobspec.yaml")
+        target.write_text(
+            """schema_version: 1
+id: backend-engineer
+title: Backend Engineer
+summary: Build systems.
+responsibilities:
+  - Build APIs
+requirements:
+  - Python
+""",
+            encoding="utf-8",
+        )
+        result = runner.invoke(app, ["spec", "validate", str(target), "--json"])
+        assert result.exit_code == 1
+        payload = json.loads(result.stdout)
+        assert payload["ok"] is False
+        assert payload["errors"][0]["code"] == "legacy_schema_removed"

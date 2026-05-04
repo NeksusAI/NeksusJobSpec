@@ -18,12 +18,12 @@ def test_integration_init_and_validate_flow(tmp_path: Path) -> None:
     jobspecs = tmp_path / "jobspecs"
     jobspecs.mkdir(exist_ok=True)
     shutil.copy(
-        ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml",
-        jobspecs / "backend-engineer.jobspec.yaml",
+        ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml",
+        jobspecs / "minimal-valid.jobspec.yaml",
     )
 
     validate = subprocess.run(
-        [str(CLI_BIN), "spec", "validate", str(jobspecs / "backend-engineer.jobspec.yaml")],
+        [str(CLI_BIN), "spec", "validate", str(jobspecs / "minimal-valid.jobspec.yaml")],
         cwd=tmp_path,
         capture_output=True,
         text=True,
@@ -34,11 +34,11 @@ def test_integration_init_and_validate_flow(tmp_path: Path) -> None:
 
 
 @pytest.mark.integration
-def test_integration_render_html_with_css_flow(tmp_path: Path) -> None:
+def test_integration_render_web_with_css_flow(tmp_path: Path) -> None:
     subprocess.run([str(CLI_BIN), "init", "--empty"], cwd=tmp_path, check=True)
-    jobspec = tmp_path / "jobspecs" / "backend-engineer.jobspec.yaml"
+    jobspec = tmp_path / "jobspecs" / "minimal-valid.jobspec.yaml"
     jobspec.parent.mkdir(exist_ok=True)
-    shutil.copy(ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml", jobspec)
+    shutil.copy(ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml", jobspec)
 
     out_file = tmp_path / "dist" / "backend-engineer.html"
     subprocess.run(
@@ -48,11 +48,11 @@ def test_integration_render_html_with_css_flow(tmp_path: Path) -> None:
             "render",
             str(jobspec),
             "--format",
-            "html",
+            "web",
             "--theme",
-            "modern",
+            "soft-professional",
             "--css",
-            str(ROOT / "examples" / "jobspec.css"),
+            str(ROOT / "examples" / "theme-overrides.css"),
             "--output",
             str(out_file),
         ],
@@ -74,15 +74,19 @@ def test_integration_check_and_strict_behavior_flow(tmp_path: Path) -> None:
     jobspec.write_text(
         """schema_version: 1
 id: warning-role
-title: Dev
-summary: Summary
-responsibilities:
-  - Build APIs.
-  - build apis.
-requirements:
-  - One
-location:
-  type: hybrid
+page:
+  layout: job_detail
+job:
+  title: Dev
+  intro: Summary
+components:
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - Build APIs.
+      - build apis.
 """,
         encoding="utf-8",
     )
@@ -134,14 +138,23 @@ def test_integration_batch_render_profile_flow(tmp_path: Path) -> None:
     jobspec.write_text(
         """schema_version: 1
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
-nice_to_have:
-  - Bonus
+page:
+  layout: job_detail
+job:
+  title: Role
+  intro: Summary
+components:
+  - type: hero
+    id: hero
+    variant: default
+    title: Role
+    intro: Summary
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - One
 """,
         encoding="utf-8",
     )
@@ -151,13 +164,13 @@ nice_to_have:
         """version: 1
 spec_directory: jobspecs
 output_directory: dist
-default_format: markdown
+default_format: web
 strict_validation: false
-default_theme: default
+default_theme: soft-professional
 render_profiles:
   public:
-    format: html
-    theme: modern
+    format: web
+    theme: soft-professional
     output_directory: dist/public
     sections:
       summary: true
@@ -179,7 +192,7 @@ render_profiles:
     payload = json.loads(render.stdout)
     assert payload["ok"] is True
     assert payload["profile"] == "public"
-    assert payload["theme"] == "modern"
+    assert payload["theme"] == "soft-professional"
 
     html_file = tmp_path / "dist" / "public" / "role.html"
     assert html_file.exists()

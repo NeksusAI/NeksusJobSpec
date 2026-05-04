@@ -1,0 +1,31 @@
+schema_version: 1
+id: backend-engineer
+page:
+  layout: job_detail
+  language: en
+  theme: default
+  component_order:
+    - hero
+    - responsibilities
+    - requirements
+job:
+  title: Backend Engineer
+  intro: Role overview.
+components:
+  - type: hero
+    id: hero
+    variant: default
+    title: Backend Engineer
+    intro: Role overview.
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - Define key ownership areas.
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items:
+      - Relevant professional experience.

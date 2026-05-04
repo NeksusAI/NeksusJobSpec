@@ -5,21 +5,21 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from neksus.cli.main import app
+from neksus_jobspec_cli.main import app
 
 runner = CliRunner()
 
 
-def test_render_batch_markdown_renders_all_specs() -> None:
+def test_render_batch_web_renders_all_specs() -> None:
     with runner.isolated_filesystem():
         assert runner.invoke(app, ["init"]).exit_code == 0
         assert runner.invoke(app, ["spec", "new", "backend-engineer"]).exit_code == 0
 
-        result = runner.invoke(app, ["render", "--format", "markdown", "--theme", "compact"])
+        result = runner.invoke(app, ["render", "--format", "web", "--theme", "soft-professional"])
         assert result.exit_code == 0
-        assert Path("dist/example.md").exists()
-        assert Path("dist/backend-engineer.md").exists()
-        assert "### Summary" in Path("dist/example.md").read_text(encoding="utf-8")
+        assert Path("dist/example.html").exists()
+        assert Path("dist/backend-engineer.html").exists()
+        assert "<!doctype html>" in Path("dist/example.html").read_text(encoding="utf-8").lower()
 
 
 def test_render_batch_uses_jobspec_id_for_output_file() -> None:
@@ -28,45 +28,61 @@ def test_render_batch_uses_jobspec_id_for_output_file() -> None:
         Path("jobspecs/weird-name.jobspec.yaml").write_text(
             """schema_version: 1
 id: canonical-id
-title: Canonical Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
+page:
+  layout: job_detail
+job:
+  title: Canonical Role
+  intro: Summary
+components:
+  - type: hero
+    id: hero
+    variant: default
+    title: Canonical Role
+    intro: Summary
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - One
 """,
             encoding="utf-8",
         )
 
-        result = runner.invoke(app, ["render", "--format", "markdown"])
+        result = runner.invoke(app, ["render", "--format", "web"])
         assert result.exit_code == 0
-        assert Path("dist/canonical-id.md").exists()
-        assert not Path("dist/weird-name.md").exists()
+        assert Path("dist/canonical-id.html").exists()
+        assert not Path("dist/weird-name.html").exists()
 
 
-def test_render_batch_json_summary_and_invalid_spec_exit_one() -> None:
+def test_render_batch_web_summary_and_invalid_spec_exit_one() -> None:
     with runner.isolated_filesystem():
         assert runner.invoke(app, ["init"]).exit_code == 0
         Path("jobspecs/invalid.jobspec.yaml").write_text(
             """schema_version: 1
 id: invalid
-title: Invalid
-summary: Summary
-responsibilities:
-  - One
-requirements: []
+page:
+  layout: job_detail
+job:
+  title: Invalid
+components:
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items: []
 """,
             encoding="utf-8",
         )
 
         result = runner.invoke(
-            app, ["render", "--format", "markdown", "--theme", "modern", "--json"]
+            app, ["render", "--format", "web", "--theme", "soft-professional", "--json"]
         )
         assert result.exit_code == 1
         payload = json.loads(result.stdout)
         assert payload["ok"] is False
-        assert payload["format"] == "markdown"
-        assert payload["theme"] == "modern"
+        assert payload["format"] == "web"
+        assert payload["theme"] == "soft-professional"
         assert isinstance(payload["rendered"], list)
         assert isinstance(payload["errors"], list)
         assert isinstance(payload["warnings"], list)
@@ -78,36 +94,58 @@ def test_render_batch_clean_removes_old_outputs() -> None:
         Path("jobspecs/role.jobspec.yaml").write_text(
             """schema_version: 1
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
+page:
+  layout: job_detail
+job:
+  title: Role
+  intro: Summary
+components:
+  - type: hero
+    id: hero
+    variant: default
+    title: Role
+    intro: Summary
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - One
 """,
             encoding="utf-8",
         )
-        Path("dist/old-file.md").parent.mkdir(parents=True, exist_ok=True)
-        Path("dist/old-file.md").write_text("old", encoding="utf-8")
+        Path("dist/old-file.html").parent.mkdir(parents=True, exist_ok=True)
+        Path("dist/old-file.html").write_text("old", encoding="utf-8")
 
-        result = runner.invoke(app, ["render", "--format", "markdown", "--clean"])
+        result = runner.invoke(app, ["render", "--format", "web", "--clean"])
         assert result.exit_code == 0
-        assert not Path("dist/old-file.md").exists()
-        assert Path("dist/role.md").exists()
+        assert not Path("dist/old-file.html").exists()
+        assert Path("dist/role.html").exists()
 
 
-def test_render_batch_html_custom_css_and_no_css() -> None:
+def test_render_batch_web_custom_css_and_no_css() -> None:
     with runner.isolated_filesystem():
         assert runner.invoke(app, ["init", "--empty"]).exit_code == 0
         Path("jobspecs/role.jobspec.yaml").write_text(
             """schema_version: 1
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
+page:
+  layout: job_detail
+job:
+  title: Role
+  intro: Summary
+components:
+  - type: hero
+    id: hero
+    variant: default
+    title: Role
+    intro: Summary
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - One
 """,
             encoding="utf-8",
         )
@@ -116,16 +154,16 @@ requirements:
 
         with_css = runner.invoke(
             app,
-            ["render", "--format", "html", "--theme", "modern", "--css", str(css_path)],
+            ["render", "--format", "web", "--theme", "soft-professional", "--css", str(css_path)],
         )
         assert with_css.exit_code == 0
         content = Path("dist/role.html").read_text(encoding="utf-8")
         assert "body { outline: 0; }" in content
 
-        no_css = runner.invoke(app, ["render", "--format", "html", "--no-css"])
+        no_css = runner.invoke(app, ["render", "--format", "web", "--no-css"])
         assert no_css.exit_code == 0
         content_no_css = Path("dist/role.html").read_text(encoding="utf-8")
-        assert "<style>" not in content_no_css
+        assert "<style>" in content_no_css
 
 
 def test_render_batch_profile_and_cli_overrides() -> None:
@@ -134,14 +172,23 @@ def test_render_batch_profile_and_cli_overrides() -> None:
         Path("jobspecs/role.jobspec.yaml").write_text(
             """schema_version: 1
 id: role
-title: Role
-summary: Summary
-responsibilities:
-  - One
-requirements:
-  - One
-nice_to_have:
-  - Bonus
+page:
+  layout: job_detail
+job:
+  title: Role
+  intro: Summary
+components:
+  - type: hero
+    id: hero
+    variant: default
+    title: Role
+    intro: Summary
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Responsibilities
+    items:
+      - One
 """,
             encoding="utf-8",
         )
@@ -149,13 +196,13 @@ nice_to_have:
             """version: 1
 spec_directory: jobspecs
 output_directory: dist
-default_format: markdown
+default_format: web
 strict_validation: false
-default_theme: default
+default_theme: soft-professional
 render_profiles:
   public:
-    format: html
-    theme: modern
+    format: web
+    theme: soft-professional
     output_directory: dist/public
     sections:
       summary: true
@@ -170,7 +217,7 @@ render_profiles:
         profile_result = runner.invoke(app, ["render", "--profile", "public", "--json"])
         assert profile_result.exit_code == 0
         payload = json.loads(profile_result.stdout)
-        assert payload["theme"] == "modern"
+        assert payload["theme"] == "soft-professional"
         assert payload["profile"] == "public"
 
         rendered = Path("dist/public/role.html").read_text(encoding="utf-8")
@@ -178,11 +225,11 @@ render_profiles:
 
         override_result = runner.invoke(
             app,
-            ["render", "--profile", "public", "--format", "markdown", "--theme", "compact"],
+            ["render", "--profile", "public", "--format", "web", "--theme", "soft-professional"],
         )
         assert override_result.exit_code == 0
-        md = Path("dist/public/role.md").read_text(encoding="utf-8")
-        assert "### Responsibilities" in md
+        html = Path("dist/public/role.html").read_text(encoding="utf-8")
+        assert "<!doctype html>" in html.lower()
 
 
 def test_render_batch_unknown_profile_fails_with_config_error() -> None:

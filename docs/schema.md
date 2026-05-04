@@ -1,64 +1,54 @@
 # Schema
 
-Neksus JobSpec uses a Pydantic v2 model with `schema_version: 1`.
+Neksus JobSpec v0.2.x uses a component-based schema (`schema_version: 1`).
 
-## Current fields and types
+## Breaking compatibility
 
-Required fields:
+v0.2.x is not backward compatible with legacy simple top-level content fields.
+
+## Required fields
 
 - `schema_version: int` (must be `1`)
-- `id: str` (slug format)
-- `title: str`
-- `summary: str`
-- `responsibilities: list[str]` (at least one non-empty item)
-- `requirements: list[str]` (at least one non-empty item)
+- `id: str` (slug pattern)
+- `page: object`
+- `job: object`
+- `components: list` (at least one component)
 
-Optional fields:
+Optional:
 
-- `department: str | null`
-- `level: str | null`
-- `location: Location | null`
-- `nice_to_have: list[str]` (defaults to `[]`, non-empty strings when present)
-- `employment: Employment | null`
+- `rendering: object`
 
-Nested types:
+## Core nested blocks
 
 ```yaml
-location:
-  type: remote | hybrid | onsite
-  city: string | null
-  country: string | null
+page:
+  layout: job_detail
+  language: da | en | ...
+  theme: soft-professional
+  component_order:
+    - hero
+    - facts
 
-employment:
-  type: full-time | part-time | contract | internship
+job:
+  title: string
+  intro: string | null
+  apply:
+    label: string
+    url: string
 ```
 
 ## Validation behavior
 
 - Missing required fields fail validation.
-- Optional fields may be omitted.
-- Validation warnings are separate from hard validation errors.
+- Unknown component types fail validation.
+- Unknown variants fail validation.
+- Component IDs must be unique.
+- `page.component_order`, when set, must include every component ID exactly once.
 
-Warnings include:
-
-- very short title
-- duplicate responsibilities
-- duplicate requirements
-- hybrid/onsite role missing both city and country
-
-Use strict mode to treat warnings as failures:
-
-```bash
-neksus-jobspec spec validate jobspecs/example.jobspec.yaml --strict
-neksus-jobspec check --strict
-```
-
-## Versioning and compatibility
+## Versioning
 
 - Current supported version: `schema_version: 1`
-- Other schema versions are rejected by the current validator.
-- Migration surface exists via `neksus-jobspec spec migrate` for future transitions.
-- Validation and project-check outputs use stable issue/result shapes.
+- Other schema versions are rejected.
+- Use `spec migrate` only for version inspection; write mode is not implemented.
 
-For full field-by-field constraints, see [Model Reference](model-reference.md).
-For editor wiring and schema export workflows, see [Schema Editor Integration](schema-editor-integration.md).
+See [Model Reference](model-reference.md) and [Specification](specification.md).

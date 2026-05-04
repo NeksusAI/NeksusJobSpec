@@ -13,6 +13,8 @@ Before considering any task complete:
 1. Documentation must be updated when changes affect behavior, usage, or developer workflow:
    - `README.md`
    - `AGENTS.MD` (when agent workflow/policy expectations change)
+   - `llms.txt` (when canonical docs entry points change)
+   - `SECURITY.md` (when security policy/support/reporting changes)
    - In-code docs and comments where relevant
    - `docs/` content for any user-visible change
 2. Temporary artifacts created during development or verification must be deleted:
@@ -20,6 +22,17 @@ Before considering any task complete:
    - temporary output files
    - temporary test artifacts not intended to be committed
    - any other non-source transient files
+
+## Release and changelog policy
+
+- `CHANGELOG.md` must be updated for all user-visible changes.
+- Any task or run that changes public behavior, CLI commands, schema, rendering output, public Python API, docs, examples, packaging, release metadata, or compatibility/security policy must include a changelog update.
+- Internal-only refactors may skip changelog entries only when they do not affect users.
+- New work must be added under `[Unreleased]`.
+- During release preparation, move relevant entries from `[Unreleased]` into the target release section.
+- Release notes should be concise and grouped under Added, Changed, Deprecated, Removed, Fixed, and Security when relevant.
+- Do not claim a release date unless it is intentionally set for the release.
+- v0.2.x introduces controlled page components for job-detail composition and removes legacy schema compatibility.
 
 ## What is Neksus JobSpec?
 Neksus JobSpec is a local-first CLI and Python package for creating, validating, inspecting, and rendering structured job specification files.
@@ -42,7 +55,7 @@ Pipeline stages:
 5. Check
     Project-level checks validate config, folders, all JobSpec files, and duplicate IDs.
 
-The CLI must stay thin. Business logic belongs in neksus/core, not in Typer command functions.
+The CLI must stay thin. Business logic belongs in src/neksus_jobspec, not in Typer command functions.
 
 Commands
 
@@ -59,7 +72,7 @@ uv run neksus-jobspec check
 uv run pytest
 uv run ruff check .
 uv run ruff format .
-./scripts/smoke.sh
+uv run pytest -m integration && uv run python -m mkdocs build --strict
 
 Run a single test:
 
@@ -78,22 +91,12 @@ Source Layout
 
 Expected repository layout:
 
-neksus/
-  __init__.py
-  cli/
-    __init__.py
-    main.py
-    commands/
-      __init__.py
-      init.py
-      spec.py
-      check.py
-      config.py
-      version.py
-  core/
+src/
+  neksus_jobspec/
     __init__.py
     errors.py
     output.py
+    results.py
     project/
       __init__.py
       config.py
@@ -108,6 +111,16 @@ neksus/
       renderer.py
       templates.py
       inspect.py
+  neksus_jobspec_cli/
+    __init__.py
+    main.py
+    commands/
+      __init__.py
+      init.py
+      spec.py
+      check.py
+      config.py
+      version.py
 tests/
   test_cli_init.py
   test_cli_spec_validate.py
@@ -116,29 +129,29 @@ tests/
   test_project_checks.py
 fixtures/
   valid/
-    backend-engineer.jobspec.yaml
+    minimal-valid.jobspec.yaml
   invalid/
-    missing-title.jobspec.yaml
+    missing-job-title.jobspec.yaml
     empty-requirements.jobspec.yaml
 
 Architecture Rules
 
 Keep these boundaries strict:
 
-Typer CLI  →  neksus.core
+Typer CLI  →  neksus_jobspec
 
 Allowed:
 
-from neksus.core.jobspec.parser import load_jobspec
-from neksus.core.jobspec.renderer import render_jobspec
+from neksus_jobspec.jobspec.parser import load_jobspec
+from neksus_jobspec.jobspec.renderer import render_jobspec
 
 Not allowed:
 
-from neksus.cli.commands.spec import validate
+from neksus_jobspec_cli.commands.spec import validate
 
 Core modules must never import CLI modules.
 
-The future FastAPI layer should be able to reuse neksus.core without importing Typer, Rich, or CLI command code.
+The future FastAPI layer should be able to reuse neksus_jobspec without importing Typer, Rich, or CLI command code.
 
 CLI Design
 
@@ -187,55 +200,28 @@ Do not introduce new exit codes unless there is a clear need.
 
 JobSpec Model
 
-The core model is defined with Pydantic v2.
+The core model is defined with Pydantic v2 and is component-based in v0.2.0.
 
 Required top-level model:
 
 class JobSpec(BaseModel):
     schema_version: int = 1
     id: str
-    title: str
-    department: str | None = None
-    level: str | None = None
-    location: Location | None = None
-    summary: str
-    responsibilities: list[str]
-    requirements: list[str]
-    nice_to_have: list[str] = []
-    employment: Employment | None = None
+    page: PageConfig
+    job: JobConfig
+    components: list[Component]
+    rendering: RenderingConfig | None = None
 
-Location model:
-
-class Location(BaseModel):
-    type: Literal["remote", "hybrid", "onsite"]
-    city: str | None = None
-    country: str | None = None
-
-Employment model:
-
-class Employment(BaseModel):
-    type: Literal["full-time", "part-time", "contract", "internship"]
-
-Validation rules:
+Core rules:
 
 * schema_version must currently be 1.
 * id must match ^[a-z0-9]+(?:-[a-z0-9]+)*$.
-* title must not be empty.
-* summary must not be empty.
-* responsibilities must contain at least one non-empty string.
-* requirements must contain at least one non-empty string.
-* nice_to_have must contain only non-empty strings when present.
-* location.type must be one of remote, hybrid, or onsite.
-* employment.type must be one of full-time, part-time, contract, or internship.
+* components must contain at least one component.
+* component IDs must be unique.
+* page.component_order, if present, must reference existing component IDs.
+* Unknown component types/variants must fail validation.
 
-Warnings should be separate from validation errors.
-
-Examples of warnings:
-
-* Very short title.
-* Duplicate responsibilities.
-* Duplicate requirements.
-* Hybrid or onsite role without city/country.
+v0.2.0 is not backward compatible with the v0.1.0 legacy top-level content schema.
 
 Validation Result Types
 
@@ -274,9 +260,9 @@ Default config:
 version: 1
 spec_directory: jobspecs
 output_directory: dist
-default_format: markdown
+default_format: web
 strict_validation: false
-default_theme: default
+default_theme: soft-professional
 render_profiles: {}
 
 Config rules:
@@ -298,13 +284,12 @@ Rendering Rules
 
 Supported formats:
 
-markdown
-html
-json
+web
+json-ld
 
 Renderer function:
 
-def render_jobspec(spec: JobSpec, format: str = "markdown") -> str:
+def render_jobspec(spec: JobSpec, format: str = "web") -> str:
     ...
 
 Markdown output should be clean and human-readable.
@@ -318,7 +303,7 @@ Do not render:
 
 Unknown formats must raise UnsupportedFormatError.
 
-Do not add PDF, DOCX, ATS, or web rendering in the initial CLI implementation.
+For v0.2.x, supported rendering formats are web and json-ld.
 
 Error Handling
 
@@ -394,9 +379,9 @@ Expected fixture layout:
 
 fixtures/
   valid/
-    backend-engineer.jobspec.yaml
+    minimal-valid.jobspec.yaml
   invalid/
-    missing-title.jobspec.yaml
+    missing-job-title.jobspec.yaml
     empty-requirements.jobspec.yaml
 
 Keep fixtures small and focused.
@@ -580,7 +565,7 @@ For documentation site work, use MkDocs + Material:
 pip install -r requirements-docs.txt
 mkdocs serve
 mkdocs build --strict
-./scripts/smoke.sh
+uv run pytest -m integration && uv run python -m mkdocs build --strict
 ```
 
 Documentation deploys to GitHub Pages through `.github/workflows/deploy-docs.yml`.
@@ -592,6 +577,6 @@ Run three layers before completion:
 
 ```bash
 uv run pytest -m "not integration"
-./scripts/smoke.sh
+uv run pytest -m integration && uv run python -m mkdocs build --strict
 uv run pytest -m integration
 ```

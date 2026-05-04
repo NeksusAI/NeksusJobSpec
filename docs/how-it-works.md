@@ -11,7 +11,7 @@ YAML input -> parse -> validate -> inspect -> render -> project check
 1. Parse: YAML files are loaded into dictionaries.
 2. Validate: Pydantic validates dictionaries into typed `JobSpec` models.
 3. Inspect: Metadata is extracted for human and JSON inspection outputs.
-4. Render: Valid models render to markdown, html, or json outputs.
+4. Render: Valid models render to web or json-ld outputs.
 5. Check: Project-level checks validate config, directories, file validity, and duplicate IDs.
 
 ## Request lifecycle example
@@ -33,7 +33,7 @@ Behavior:
 Then render:
 
 ```bash
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format html --theme modern --output dist/backend-engineer.html
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web --theme soft-professional --output dist/backend-engineer.html
 ```
 
 Behavior:

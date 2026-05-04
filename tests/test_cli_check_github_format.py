@@ -5,7 +5,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from neksus.cli.main import app
+from neksus_jobspec_cli.main import app
 
 runner = CliRunner()
 
@@ -16,11 +16,16 @@ def test_check_format_github_emits_annotations() -> None:
         Path("jobspecs/invalid.jobspec.yaml").write_text(
             """schema_version: 1
 id: invalid
-title: Invalid
-summary: Summary
-responsibilities:
-  - One
-requirements: []
+page:
+  layout: job_detail
+job:
+  title: Invalid
+components:
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items: []
 """,
             encoding="utf-8",
         )
