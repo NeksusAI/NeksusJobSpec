@@ -9,15 +9,27 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_public_api_functions_have_docstrings() -> None:
     module = importlib.import_module("neksus_jobspec")
-    assert module.load_jobspec.__doc__
-    assert module.validate_jobspec.__doc__
-    assert module.render_jobspec.__doc__
+    public_functions = [
+        ("load_jobspec", module.load_jobspec),
+        ("validate_jobspec", module.validate_jobspec),
+        ("render_jobspec", module.render_jobspec),
+    ]
+    key_elements = ("Args:", "Parameters", "Returns:", "Raises:")
+
+    for name, func in public_functions:
+        doc = (func.__doc__ or "").strip()
+        assert doc, f"{name} must have a non-empty docstring"
+        assert len(doc) >= 20, f"{name} docstring is too short to be useful"
+        assert any(token in doc for token in key_elements), (
+            f"{name} docstring should include at least one documentation section "
+            f"({', '.join(key_elements)})"
+        )
 
 
 def test_wheel_smoke_script_exists_and_is_executable() -> None:
     script = ROOT / ".github" / "scripts" / "smoke_wheel.sh"
     assert script.exists()
-    assert script.stat().st_mode & 0o111
+    assert (script.stat().st_mode & 0o100) != 0
 
 
 def test_version_metadata_is_consistent() -> None:
