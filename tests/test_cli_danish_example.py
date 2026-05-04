@@ -8,6 +8,9 @@ from neksus.cli.main import app
 
 runner = CliRunner()
 ROOT = Path(__file__).resolve().parents[1]
+CANONICAL_SOFT_PRO = (
+    ROOT / "fixtures" / "stitch" / "isolated-jobspec-output.soft-professional.html"
+).read_text(encoding="utf-8")
 
 
 def test_cli_validate_danish_example() -> None:
@@ -20,7 +23,7 @@ def test_cli_render_danish_example_web() -> None:
     example = ROOT / "examples" / "danish-job-detail.jobspec.yaml"
     result = runner.invoke(app, ["spec", "render", str(example), "--format", "web"])
     assert result.exit_code == 0
-    assert "Senior Security Engineering Manager" in result.stdout
+    assert result.stdout == CANONICAL_SOFT_PRO
 
 
 def test_cli_render_danish_example_json_ld() -> None:

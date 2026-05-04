@@ -16,6 +16,8 @@ Current focus is a stable CLI and reusable core library. Hosted API and MCP serv
 v0.2.x uses controlled, Lego-brick-like job-detail page components.
 You can compose validated page blocks such as header_brand, hero_banner, hero, meta_panel, CTA, responsibilities, requirements, benefits, quote, social_links, location_map, company profile, and legal blocks without defaulting to arbitrary HTML.
 
+`soft-professional` now follows a pinned Stitch reference contract for deterministic output. The canonical reference fixture is stored at `fixtures/stitch/isolated-jobspec-output.soft-professional.html`.
+
 - Example: [`examples/danish-job-detail.jobspec.yaml`](examples/danish-job-detail.jobspec.yaml)
 - Docs: [`docs/specification.md`](docs/specification.md), [`docs/rendering.md`](docs/rendering.md), [`docs/themes.md`](docs/themes.md), [`docs/examples.md`](docs/examples.md)
 
@@ -58,7 +60,7 @@ neksus-jobspec spec new backend-engineer
 neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web
 neksus-jobspec themes
-neksus-jobspec themes show classic
+neksus-jobspec themes show soft-professional
 ```
 
 ## Development

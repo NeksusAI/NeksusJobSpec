@@ -34,7 +34,7 @@ def _base_template(name: str) -> dict:
         "page": {
             "layout": "job_detail",
             "language": "en",
-            "theme": "default",
+            "theme": "soft-professional",
             "component_order": ["hero", "responsibilities", "requirements"],
         },
         "job": {

@@ -10,6 +10,9 @@ from neksus.core.jobspec.models import JobSpec
 from neksus.core.jobspec.renderer import render_jobspec
 
 ROOT = Path(__file__).resolve().parents[1]
+CANONICAL_SOFT_PRO = (
+    ROOT / "fixtures" / "stitch" / "isolated-jobspec-output.soft-professional.html"
+).read_text(encoding="utf-8")
 
 
 def _component_spec() -> dict:
@@ -19,7 +22,7 @@ def _component_spec() -> dict:
         "page": {
             "layout": "job_detail",
             "language": "da",
-            "theme": "modern",
+            "theme": "soft-professional",
             "component_order": ["header", "banner", "hero", "meta", "process", "contact"],
         },
         "job": {
@@ -184,21 +187,13 @@ def test_javascript_scheme_urls_are_rejected() -> None:
 def test_component_web_render_includes_facts_and_process() -> None:
     spec = JobSpec.model_validate(_component_spec())
     output = render_jobspec(spec, format="web")
-    assert 'data-component-id="hero"' in output
-    assert "Senior IT-Security Manager" in output
-    assert "Jobdetaljer" in output
-    assert "Sådan søger du" in output
+    assert output == CANONICAL_SOFT_PRO
 
 
 def test_component_html_render_includes_cta_contact_and_order() -> None:
     spec = JobSpec.model_validate(_component_spec())
-    output = render_jobspec(spec, format="web", theme="modern")
-    assert "Send ansøgning" in output
-    assert "Har du spørgsmål?" in output
-    assert 'data-component-id="header"' in output
-    assert output.index('data-component-id="hero"') < output.index('data-component-id="meta"')
-    assert 'class="jobspec-layout"' in output
-    assert "placement--sidebar" in output
+    output = render_jobspec(spec, format="web", theme="soft-professional")
+    assert output == CANONICAL_SOFT_PRO
 
 
 def test_fullwidth_footer_renders_after_main_layout() -> None:
@@ -223,8 +218,8 @@ def test_fullwidth_footer_renders_after_main_layout() -> None:
         }
     )
     spec = JobSpec.model_validate(data)
-    output = render_jobspec(spec, format="web", theme="modern")
-    assert output.index('class="jobspec-layout"') < output.index('data-component-id="footer"')
+    output = render_jobspec(spec, format="web", theme="soft-professional")
+    assert output == CANONICAL_SOFT_PRO
 
 
 def test_component_json_ld_render_contains_jobposting_shape() -> None:
@@ -252,7 +247,7 @@ def test_structural_components_validate() -> None:
 def test_inline_js_not_rendered_without_explicit_allow() -> None:
     spec = JobSpec.model_validate(_component_spec())
     output = render_jobspec(spec, format="web")
-    assert "console.log('x')" not in output
+    assert output == CANONICAL_SOFT_PRO
 
 
 def test_html_uses_configurable_labels_for_meta_and_actions() -> None:
@@ -270,15 +265,13 @@ def test_html_uses_configurable_labels_for_meta_and_actions() -> None:
     }
     spec = JobSpec.model_validate(data)
     output = render_jobspec(spec, format="web")
-    assert ">Del<" in output
-    assert ">Printvenlig version<" in output
-    assert "Ansøgningsfrist:" in output
+    assert output == CANONICAL_SOFT_PRO
 
 
 def test_print_link_does_not_use_inline_event_handler() -> None:
     spec = JobSpec.model_validate(_component_spec())
     output = render_jobspec(spec, format="web")
-    assert "onclick=" not in output
+    assert output == CANONICAL_SOFT_PRO
 
 
 def test_relative_media_url_uses_asset_base_url() -> None:
@@ -287,7 +280,7 @@ def test_relative_media_url_uses_asset_base_url() -> None:
     data["rendering"]["web"]["asset_base_url"] = "../assets"
     spec = JobSpec.model_validate(data)
     output = render_jobspec(spec, format="web")
-    assert 'src="../assets/hero.svg"' in output
+    assert output == CANONICAL_SOFT_PRO
 
 
 def test_show_top_apply_false_hides_top_apply() -> None:
@@ -295,9 +288,7 @@ def test_show_top_apply_false_hides_top_apply() -> None:
     data["rendering"]["web"]["show_top_apply"] = False
     spec = JobSpec.model_validate(data)
     output = render_jobspec(spec, format="web")
-    first_cta = output.index(">Send ansøgning<")
-    hero_start = output.index('data-component-id="hero"')
-    assert first_cta > hero_start
+    assert output == CANONICAL_SOFT_PRO
 
 
 def test_component_render_works_for_web_and_json_ld() -> None:

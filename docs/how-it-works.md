@@ -33,7 +33,7 @@ Behavior:
 Then render:
 
 ```bash
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web --theme modern --output dist/backend-engineer.html
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web --theme soft-professional --output dist/backend-engineer.html
 ```
 
 Behavior:

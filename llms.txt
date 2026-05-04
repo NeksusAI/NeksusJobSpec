@@ -28,8 +28,7 @@ v0.2.x Composition Model
 
 Security and boundaries
 - Custom CSS is supported.
-- JS config is trusted/local-only output configuration.
-- Inline JS must not be emitted unless explicitly enabled.
+- Theme customization in v0.2.x is CSS-first.
 - Rendering produces output only and does not execute scripts.
 - Hosted API: planned, not implemented.
 - MCP server: planned, not implemented.

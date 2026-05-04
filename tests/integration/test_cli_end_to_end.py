@@ -10,6 +10,9 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 CLI_BIN = ROOT / ".venv" / "bin" / "neksus-jobspec"
+CANONICAL_SOFT_PRO = (
+    ROOT / "fixtures" / "stitch" / "isolated-jobspec-output.soft-professional.html"
+).read_text(encoding="utf-8")
 
 
 @pytest.mark.integration
@@ -50,7 +53,7 @@ def test_integration_render_web_with_css_flow(tmp_path: Path) -> None:
             "--format",
             "web",
             "--theme",
-            "modern",
+            "soft-professional",
             "--css",
             str(ROOT / "examples" / "jobspec.css"),
             "--output",
@@ -62,8 +65,7 @@ def test_integration_render_web_with_css_flow(tmp_path: Path) -> None:
 
     assert out_file.exists()
     html = out_file.read_text(encoding="utf-8")
-    assert "<html" in html
-    assert "font-family" in html
+    assert html == CANONICAL_SOFT_PRO
 
 
 @pytest.mark.integration
@@ -166,11 +168,11 @@ spec_directory: jobspecs
 output_directory: dist
 default_format: web
 strict_validation: false
-default_theme: default
+default_theme: soft-professional
 render_profiles:
   public:
     format: web
-    theme: modern
+    theme: soft-professional
     output_directory: dist/public
     sections:
       summary: true
@@ -192,9 +194,9 @@ render_profiles:
     payload = json.loads(render.stdout)
     assert payload["ok"] is True
     assert payload["profile"] == "public"
-    assert payload["theme"] == "modern"
+    assert payload["theme"] == "soft-professional"
 
     html_file = tmp_path / "dist" / "public" / "role.html"
     assert html_file.exists()
     html = html_file.read_text(encoding="utf-8")
-    assert "Nice to Have" not in html
+    assert html == CANONICAL_SOFT_PRO

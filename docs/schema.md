@@ -24,7 +24,7 @@ Optional:
 page:
   layout: job_detail
   language: da | en | ...
-  theme: default | modern | ...
+  theme: soft-professional
   component_order:
     - hero
     - facts

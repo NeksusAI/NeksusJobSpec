@@ -84,7 +84,7 @@ def _resolve_default_theme(explicit_theme: str | None) -> str:
         config = load_project_config(root)
         return config.default_theme
     except ConfigError:
-        return "default"
+        return "soft-professional"
 
 
 @app.command("new")
@@ -173,11 +173,7 @@ def spec_render(
     theme: Annotated[str | None, typer.Option("--theme", help="Built-in render theme.")] = None,
     template: Annotated[
         str | None,
-        typer.Option("--template", help="Web template preset (e.g. modern, corporate, minimal)."),
-    ] = None,
-    custom_template_dir: Annotated[
-        Path | None,
-        typer.Option("--custom-template-dir", help="Path to a custom template directory."),
+        typer.Option("--template", help="Web template preset (soft-professional)."),
     ] = None,
     css: Annotated[
         Path | None, typer.Option("--css", help="Append custom CSS file (web only).")
@@ -234,13 +230,6 @@ def spec_render(
             spec.rendering.web.template = theme
         if template is not None:
             spec.rendering.web.template = template
-        if custom_template_dir is not None:
-            if not custom_template_dir.exists() or not custom_template_dir.is_dir():
-                raise FileSystemError(f"Custom template directory not found: {custom_template_dir}")
-            manifest = custom_template_dir / "template.yaml"
-            if not manifest.exists():
-                raise FileSystemError(f"Custom template missing manifest: {manifest}")
-            spec.rendering.web.custom_template_dir = str(custom_template_dir)
         custom_css: str | None = None
         if css is not None:
             try:
@@ -263,13 +252,6 @@ def spec_render(
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(rendered, encoding="utf-8")
             if format == "web":
-                output.with_suffix(".js").write_text(
-                    "document.addEventListener('click',(e)=>{const t=e.target;"
-                    "if(t&&t.matches('[data-action=\"print\"]'))window.print();"
-                    "if(t&&t.matches('[data-action=\"share\"]')){"
-                    "if(navigator.share){navigator.share({url:location.href});}}});",
-                    encoding="utf-8",
-                )
                 output.with_suffix(".css").write_text(
                     spec.rendering.web.css.inline, encoding="utf-8"
                 )
@@ -288,7 +270,7 @@ def spec_render(
                 print_success(f"Rendered JobSpec to {output}")
             return
 
-        # Stdout mode prints either JSON metadata/content or raw markdown.
+        # Stdout mode prints either JSON metadata/content or raw rendered output.
         if json:
             print_json(
                 {

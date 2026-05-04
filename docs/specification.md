@@ -53,6 +53,10 @@ Supported component types:
 - `social_links`
 - `location_map`
 - `footer_brand`
+- `nav_links`
+- `header_actions`
+- `feature_grid`
+- `meta_chips`
 
 ## Ordering rules
 
@@ -64,7 +68,7 @@ Supported component types:
 - Typed components are the default authoring model.
 - Arbitrary HTML is not the default model.
 - Custom CSS is supported.
-- JS config is trusted/local-only and inline JS requires explicit allow.
+- Theme customization is CSS-first in v0.2.x.
 - URL fields accept only safe schemes (`http`, `https`, `mailto`, `tel`) or safe relative paths.
 - Component `attributes` are restricted to safe keys (`data-*`, `aria-*`, `id`, `role`, `title`).
 
@@ -80,3 +84,6 @@ Supported component types:
 - `asset_base_url`: optional URL/path prefix for relative component asset URLs
 - `labels`: optional localized UI labels:
   - `share`, `print`, `phone`, `mobile`, `email`, `open_map`, `deadline`
+- `template`: `soft-professional`
+
+For `soft-professional`, web output is pinned to the Stitch reference contract fixture at `fixtures/stitch/isolated-jobspec-output.soft-professional.html`.

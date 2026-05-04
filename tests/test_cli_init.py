@@ -41,5 +41,5 @@ def test_init_writes_default_theme_and_render_profiles() -> None:
     with runner.isolated_filesystem():
         assert runner.invoke(app, ["init"]).exit_code == 0
         config_data = yaml.safe_load(Path(".neksus/config.yaml").read_text(encoding="utf-8"))
-        assert config_data["default_theme"] == "default"
+        assert config_data["default_theme"] == "soft-professional"
         assert config_data["render_profiles"] == {}

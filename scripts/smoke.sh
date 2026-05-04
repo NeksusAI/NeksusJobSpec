@@ -50,7 +50,7 @@ echo "[smoke] rendering web output"
 echo "[smoke] rendering web output with custom CSS"
 "$CLI_BIN" spec render jobspecs/backend-engineer.jobspec.yaml \
   --format web \
-  --theme modern \
+  --theme soft-professional \
   --css "$ROOT_DIR/examples/jobspec.css" \
   --output dist/backend-engineer-custom.html >/dev/null
 

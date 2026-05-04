@@ -67,7 +67,7 @@ def test_render_jobspec_web_with_builtin_theme() -> None:
     content = render_jobspec(
         ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml",
         format="web",
-        theme="modern",
+        theme="soft-professional",
     )
     assert "<!doctype html>" in content.lower()
 
@@ -79,7 +79,7 @@ def test_render_jobspec_writes_output_file(tmp_path: Path) -> None:
     render_jobspec(
         ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml",
         format="web",
-        theme="modern",
+        theme="soft-professional",
         output=out,
     )
     assert out.exists()

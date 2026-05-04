@@ -1,229 +1,217 @@
 schema_version: 1
-id: nordic-security-manager-demo
+id: isolated-jobspec-output
 
 page:
   layout: job_detail
-  language: da
-  theme: modern
+  layout_mode: stitch_job_detail
+  language: en
+  theme: soft-professional
   component_order:
     - brand_header
+    - top_nav
+    - header_actions
     - hero_banner
     - hero
+    - hero_meta
     - about_role
-    - responsibilities
+    - responsibilities_cards
     - requirements
     - colleague_quote
     - culture
     - process
     - company
     - legal
-    - apply_footer
-    - meta
-    - social
-    - map
-    - footer_brand
+    - sidebar_meta
+    - sidebar_social
+    - sidebar_map
 
 job:
-  title: Senior Security Engineering Manager
-  intro: Bliv en del af et dedikeret IT-sikkerhedsteam med fokus på styring, efterlevelse og risikobaseret sikkerhedsarbejde.
+  title: Senior Systems Architect
+  intro: We are seeking a Senior Systems Architect to lead the design and evolution of our containerized CLI ecosystem.
   apply:
-    label: Send ansøgning
-    url: https://example.com/jobs/senior-security-engineering-manager
+    label: Apply Now
+    url: https://example.com/jobs/senior-systems-architect
 
 components:
   - type: header_brand
     id: brand_header
     variant: bar
     placement: fullwidth
-    class_name: brand-header
-    brand_name: Nordwell
-    brand_url: https://example.com/companies/nordwell
+    region: header
+    brand_name: Codex Systems
+
+  - type: nav_links
+    id: top_nav
+    variant: top
+    placement: fullwidth
+    region: header
+    links:
+      - label: Jobs
+        url: https://example.com/jobs
+      - label: Teams
+        url: https://example.com/teams
+      - label: Company
+        url: https://example.com/company
+        active: true
+
+  - type: header_actions
+    id: header_actions
+    variant: buttons
+    placement: fullwidth
+    region: header
+    actions:
+      - label: Apply Now
+        url: https://example.com/jobs/senior-systems-architect
+        variant: primary
+        size: md
+        intent: primary
 
   - type: hero_banner
     id: hero_banner
     variant: cover
     placement: fullwidth
-    class_name: hero-banner-image
-    image_url: job-banner-placeholder.svg
-    alt: Neutralt jobbanner
+    region: hero
+    image_url: https://lh3.googleusercontent.com/aida-public/AB6AXuBP7eiY08JzrrHzVBNG0b8cSa2T8AYepZGIzOqEG3IThlXtGYg7jZ1GKMw8NfMQB5eYFiZtXfAaKealTDv44YaN5uDMWIIamTqBS2mnvSyQYp4wd86_d0EKUbsonXAanZ-B7BGX5A3R85JBXMRTXMtujqjO3LeXDN7z4Zot5YRLbpJZf5_Ln9x7mP2y-IDGT11jB7xbIiBvu1D4o3lj1-hwtbjWAn1_E6ZmrS8aWWDhyBK1EMBIWqa-EBAumbiO43oBtKZaEUk0MNcI
+    alt: Map image
 
   - type: hero
     id: hero
     variant: split
-    class_name: hero-banner
-    title: Senior Security Engineering Manager
-    subtitle: Nordwell · Øresundsregionen · Fuldtid
-    intro: Vi søger en erfaren profil, der kan sætte retning på tværs af IT og forretning og omsætte sikkerhedskrav til praksis.
-    cta:
-      label: Send ansøgning
-      url: https://example.com/jobs/senior-security-engineering-manager
+    region: hero
+    title: Senior Systems Architect
+    subtitle: San Francisco, CA · Full-time
+    intro: We are seeking a Senior Systems Architect to lead the design and evolution of our containerized CLI ecosystem.
+
+  - type: meta_chips
+    id: hero_meta
+    variant: pills
+    region: hero
+    items:
+      - label: Location
+        value: San Francisco, CA
+        icon: location_on
+      - label: Salary
+        value: $180k - $240k
+        icon: payments
+      - label: Type
+        value: Full-time
+        icon: work
 
   - type: rich_text
     id: about_role
     variant: highlighted
-    class_name: intro-card
-    title: Om jobbet
-    body: Du bliver en del af en mindre enhed med høj faglighed, hvor overvågning og test er outsourcet, og hvor dit ansvar bliver at drive opfølgning, implementering og efterlevelse.
+    region: main
+    title: About the Role
+    body: You will bridge high-level architecture and low-level execution to ensure resilient, scalable distributed systems.
 
-  - type: list
-    id: responsibilities
-    variant: numbered
-    class_name: section-list
-    title: Dine primære opgaver bliver
+  - type: feature_grid
+    id: responsibilities_cards
+    variant: cards
+    region: main
+    columns_mobile: 1
+    columns_desktop: 2
+    title: Key Responsibilities
     items:
-      - Forankre IT-sikkerhed i organisationen og deltage tæt i forretningsprojekter.
-      - Lede tekniske IT-sikkerhedsprojekter fra plan til gennemførsel.
-      - Videreudvikle leverandørstyring med tydelige sikkerhedskrav.
-      - Rapportere sikkerhedsstatus og risici til ledelse og relevante fora.
+      - title: System Design
+        body: Design microservices architectures for low-latency terminal interactions.
+        icon: architecture
+      - title: Cloud Orchestration
+        body: Manage Kubernetes clusters and CI/CD pipelines for CLI distributions.
+        icon: cloud_sync
+      - title: Security and Reliability
+        body: Implement zero-trust security and 99.99% uptime strategies.
+        icon: security
 
   - type: list
     id: requirements
     variant: bullets
-    class_name: section-list
-    title: Du har forudsætningerne
+    region: main
+    title: Requirements
     items:
-      - Erfaring med governance- og compliancearbejde inden for IT-sikkerhed.
-      - Praktisk forståelse for risikovurderinger og sikkerhedsdiscipliner.
-      - Stærke samarbejds- og kommunikationsevner på tværs af niveauer.
-      - Relevant videregående uddannelse, gerne suppleret med certificeringer.
+      - 8+ years in systems architecture or distributed systems.
+      - Expertise with Kubernetes, cloud networking, and observability.
+      - Strong security engineering mindset.
 
   - type: quote
     id: colleague_quote
     variant: pullquote
-    class_name: quote-feature
-    quote: Her får du stor selvstændighed, tæt sparring i teamet og reel indflydelse på sikkerhedsarbejdet.
-    author: Kollegaprofil
-    author_title: IT Security Manager
+    region: main
+    quote: This role is where architecture strategy becomes measurable production impact.
+    author: Hiring Team
 
   - type: benefits
     id: culture
     variant: cards
-    class_name: benefits-grid
-    title: Arbejdsmiljø og kultur
+    region: main
+    title: Why Join
     items:
-      - Høj grad af tillid, fleksibilitet og faglig autonomi.
-      - Onboarding med buddy og tydelig lederstøtte.
-      - Stærkt socialt miljø med aktiviteter på tværs af interesser.
+      - text: High-autonomy technical leadership role.
+        icon: check_circle
+      - text: Competitive compensation and equity.
+        icon: check_circle
 
   - type: application_process
     id: process
     variant: steps
-    class_name: process-box
-    title: Sådan søger du
-    deadline: 04-05-2026
-    body: Vi holder samtaler løbende. Send CV og en kort motiveret ansøgning.
+    region: main
+    title: Process
+    body: We review applications quickly and move qualified candidates through interview loops.
     steps:
-      - Indsend ansøgning via jobportalen.
-      - Første samtale med leder og relevante interessenter.
-      - Eventuel opfølgende dialog og endelig tilbagemelding.
+      - Submit application
+      - Recruiter intro
+      - Technical interviews
 
   - type: company_profile
     id: company
     variant: card
-    class_name: company-card
-    title: Om virksomheden
-    body: Nordwell er en nordisk finansvirksomhed med fokus på ansvarlighed, langsigtede relationer og høj kvalitet i rådgivning og digitale løsninger.
+    region: main
+    title: Company
+    body: We build developer-first systems that combine local CLI ergonomics with resilient cloud primitives.
 
   - type: legal
     id: legal
     variant: muted
-    class_name: legal-note
-    title: Lige muligheder og databeskyttelse
-    body: Vi opfordrer alle kvalificerede kandidater til at søge. Persondata behandles i henhold til gældende regler.
-
-  - type: cta
-    id: apply_footer
-    variant: full_width
-    class_name: apply-strip
-    title: Klar til næste skridt?
-    label: Send ansøgning
-    url: https://example.com/jobs/senior-security-engineering-manager
+    region: main
+    title: Equal Opportunity
+    body: We are an equal opportunity employer and consider all qualified applicants.
 
   - type: meta_panel
-    id: meta
+    id: sidebar_meta
     variant: card
     placement: sidebar
-    class_name: meta-panel
-    title: Jobdetaljer
+    region: sidebar
+    title: Job Details
     facts:
-      - label: Referencenummer
-        value: SEC-2026-042
-      - label: Region
-        value: Øresundsregionen
-      - label: Jobtype
-        value: Fast
-      - label: Arbejdstid
-        value: Fuldtid
-      - label: Ansøgningsfrist
-        value: 04-05-2026
-      - label: Tiltrædelse
-        value: 01-07-2026
-      - label: Arbejdssted
-        value: Havnekaj 12
-    contact_name: Hiring Team
-    contact_role: Hiring Manager
-    contact_phone: +45 70 10 20 30
-    contact_mobile: +45 31 23 45 67
-    contact_email: job@example.com
+      - label: Team
+        value: Platform Architecture
+        icon: groups
+      - label: Req ID
+        value: ARC-2026-014
+        icon: sell
+    contact_name: Recruiting
+    contact_email: jobs@example.com
 
   - type: social_links
-    id: social
+    id: sidebar_social
     variant: icons
     placement: sidebar
-    class_name: social-panel
-    title: Del på
+    region: sidebar
+    title: Share
     links:
       - label: LinkedIn
         url: https://www.linkedin.com
-      - label: Facebook
-        url: https://www.facebook.com
-      - label: X
-        url: https://x.com
+        icon: share
 
   - type: location_map
-    id: map
+    id: sidebar_map
     variant: map
     placement: sidebar
-    class_name: map-panel
-    title: Lokation
-    address: Havnekaj 12, 2100 København
-    caption: Se lokationen på kort
-    map_url: https://maps.google.com/?q=Havnekaj+12+2100+K%C3%B8benhavn
-
-  - type: footer_brand
-    id: footer_brand
-    variant: default
-    placement: fullwidth
-    class_name: footer-brand
-    brand_name: Nordwell
-    body: Nordwell leverer finansielle løsninger til både private og virksomheder. Som kundefokuseret selskab arbejder vi med omtanke, ordentlighed og langsigtet værdi for kunder og samfund.
-    links:
-      - label: Læs mere
-        url: https://example.com/companies/nordwell
+    region: sidebar
+    title: Location
+    map_url: https://maps.google.com/?q=San+Francisco
+    address: San Francisco, CA
+    embed: false
 
 rendering:
   web:
-    template: classic
-    css:
-      files: []
-      inline: ""
-      tokens:
-        color_primary: ""
-        color_background: ""
-        font_body: ""
-        font_heading: ""
-        border_radius: ""
-        spacing_scale: ""
-    labels:
-      share: Del
-      print: Printvenlig version
-      phone: Telefon
-      mobile: Mobil
-      email: E-mail
-      open_map: Åbn kort
-      deadline: Ansøgningsfrist
-    asset_base_url: ../examples/assets
-    show_top_apply: false
-    show_share_links: true
-    show_print_link: true
-    repeat_cta: false
+    template: soft-professional

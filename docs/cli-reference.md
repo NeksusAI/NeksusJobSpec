@@ -122,7 +122,7 @@ Examples:
 
 ```bash
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web --theme modern --css examples/jobspec.css
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web --theme soft-professional --css examples/jobspec.css
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format json-ld --output dist/backend-engineer.json --json
 ```
 
@@ -241,7 +241,7 @@ Examples:
 
 ```bash
 neksus-jobspec render --format web
-neksus-jobspec render --format web --theme modern --clean
+neksus-jobspec render --format web --theme soft-professional --clean
 neksus-jobspec render --profile website --json
 ```
 
@@ -309,8 +309,8 @@ Options:
 Examples:
 
 ```bash
-neksus-jobspec themes show modern
-neksus-jobspec themes show default --json
+neksus-jobspec themes show soft-professional
+neksus-jobspec themes show soft-professional --json
 ```
 
 ## `config get` and `config set`

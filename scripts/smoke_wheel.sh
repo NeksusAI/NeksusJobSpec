@@ -41,11 +41,11 @@ echo "[smoke-wheel] generating jobspec"
 echo "[smoke-wheel] validating jobspec"
 "$venv_dir/bin/neksus-jobspec" spec validate jobspecs/backend-engineer.jobspec.yaml >/dev/null
 
-echo "[smoke-wheel] rendering markdown"
-"$venv_dir/bin/neksus-jobspec" spec render jobspecs/backend-engineer.jobspec.yaml --format markdown >/dev/null
+echo "[smoke-wheel] rendering web"
+"$venv_dir/bin/neksus-jobspec" spec render jobspecs/backend-engineer.jobspec.yaml --format web --theme soft-professional >/dev/null
 
-echo "[smoke-wheel] rendering html"
-"$venv_dir/bin/neksus-jobspec" spec render jobspecs/backend-engineer.jobspec.yaml --format html --theme modern >/dev/null
+echo "[smoke-wheel] rendering json-ld"
+"$venv_dir/bin/neksus-jobspec" spec render jobspecs/backend-engineer.jobspec.yaml --format json-ld >/dev/null
 
 echo "[smoke-wheel] checking public Python API import"
 "$venv_dir/bin/python" -c "from neksus_jobspec import JobSpec, load_jobspec, validate_jobspec, render_jobspec; print('ok')" >/dev/null

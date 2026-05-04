@@ -11,7 +11,7 @@ def render_jobspec(
     spec: JobSpec,
     format: str = "web",
     *,
-    theme: str = "default",
+    theme: str = "soft-professional",
     embed_css: bool = True,
     custom_css: str | None = None,
     asset_base_url: str | None = None,

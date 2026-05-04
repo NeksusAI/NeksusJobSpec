@@ -77,7 +77,13 @@ def render_json_ld(spec) -> str:
             elif "krav" in title or "qualif" in title:
                 qualifications.extend(component.items)
         elif component.type == "benefits":
-            benefits.extend(component.items)
+            for benefit in component.items:
+                if isinstance(benefit, str):
+                    benefits.append(benefit)
+                else:
+                    text = benefit.get("text")
+                    if text:
+                        benefits.append(text)
 
     payload = {
         "@context": "https://schema.org",

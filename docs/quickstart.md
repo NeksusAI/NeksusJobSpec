@@ -45,7 +45,7 @@ neksus-jobspec check --strict
 
 ```bash
 neksus-jobspec render --format web
-neksus-jobspec render --format web --theme modern
+neksus-jobspec render --format web --theme soft-professional
 ```
 
 For all commands and options, see [CLI Reference](cli-reference.md).

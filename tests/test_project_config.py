@@ -18,7 +18,7 @@ spec_directory: jobspecs
 output_directory: dist
 default_format: web
 strict_validation: false
-default_theme: default
+default_theme: soft-professional
 render_profiles:
   public:
     format: web
@@ -41,7 +41,7 @@ spec_directory: jobspecs
 output_directory: dist
 default_format: web
 strict_validation: false
-default_theme: default
+default_theme: soft-professional
 render_profiles:
   public:
     format: web
@@ -66,7 +66,7 @@ spec_directory: jobspecs
 output_directory: dist
 default_format: web
 strict_validation: false
-default_theme: default
+default_theme: soft-professional
 render_profiles:
   public:
     format: web

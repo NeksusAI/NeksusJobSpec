@@ -44,7 +44,7 @@ def render_jobspec(
     content = _render_jobspec(
         spec,
         format=format,
-        theme=theme or "default",
+        theme=theme or "soft-professional",
         custom_css=css,
         asset_base_url=asset_base_url,
     )

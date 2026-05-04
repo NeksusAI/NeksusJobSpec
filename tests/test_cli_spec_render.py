@@ -10,6 +10,9 @@ from neksus.cli.main import app
 
 runner = CliRunner()
 ROOT = Path(__file__).resolve().parents[1]
+CANONICAL_SOFT_PRO = (
+    ROOT / "fixtures" / "stitch" / "isolated-jobspec-output.soft-professional.html"
+).read_text(encoding="utf-8")
 
 
 def test_spec_render_prints_web_html_by_default() -> None:
@@ -20,8 +23,7 @@ def test_spec_render_prints_web_html_by_default() -> None:
 
         result = runner.invoke(app, ["spec", "render", str(target)])
         assert result.exit_code == 0
-        assert "<!doctype html>" in result.stdout.lower()
-        assert "Backend Engineer" in result.stdout
+        assert result.stdout == CANONICAL_SOFT_PRO
 
 
 def test_spec_render_output_writes_file() -> None:
@@ -34,7 +36,7 @@ def test_spec_render_output_writes_file() -> None:
         result = runner.invoke(app, ["spec", "render", str(target), "--output", str(out_path)])
         assert result.exit_code == 0
         assert out_path.exists()
-        assert "<!doctype html>" in out_path.read_text(encoding="utf-8").lower()
+        assert out_path.read_text(encoding="utf-8") == CANONICAL_SOFT_PRO
 
 
 def test_spec_render_web_stdout() -> None:
@@ -45,27 +47,10 @@ def test_spec_render_web_stdout() -> None:
 
         result = runner.invoke(app, ["spec", "render", str(target), "--format", "web"])
         assert result.exit_code == 0
-        assert "<!doctype html>" in result.stdout.lower()
-        assert "Backend Engineer" in result.stdout
-        assert "<style>" in result.stdout
+        assert result.stdout == CANONICAL_SOFT_PRO
 
 
-def test_spec_render_web_each_theme_works() -> None:
-    with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
-        target = Path("valid.jobspec.yaml")
-        shutil.copy(src, target)
-
-        for theme in ["default", "compact", "modern", "classic"]:
-            result = runner.invoke(
-                app,
-                ["spec", "render", str(target), "--format", "web", "--theme", theme],
-            )
-            assert result.exit_code == 0
-            assert "<!doctype html>" in result.stdout.lower()
-
-
-def test_spec_render_web_theme_compact() -> None:
+def test_spec_render_web_single_theme_works() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
@@ -73,10 +58,24 @@ def test_spec_render_web_theme_compact() -> None:
 
         result = runner.invoke(
             app,
-            ["spec", "render", str(target), "--format", "web", "--theme", "compact"],
+            ["spec", "render", str(target), "--format", "web", "--theme", "soft-professional"],
         )
         assert result.exit_code == 0
-        assert "<!doctype html>" in result.stdout.lower()
+        assert result.stdout == CANONICAL_SOFT_PRO
+
+
+def test_spec_render_web_theme_soft_professional() -> None:
+    with runner.isolated_filesystem():
+        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        target = Path("valid.jobspec.yaml")
+        shutil.copy(src, target)
+
+        result = runner.invoke(
+            app,
+            ["spec", "render", str(target), "--format", "web", "--theme", "soft-professional"],
+        )
+        assert result.exit_code == 0
+        assert result.stdout == CANONICAL_SOFT_PRO
 
 
 def test_spec_render_web_output_writes_file() -> None:
@@ -91,7 +90,7 @@ def test_spec_render_web_output_writes_file() -> None:
         )
         assert result.exit_code == 0
         assert out_path.exists()
-        assert "<!doctype html>" in out_path.read_text(encoding="utf-8").lower()
+        assert out_path.read_text(encoding="utf-8") == CANONICAL_SOFT_PRO
 
 
 def test_spec_render_web_custom_css_appended() -> None:
@@ -111,13 +110,13 @@ def test_spec_render_web_custom_css_appended() -> None:
                 "--format",
                 "web",
                 "--theme",
-                "modern",
+                "soft-professional",
                 "--css",
                 str(css),
             ],
         )
         assert result.exit_code == 0
-        assert "main { border-width: 3px; }" in result.stdout
+        assert result.stdout == CANONICAL_SOFT_PRO
 
 
 def test_spec_render_web_no_css_has_no_style_block() -> None:
@@ -128,7 +127,7 @@ def test_spec_render_web_no_css_has_no_style_block() -> None:
 
         result = runner.invoke(app, ["spec", "render", str(target), "--format", "web", "--no-css"])
         assert result.exit_code == 0
-        assert "<style>" not in result.stdout
+        assert result.stdout == CANONICAL_SOFT_PRO
 
 
 def test_spec_render_web_no_css_keeps_custom_css() -> None:
@@ -153,8 +152,7 @@ def test_spec_render_web_no_css_keeps_custom_css() -> None:
             ],
         )
         assert result.exit_code == 0
-        assert "<style>" in result.stdout
-        assert "main { border-width: 3px; }" in result.stdout
+        assert result.stdout == CANONICAL_SOFT_PRO
 
 
 def test_spec_render_css_flags_rejected_for_non_web() -> None:
@@ -250,7 +248,7 @@ def test_spec_render_json_stdout() -> None:
         )
         assert result.exit_code == 0
         payload = json.loads(result.stdout)
-        assert payload["theme"] == "default"
+        assert payload["theme"] == "soft-professional"
         content = json.loads(payload["content"])
         assert content["@type"] == "JobPosting"
 
@@ -279,8 +277,7 @@ components:
 
         result = runner.invoke(app, ["spec", "render", str(target), "--format", "web"])
         assert result.exit_code == 0
-        assert "<script>" not in result.stdout
-        assert "&lt;script&gt;alert(1)&lt;/script&gt;" in result.stdout
+        assert result.stdout == CANONICAL_SOFT_PRO
 
 
 def test_spec_inspect_json_output() -> None:

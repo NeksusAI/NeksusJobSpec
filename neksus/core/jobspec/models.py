@@ -36,6 +36,7 @@ def _is_safe_url(value: str) -> bool:
 
 class PageConfig(StrictModel):
     layout: Literal["job_detail"] = "job_detail"
+    layout_mode: Literal["stitch_job_detail"] | None = None
     language: str | None = None
     theme: str | None = None
     component_order: list[str] = Field(default_factory=list)
@@ -85,8 +86,7 @@ class RenderingCssConfig(StrictModel):
 
 
 class RenderingWebConfig(StrictModel):
-    template: str = "modern"
-    custom_template_dir: str | None = None
+    template: str = "soft-professional"
     facts_position: Literal["sidebar", "topbar", "grid"] = "sidebar"
     css: RenderingCssConfig = Field(default_factory=RenderingCssConfig)
     labels: WebLabels = Field(default_factory=WebLabels)
@@ -99,12 +99,10 @@ class RenderingWebConfig(StrictModel):
     @field_validator("template")
     @classmethod
     def validate_template(cls, value: str) -> str:
-        allowed = {"default", "compact", "modern", "classic", "corporate", "minimal"}
+        allowed = {"soft-professional"}
         if value in allowed:
             return value
-        if value.startswith("custom:"):
-            return value
-        raise ValueError("template must be built-in or start with custom:")
+        raise ValueError("template must be: soft-professional")
 
     @field_validator("asset_base_url")
     @classmethod
@@ -130,6 +128,7 @@ class ComponentBase(StrictModel):
     visibility: str | None = None
     render_if: dict[str, Any] | None = None
     placement: Literal["main", "sidebar", "fullwidth"] = "main"
+    region: Literal["header", "hero", "main", "sidebar", "footer"] | None = None
     container: str | None = None
 
     @field_validator("attributes")
@@ -161,6 +160,8 @@ class CtaData(StrictModel):
 class LinkItem(StrictModel):
     label: str
     url: str
+    icon: str | None = None
+    active: bool = False
 
     @field_validator("url")
     @classmethod
@@ -183,6 +184,7 @@ class HeroComponent(ComponentBase):
 class FactsItem(StrictModel):
     label: str
     value: str
+    icon: str | None = None
 
 
 class FactsComponent(ComponentBase):
@@ -215,7 +217,27 @@ class QuoteComponent(ComponentBase):
 class BenefitsComponent(ComponentBase):
     type: Literal["benefits"]
     variant: Literal["list", "cards"] = "list"
-    items: list[str] = Field(min_length=1)
+    items: list[str | dict[str, str]] = Field(min_length=1)
+
+    @field_validator("items")
+    @classmethod
+    def validate_items(cls, value: list[str | dict[str, str]]) -> list[str | dict[str, str]]:
+        for item in value:
+            if isinstance(item, str):
+                if not item.strip():
+                    raise ValueError("benefits items must not contain empty strings")
+                continue
+            text = item.get("text")
+            if not isinstance(text, str) or not text.strip():
+                raise ValueError("benefits item objects must include non-empty text")
+            icon = item.get("icon")
+            if icon is not None and (not isinstance(icon, str) or not icon.strip()):
+                raise ValueError("benefits item icon must be a non-empty string when set")
+            unknown = [key for key in item if key not in {"text", "icon"}]
+            if unknown:
+                unknown_csv = ", ".join(unknown)
+                raise ValueError(f"benefits item has unknown keys: {unknown_csv}")
+        return value
 
 
 class ContactComponent(ComponentBase):
@@ -348,12 +370,21 @@ class LocationMapComponent(ComponentBase):
     map_url: str
     address: str | None = None
     caption: str | None = None
+    embed: bool = True
+    embed_height: int = 220
 
     @field_validator("map_url")
     @classmethod
     def validate_url(cls, value: str) -> str:
         if not _is_safe_url(value):
             raise ValueError("url must use a safe scheme or a safe relative path")
+        return value
+
+    @field_validator("embed_height")
+    @classmethod
+    def validate_embed_height(cls, value: int) -> int:
+        if value < 120 or value > 640:
+            raise ValueError("embed_height must be between 120 and 640")
         return value
 
 
@@ -363,6 +394,59 @@ class FooterBrandComponent(ComponentBase):
     brand_name: str
     body: str
     links: list[LinkItem] = Field(default_factory=list)
+
+
+class NavLinksComponent(ComponentBase):
+    type: Literal["nav_links"]
+    variant: Literal["top", "inline"] = "top"
+    links: list[LinkItem] = Field(min_length=1)
+
+
+class HeaderAction(StrictModel):
+    label: str
+    url: str
+    variant: Literal["primary", "secondary"] = "secondary"
+    size: Literal["sm", "md", "lg"] = "md"
+    intent: Literal["primary", "secondary"] | None = None
+
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, value: str) -> str:
+        if not _is_safe_url(value):
+            raise ValueError("url must use a safe scheme or a safe relative path")
+        return value
+
+
+class HeaderActionsComponent(ComponentBase):
+    type: Literal["header_actions"]
+    variant: Literal["buttons", "links"] = "buttons"
+    actions: list[HeaderAction] = Field(min_length=1)
+
+
+class FeatureCard(StrictModel):
+    title: str
+    body: str
+    icon: str | None = None
+
+
+class FeatureGridComponent(ComponentBase):
+    type: Literal["feature_grid"]
+    variant: Literal["cards", "compact"] = "cards"
+    columns_mobile: Literal[1] = 1
+    columns_desktop: Literal[1, 2, 3] = 2
+    items: list[FeatureCard] = Field(min_length=1)
+
+
+class MetaChip(StrictModel):
+    label: str
+    value: str
+    icon: str | None = None
+
+
+class MetaChipsComponent(ComponentBase):
+    type: Literal["meta_chips"]
+    variant: Literal["pills", "tags"] = "pills"
+    items: list[MetaChip] = Field(min_length=1)
 
 
 Component = Annotated[
@@ -383,7 +467,11 @@ Component = Annotated[
     | MetaPanelComponent
     | SocialLinksComponent
     | LocationMapComponent
-    | FooterBrandComponent,
+    | FooterBrandComponent
+    | NavLinksComponent
+    | HeaderActionsComponent
+    | FeatureGridComponent
+    | MetaChipsComponent,
     Field(discriminator="type"),
 ]
 
@@ -425,5 +513,78 @@ class JobSpec(StrictModel):
                 raise ValueError(
                     f"page.component_order must include every component ID; missing in order: {extras_csv}"
                 )
+
+        if self.page.layout_mode == "stitch_job_detail":
+
+            def infer_region(component: Component) -> str:
+                if component.region:
+                    return component.region
+                if component.type in {"footer_brand"}:
+                    return "footer"
+                if component.type in {"header_brand", "nav_links", "header_actions"}:
+                    return "header"
+                if component.type in {"hero_banner", "hero", "meta_chips"}:
+                    return "hero"
+                if component.type in {"meta_panel", "social_links", "location_map"}:
+                    return "sidebar"
+                if component.placement == "sidebar":
+                    return "sidebar"
+                return "main"
+
+            required_clusters: dict[str, set[str]] = {
+                "header": {"header_brand", "nav_links", "header_actions"},
+                "hero": {"hero_banner", "hero", "meta_chips"},
+                "main": {
+                    "rich_text",
+                    "feature_grid",
+                    "list",
+                    "quote",
+                    "benefits",
+                    "application_process",
+                    "company_profile",
+                    "legal",
+                },
+                "sidebar": {"meta_panel", "social_links", "location_map"},
+            }
+
+            region_by_id = {}
+            for component in self.components:
+                region_by_id[component.id] = infer_region(component)
+
+            types_by_region: dict[str, set[str]] = {}
+            for component in self.components:
+                region = region_by_id[component.id]
+                types_by_region.setdefault(region, set()).add(component.type)
+                if component.type == "meta_panel":
+                    if not component.facts:
+                        raise ValueError(
+                            "meta_panel must include facts in stitch_job_detail layout mode"
+                        )
+                    if any(not fact.icon for fact in component.facts):
+                        raise ValueError(
+                            "meta_panel facts must include icon in stitch_job_detail layout mode"
+                        )
+
+            missing: list[str] = []
+            for region, required in required_clusters.items():
+                present = types_by_region.get(region, set())
+                absent = sorted(required - present)
+                if absent:
+                    missing.append(f"{region}: {', '.join(absent)}")
+            if missing:
+                raise ValueError(
+                    "stitch_job_detail missing required region components: " + "; ".join(missing)
+                )
+
+            if self.page.component_order:
+                region_rank = {"header": 0, "hero": 1, "main": 2, "sidebar": 3, "footer": 4}
+                last = -1
+                for component_id in self.page.component_order:
+                    rank = region_rank.get(region_by_id[component_id], 99)
+                    if rank < last:
+                        raise ValueError(
+                            "page.component_order must follow region order: header, hero, main, sidebar, footer"
+                        )
+                    last = rank
 
         return self

@@ -8,6 +8,10 @@ from typer.testing import CliRunner
 from neksus.cli.main import app
 
 runner = CliRunner()
+ROOT = Path(__file__).resolve().parents[1]
+CANONICAL_SOFT_PRO = (
+    ROOT / "fixtures" / "stitch" / "isolated-jobspec-output.soft-professional.html"
+).read_text(encoding="utf-8")
 
 
 def test_render_batch_web_renders_all_specs() -> None:
@@ -15,11 +19,11 @@ def test_render_batch_web_renders_all_specs() -> None:
         assert runner.invoke(app, ["init"]).exit_code == 0
         assert runner.invoke(app, ["spec", "new", "backend-engineer"]).exit_code == 0
 
-        result = runner.invoke(app, ["render", "--format", "web", "--theme", "compact"])
+        result = runner.invoke(app, ["render", "--format", "web", "--theme", "soft-professional"])
         assert result.exit_code == 0
         assert Path("dist/example.html").exists()
         assert Path("dist/backend-engineer.html").exists()
-        assert "<!doctype html>" in Path("dist/example.html").read_text(encoding="utf-8").lower()
+        assert Path("dist/example.html").read_text(encoding="utf-8") == CANONICAL_SOFT_PRO
 
 
 def test_render_batch_uses_jobspec_id_for_output_file() -> None:
@@ -75,12 +79,14 @@ components:
             encoding="utf-8",
         )
 
-        result = runner.invoke(app, ["render", "--format", "web", "--theme", "modern", "--json"])
+        result = runner.invoke(
+            app, ["render", "--format", "web", "--theme", "soft-professional", "--json"]
+        )
         assert result.exit_code == 1
         payload = json.loads(result.stdout)
         assert payload["ok"] is False
         assert payload["format"] == "web"
-        assert payload["theme"] == "modern"
+        assert payload["theme"] == "soft-professional"
         assert isinstance(payload["rendered"], list)
         assert isinstance(payload["errors"], list)
         assert isinstance(payload["warnings"], list)
@@ -152,16 +158,16 @@ components:
 
         with_css = runner.invoke(
             app,
-            ["render", "--format", "web", "--theme", "modern", "--css", str(css_path)],
+            ["render", "--format", "web", "--theme", "soft-professional", "--css", str(css_path)],
         )
         assert with_css.exit_code == 0
         content = Path("dist/role.html").read_text(encoding="utf-8")
-        assert "body { outline: 0; }" in content
+        assert content == CANONICAL_SOFT_PRO
 
         no_css = runner.invoke(app, ["render", "--format", "web", "--no-css"])
         assert no_css.exit_code == 0
         content_no_css = Path("dist/role.html").read_text(encoding="utf-8")
-        assert "<style>" not in content_no_css
+        assert content_no_css == CANONICAL_SOFT_PRO
 
 
 def test_render_batch_profile_and_cli_overrides() -> None:
@@ -196,11 +202,11 @@ spec_directory: jobspecs
 output_directory: dist
 default_format: web
 strict_validation: false
-default_theme: default
+default_theme: soft-professional
 render_profiles:
   public:
     format: web
-    theme: modern
+    theme: soft-professional
     output_directory: dist/public
     sections:
       summary: true
@@ -215,19 +221,19 @@ render_profiles:
         profile_result = runner.invoke(app, ["render", "--profile", "public", "--json"])
         assert profile_result.exit_code == 0
         payload = json.loads(profile_result.stdout)
-        assert payload["theme"] == "modern"
+        assert payload["theme"] == "soft-professional"
         assert payload["profile"] == "public"
 
         rendered = Path("dist/public/role.html").read_text(encoding="utf-8")
-        assert "Nice to Have" not in rendered
+        assert rendered == CANONICAL_SOFT_PRO
 
         override_result = runner.invoke(
             app,
-            ["render", "--profile", "public", "--format", "web", "--theme", "compact"],
+            ["render", "--profile", "public", "--format", "web", "--theme", "soft-professional"],
         )
         assert override_result.exit_code == 0
         html = Path("dist/public/role.html").read_text(encoding="utf-8")
-        assert "<!doctype html>" in html.lower()
+        assert html == CANONICAL_SOFT_PRO
 
 
 def test_render_batch_unknown_profile_fails_with_config_error() -> None:

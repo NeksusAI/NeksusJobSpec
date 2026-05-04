@@ -1,8 +1,8 @@
 # Themes
 
-Neksus renders `web` output with built-in themes and optional CSS overrides.
+Neksus renders `web` output with one built-in theme and optional CSS overrides.
 
-## Built-in themes
+## Built-in theme
 
 List available themes:
 
@@ -11,34 +11,31 @@ neksus-jobspec themes
 neksus-jobspec themes --json
 ```
 
-Inspect one theme:
+Inspect theme metadata:
 
 ```bash
-neksus-jobspec themes show classic
+neksus-jobspec themes show soft-professional
 ```
 
-Current built-ins:
+Current built-in:
 
-- `default`
-- `compact`
-- `modern`
-- `classic`
+- `soft-professional`
 
-Use a theme at render time:
+Use it at render time:
 
 ```bash
-neksus-jobspec spec render examples/danish-job-detail.jobspec.yaml --format web --theme classic --output dist/danish-job-detail-classic.html
+neksus-jobspec spec render examples/danish-job-detail.jobspec.yaml --format web --theme soft-professional --output dist/danish-job-detail.html
 ```
 
 ## CSS customization
 
-You can layer CSS on top of built-ins:
+Layer your CSS on top of the embedded base theme:
 
 ```bash
-neksus-jobspec spec render examples/danish-job-detail.jobspec.yaml --format web --theme classic --css examples/jobspec.css --output dist/danish-job-detail-custom.html
+neksus-jobspec spec render examples/danish-job-detail.jobspec.yaml --format web --theme soft-professional --css examples/jobspec.css --output dist/danish-job-detail-custom.html
 ```
 
-Disable built-in embedded CSS (advanced):
+Disable embedded base CSS (advanced):
 
 ```bash
 neksus-jobspec spec render examples/danish-job-detail.jobspec.yaml --format web --no-css --css examples/jobspec.css
@@ -46,51 +43,17 @@ neksus-jobspec spec render examples/danish-job-detail.jobspec.yaml --format web 
 
 ## Theme selection in JobSpec
 
-Set theme directly in spec:
-
 ```yaml
 rendering:
   web:
-    template: classic
+    template: soft-professional
 ```
 
-Supported values for `rendering.web.template`:
+Supported value for `rendering.web.template`:
 
-- `default`
-- `compact`
-- `modern`
-- `classic`
-- `corporate`
-- `minimal`
+- `soft-professional`
 
-`corporate` and `minimal` are compatibility aliases to built-in style families.
+## Custom templates
 
-## Custom template directory
-
-Use a custom template directory path:
-
-```bash
-neksus-jobspec spec render examples/danish-job-detail.jobspec.yaml --format web --custom-template-dir ./my-template
-```
-
-Current contract (v0.2.x):
-
-- Directory must exist.
-- `template.yaml` must exist in that directory.
-- If missing, render fails with a controlled error.
-
-Minimal structure:
-
-```text
-my-template/
-  template.yaml
-```
-
-Minimal manifest example:
-
-```yaml
-name: my-template
-version: 1
-```
-
-Note: v0.2.x validates manifest presence only. Full custom-template slot/asset contracts are planned for a later release.
+Custom template directories are not part of the active v0.2.x render contract.
+Use the built-in theme plus CSS overrides.
