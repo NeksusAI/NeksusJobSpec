@@ -8,7 +8,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from neksus_jobspec.errors import FileSystemError, JobSpecValidationError
+from neksus_jobspec.errors import JobSpecValidationError
 from neksus_jobspec.jobspec.models import JobSpec
 from neksus_jobspec.jobspec.parser import load_jobspec as _load_jobspec
 from neksus_jobspec.jobspec.renderer import render_jobspec as _render_jobspec
@@ -36,27 +36,18 @@ def render_jobspec(
     spec_or_path: JobSpec | str | Path,
     format: str = "web",
     theme: str | None = None,
-    output: str | Path | None = None,
     css: str | None = None,
     asset_base_url: str | None = None,
 ) -> str:
-    """Render a JobSpec to a string, optionally writing to a file."""
+    """Render a JobSpec to a string."""
     spec = load_jobspec(spec_or_path) if isinstance(spec_or_path, (str, Path)) else spec_or_path
-    content = _render_jobspec(
+    return _render_jobspec(
         spec,
         format=format,
         theme=theme or "soft-professional",
         custom_css=css,
         asset_base_url=asset_base_url,
     )
-    if output is not None:
-        output_path = Path(output)
-        try:
-            output_path.parent.mkdir(parents=True, exist_ok=True)
-            output_path.write_text(content, encoding="utf-8")
-        except OSError as exc:
-            raise FileSystemError(f"Failed to write file: {output_path}") from exc
-    return content
 
 
 __all__ = ["JobSpec", "__version__", "load_jobspec", "render_jobspec", "validate_jobspec"]

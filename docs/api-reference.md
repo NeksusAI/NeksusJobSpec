@@ -56,7 +56,7 @@ spec = validate_jobspec(
 )
 ```
 
-## `render_jobspec(spec_or_path, format="web", theme=None, output=None, css=None, asset_base_url=None)`
+## `render_jobspec(spec_or_path, format="web", theme=None, css=None, asset_base_url=None)`
 
 Purpose: render validated JobSpec as web/json-ld.
 
@@ -64,13 +64,12 @@ Arguments:
 - `spec_or_path: JobSpec | str | pathlib.Path`
 - `format: "web" | "json-ld"`
 - `theme: str | None`
-- `output: str | pathlib.Path | None`
 - `css: str | None`
 - `asset_base_url: str | None`
 
 Returns: `str`
 
-Raises: `FileSystemError`, `UnsupportedFormatError`, `JobSpecParseError`, `JobSpecValidationError`
+Raises: `UnsupportedFormatError`, `JobSpecParseError`, `JobSpecValidationError`
 
 ## `__version__`
 

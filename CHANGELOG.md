@@ -31,6 +31,7 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
   - CLI: `src/neksus_jobspec_cli/*`
 - BREAKING: CLI entrypoint now resolves from `neksus_jobspec_cli.main`.
 - Packaging/build config now ships only `neksus_jobspec` and `neksus_jobspec_cli`.
+- BREAKING: Public Python `render_jobspec(...)` no longer writes output files directly; it returns rendered content only.
 - Documentation renamed the public full example to `examples/job-detail.jobspec.yaml`.
 - Documentation renamed custom CSS example file to `examples/theme-overrides.css`.
 

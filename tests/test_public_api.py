@@ -72,16 +72,17 @@ def test_render_jobspec_web_with_builtin_theme() -> None:
     assert "<!doctype html>" in content.lower()
 
 
-def test_render_jobspec_writes_output_file(tmp_path: Path) -> None:
+def test_render_jobspec_returns_content_for_caller_managed_output(tmp_path: Path) -> None:
     from neksus_jobspec import render_jobspec
 
     out = tmp_path / "dist" / "backend-engineer.html"
-    render_jobspec(
+    content = render_jobspec(
         ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml",
         format="web",
         theme="soft-professional",
-        output=out,
     )
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(content, encoding="utf-8")
     assert out.exists()
 
 
