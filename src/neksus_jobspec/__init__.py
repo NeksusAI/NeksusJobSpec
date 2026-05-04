@@ -17,12 +17,36 @@ __version__ = "0.2.0"
 
 
 def load_jobspec(path: str | Path) -> JobSpec:
-    """Load and validate a JobSpec YAML file."""
+    """Load and validate a JobSpec YAML file.
+
+    Args:
+        path: Path to a JobSpec YAML file.
+
+    Returns:
+        A validated ``JobSpec`` model.
+
+    Raises:
+        FileSystemError: If the file cannot be read.
+        JobSpecParseError: If YAML parsing fails.
+        JobSpecValidationError: If validation fails.
+    """
     return _load_jobspec(Path(path))
 
 
 def validate_jobspec(path_or_data: str | Path | Mapping[str, Any]) -> JobSpec:
-    """Validate a JobSpec from a path or mapping and return a model."""
+    """Validate a JobSpec from a path or mapping.
+
+    Args:
+        path_or_data: Path to a YAML file or mapping payload.
+
+    Returns:
+        A validated ``JobSpec`` model.
+
+    Raises:
+        FileSystemError: If reading from path fails.
+        JobSpecParseError: If YAML parsing fails.
+        JobSpecValidationError: If validation fails.
+    """
     if isinstance(path_or_data, (str, Path)):
         return load_jobspec(path_or_data)
 
@@ -39,7 +63,24 @@ def render_jobspec(
     css: str | None = None,
     asset_base_url: str | None = None,
 ) -> str:
-    """Render a JobSpec to a string."""
+    """Render a JobSpec to a string.
+
+    Args:
+        spec_or_path: Validated JobSpec or YAML file path.
+        format: Output format (``web`` or ``json-ld``).
+        theme: Built-in theme name for web output.
+        css: Extra CSS rules appended for web output.
+        asset_base_url: Prefix for relative media/asset paths.
+
+    Returns:
+        Rendered output content as text.
+
+    Raises:
+        FileSystemError: If reading from path fails.
+        JobSpecParseError: If YAML parsing fails.
+        JobSpecValidationError: If validation fails.
+        UnsupportedFormatError: If format is not supported.
+    """
     spec = load_jobspec(spec_or_path) if isinstance(spec_or_path, (str, Path)) else spec_or_path
     return _render_jobspec(
         spec,
