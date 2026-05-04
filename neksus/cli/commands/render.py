@@ -61,10 +61,6 @@ def render_command(
     ] = False,
     format: Annotated[str | None, typer.Option("--format", help="Render format.")] = None,
     theme: Annotated[str | None, typer.Option("--theme", help="Built-in render theme.")] = None,
-    template: Annotated[
-        str | None,
-        typer.Option("--template", help="Web template preset (soft-professional)."),
-    ] = None,
     css: Annotated[
         Path | None, typer.Option("--css", help="Append custom CSS file (web only).")
     ] = None,
@@ -157,8 +153,6 @@ def render_command(
             spec = JobSpec.model_validate(data)
             if theme is not None:
                 spec.rendering.web.template = theme
-            if template is not None:
-                spec.rendering.web.template = template
             rendered_content = render_jobspec(
                 spec,
                 format=render_format,

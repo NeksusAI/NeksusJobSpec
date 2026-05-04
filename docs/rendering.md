@@ -8,11 +8,18 @@ Rendering expects a v0.2.x component JobSpec (`page` + `job` + `components`).
 
 ## Web
 
-- `soft-professional` is pinned to the Stitch screen contract.
-- Canonical HTML fixture: `fixtures/stitch/isolated-jobspec-output.soft-professional.html`.
-- Canonical screenshot fixture: `fixtures/stitch/isolated-jobspec-output.soft-professional.png`.
-- CLI/theme entry points stay the same (`spec render`, `render`, `--theme soft-professional`).
-- JSON-LD output remains model-driven; only web output is contract-pinned.
+- Renders component order with explicit regions:
+  - `.jobspec-region--header`
+  - `.jobspec-region--hero`
+  - `.jobspec-main`
+  - `.jobspec-sidebar`
+  - `.jobspec-region--footer`
+- Maps components by `placement` (`fullwidth`, `main`, `sidebar`) and `region`.
+- Supports apply CTA, optional repeated CTA, share links, and print link.
+- Supports CSS tokens and inline CSS from YAML.
+- Supports `rendering.web.asset_base_url` (or CLI `--asset-base-url`) to prefix relative component media/asset URLs.
+- Supports built-in theme names via `--theme`.
+- JSON-LD output remains model-driven.
 
 ## JSON-LD
 

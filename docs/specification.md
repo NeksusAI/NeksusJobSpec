@@ -84,6 +84,4 @@ Supported component types:
 - `asset_base_url`: optional URL/path prefix for relative component asset URLs
 - `labels`: optional localized UI labels:
   - `share`, `print`, `phone`, `mobile`, `email`, `open_map`, `deadline`
-- `template`: `soft-professional`
-
-For `soft-professional`, web output is pinned to the Stitch reference contract fixture at `fixtures/stitch/isolated-jobspec-output.soft-professional.html`.
+- `template`: built-in theme name or custom template identifier/path

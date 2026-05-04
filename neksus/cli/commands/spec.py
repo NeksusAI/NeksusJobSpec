@@ -171,10 +171,6 @@ def spec_render(
     path: Annotated[Path, typer.Argument(help="Path to a JobSpec YAML file.")],
     format: Annotated[str, typer.Option("--format", help="Render format.")] = "web",
     theme: Annotated[str | None, typer.Option("--theme", help="Built-in render theme.")] = None,
-    template: Annotated[
-        str | None,
-        typer.Option("--template", help="Web template preset (soft-professional)."),
-    ] = None,
     css: Annotated[
         Path | None, typer.Option("--css", help="Append custom CSS file (web only).")
     ] = None,
@@ -228,8 +224,6 @@ def spec_render(
         selected_theme = _resolve_default_theme(theme)
         if theme is not None:
             spec.rendering.web.template = theme
-        if template is not None:
-            spec.rendering.web.template = template
         custom_css: str | None = None
         if css is not None:
             try:

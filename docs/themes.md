@@ -41,7 +41,7 @@ Disable embedded base CSS (advanced):
 neksus-jobspec spec render examples/danish-job-detail.jobspec.yaml --format web --no-css --css examples/jobspec.css
 ```
 
-## Theme selection in JobSpec
+## Theme selection in JobSpec YAML
 
 ```yaml
 rendering:
@@ -49,11 +49,8 @@ rendering:
     template: soft-professional
 ```
 
-Supported value for `rendering.web.template`:
+`rendering.web.template` can be a built-in theme name (currently `soft-professional`).
 
-- `soft-professional`
+Built-in theme CSS is file-based under:
 
-## Custom templates
-
-Custom template directories are not part of the active v0.2.x render contract.
-Use the built-in theme plus CSS overrides.
+- `neksus/core/jobspec/rendering/theme_css/soft-professional.css`

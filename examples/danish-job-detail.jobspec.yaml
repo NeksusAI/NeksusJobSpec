@@ -72,7 +72,7 @@ components:
     placement: fullwidth
     region: hero
     image_url: https://lh3.googleusercontent.com/aida-public/AB6AXuBP7eiY08JzrrHzVBNG0b8cSa2T8AYepZGIzOqEG3IThlXtGYg7jZ1GKMw8NfMQB5eYFiZtXfAaKealTDv44YaN5uDMWIIamTqBS2mnvSyQYp4wd86_d0EKUbsonXAanZ-B7BGX5A3R85JBXMRTXMtujqjO3LeXDN7z4Zot5YRLbpJZf5_Ln9x7mP2y-IDGT11jB7xbIiBvu1D4o3lj1-hwtbjWAn1_E6ZmrS8aWWDhyBK1EMBIWqa-EBAumbiO43oBtKZaEUk0MNcI
-    alt: Map image
+    alt: A detailed, high-contrast black and white map of San Francisco showing the dense urban grid and coastal outlines. The image has a clean, technical aesthetic with sharp lines and minimalist labeling, fitting a modern developer environment. The lighting is bright and even, reinforcing a professional light-mode UI design. The overall mood is precise and focused.
 
   - type: hero
     id: hero
@@ -91,7 +91,7 @@ components:
         value: San Francisco, CA
         icon: location_on
       - label: Salary
-        value: $180k - $240k
+        value: $180k – $240k
         icon: payments
       - label: Type
         value: Full-time
@@ -102,7 +102,7 @@ components:
     variant: highlighted
     region: main
     title: About the Role
-    body: You will bridge high-level architecture and low-level execution to ensure resilient, scalable distributed systems.
+    body: We are seeking a Senior Systems Architect to lead the design and evolution of our containerized CLI ecosystem. In this role, you will bridge the gap between high-level architectural vision and low-level technical execution. You will be responsible for ensuring our distributed systems are resilient, scalable, and maintain the highest standards of technical professionalism.
 
   - type: feature_grid
     id: responsibilities_cards
@@ -113,13 +113,13 @@ components:
     title: Key Responsibilities
     items:
       - title: System Design
-        body: Design microservices architectures for low-latency terminal interactions.
+        body: Design end-to-end microservices architectures optimized for low-latency terminal interactions.
         icon: architecture
       - title: Cloud Orchestration
-        body: Manage Kubernetes clusters and CI/CD pipelines for CLI distributions.
+        body: Manage complex Kubernetes clusters and automated CI/CD pipelines for CLI binary distributions.
         icon: cloud_sync
-      - title: Security and Reliability
-        body: Implement zero-trust security and 99.99% uptime strategies.
+      - title: Security & Reliability
+        body: Implement zero-trust security models and 99.99% uptime strategies across our entire CLI-to-Cloud infrastructure.
         icon: security
 
   - type: list
@@ -128,9 +128,11 @@ components:
     region: main
     title: Requirements
     items:
-      - 8+ years in systems architecture or distributed systems.
-      - Expertise with Kubernetes, cloud networking, and observability.
-      - Strong security engineering mindset.
+      - 8+ years of experience in distributed systems and backend engineering.
+      - Deep expertise in Rust, Go, or C++ with a focus on high-performance binaries.
+      - Proven track record of deploying containerized workloads at scale (K8s, Nomad).
+      - Strong understanding of networking protocols (gRPC, WebSockets, TLS 1.3).
+      - Experience with CLI design patterns and developer experience (DX) best practices.
 
   - type: quote
     id: colleague_quote
@@ -143,11 +145,17 @@ components:
     id: culture
     variant: cards
     region: main
-    title: Why Join
+    title: Our Benefits
     items:
-      - text: High-autonomy technical leadership role.
+      - text: Unlimited PTO
         icon: check_circle
-      - text: Competitive compensation and equity.
+      - text: Equity Options
+        icon: check_circle
+      - text: Health/Dental
+        icon: check_circle
+      - text: Tech Stipend
+        icon: check_circle
+      - text: Annual Retreats
         icon: check_circle
 
   - type: application_process
@@ -182,11 +190,17 @@ components:
     region: sidebar
     title: Job Details
     facts:
-      - label: Team
-        value: Platform Architecture
+      - label: Industry
+        value: FinTech / CLI Tech
         icon: groups
-      - label: Req ID
-        value: ARC-2026-014
+      - label: Team Size
+        value: 12 Engineers
+        icon: groups
+      - label: Remote Policy
+        value: Hybrid (3 Days)
+        icon: groups
+      - label: Reports to
+        value: CTO
         icon: sell
     contact_name: Recruiting
     contact_email: jobs@example.com
@@ -209,7 +223,7 @@ components:
     region: sidebar
     title: Location
     map_url: https://maps.google.com/?q=San+Francisco
-    address: San Francisco, CA
+    address: 450 Mission St, San Francisco
     embed: false
 
 rendering:

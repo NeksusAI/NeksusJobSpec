@@ -99,10 +99,12 @@ class RenderingWebConfig(StrictModel):
     @field_validator("template")
     @classmethod
     def validate_template(cls, value: str) -> str:
-        allowed = {"soft-professional"}
-        if value in allowed:
-            return value
-        raise ValueError("template must be: soft-professional")
+        cleaned = value.strip()
+        if not cleaned:
+            raise ValueError("template must not be empty")
+        if any(char in cleaned for char in ("\n", "\r", "\t")):
+            raise ValueError("template must not contain control whitespace")
+        return cleaned
 
     @field_validator("asset_base_url")
     @classmethod

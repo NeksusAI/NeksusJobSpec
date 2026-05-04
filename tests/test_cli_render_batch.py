@@ -8,10 +8,6 @@ from typer.testing import CliRunner
 from neksus.cli.main import app
 
 runner = CliRunner()
-ROOT = Path(__file__).resolve().parents[1]
-CANONICAL_SOFT_PRO = (
-    ROOT / "fixtures" / "stitch" / "isolated-jobspec-output.soft-professional.html"
-).read_text(encoding="utf-8")
 
 
 def test_render_batch_web_renders_all_specs() -> None:
@@ -23,7 +19,7 @@ def test_render_batch_web_renders_all_specs() -> None:
         assert result.exit_code == 0
         assert Path("dist/example.html").exists()
         assert Path("dist/backend-engineer.html").exists()
-        assert Path("dist/example.html").read_text(encoding="utf-8") == CANONICAL_SOFT_PRO
+        assert "<!doctype html>" in Path("dist/example.html").read_text(encoding="utf-8").lower()
 
 
 def test_render_batch_uses_jobspec_id_for_output_file() -> None:
@@ -162,12 +158,12 @@ components:
         )
         assert with_css.exit_code == 0
         content = Path("dist/role.html").read_text(encoding="utf-8")
-        assert content == CANONICAL_SOFT_PRO
+        assert "body { outline: 0; }" in content
 
         no_css = runner.invoke(app, ["render", "--format", "web", "--no-css"])
         assert no_css.exit_code == 0
         content_no_css = Path("dist/role.html").read_text(encoding="utf-8")
-        assert content_no_css == CANONICAL_SOFT_PRO
+        assert "<style>" in content_no_css
 
 
 def test_render_batch_profile_and_cli_overrides() -> None:
@@ -225,7 +221,7 @@ render_profiles:
         assert payload["profile"] == "public"
 
         rendered = Path("dist/public/role.html").read_text(encoding="utf-8")
-        assert rendered == CANONICAL_SOFT_PRO
+        assert "Nice to Have" not in rendered
 
         override_result = runner.invoke(
             app,
@@ -233,7 +229,7 @@ render_profiles:
         )
         assert override_result.exit_code == 0
         html = Path("dist/public/role.html").read_text(encoding="utf-8")
-        assert html == CANONICAL_SOFT_PRO
+        assert "<!doctype html>" in html.lower()
 
 
 def test_render_batch_unknown_profile_fails_with_config_error() -> None:
