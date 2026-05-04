@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from neksus.core.errors import ConfigError
-from neksus.core.project.config import load_project_config
+from neksus_jobspec.errors import ConfigError
+from neksus_jobspec.project.config import load_project_config
 
 
 def test_load_project_config_rejects_unknown_profile_key(tmp_path: Path) -> None:

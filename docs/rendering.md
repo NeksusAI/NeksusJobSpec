@@ -8,18 +8,19 @@ Rendering expects a v0.2.x component JobSpec (`page` + `job` + `components`).
 
 ## Web
 
-- Renders component order with explicit regions:
-  - `.jobspec-region--header`
-  - `.jobspec-region--hero`
-  - `.jobspec-main`
-  - `.jobspec-sidebar`
-  - `.jobspec-region--footer`
-- Maps components by `placement` (`fullwidth`, `main`, `sidebar`) and `region`.
-- Supports apply CTA, optional repeated CTA, share links, and print link.
-- Supports CSS tokens and inline CSS from YAML.
+- Uses the built-in `soft-professional` HTML contract for component-based job-detail pages.
+- Derives visible job content from YAML components and rendering config.
+- Supports apply CTA, share links, and print-link icon toggle from `rendering.web`.
+- Supports CSS overrides from CLI (`--css`) and YAML (`rendering.web.css`).
 - Supports `rendering.web.asset_base_url` (or CLI `--asset-base-url`) to prefix relative component media/asset URLs.
 - Supports built-in theme names via `--theme`.
 - JSON-LD output remains model-driven.
+
+See also:
+
+- [Soft-Professional Guide](soft-professional-guide.md)
+- [Content vs Theme](content-vs-theme.md)
+- [Render Troubleshooting](render-troubleshooting.md)
 
 ## JSON-LD
 
@@ -29,4 +30,4 @@ Rendering expects a v0.2.x component JobSpec (`page` + `job` + `components`).
 
 - CSS settings are trusted local-output settings.
 - Rendering emits output only; it does not execute scripts.
-- Rendering does not fetch external resources.
+- Rendering itself does not fetch external resources; rendered HTML may reference external assets (for example fonts/scripts/images).

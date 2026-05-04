@@ -40,7 +40,7 @@ Deprecations should be preferred before removals when practical.
 
 ## Non-stable internals
 
-Internal modules under `neksus.core.*` and `neksus.cli.*` are implementation details and not stable contracts.
+Internal modules under `neksus_jobspec.*` and `neksus_jobspec_cli.*` are implementation details and not stable contracts.
 
 ## Out of scope for v0.2.x contract
 

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from neksus.cli.main import app
+from neksus_jobspec_cli.main import app
 
 runner = CliRunner()
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_spec_render_prints_web_html_by_default() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
@@ -26,7 +26,7 @@ def test_spec_render_prints_web_html_by_default() -> None:
 
 def test_spec_render_output_writes_file() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         out_path = Path("dist/out.html")
         shutil.copy(src, target)
@@ -39,7 +39,7 @@ def test_spec_render_output_writes_file() -> None:
 
 def test_spec_render_web_stdout() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
@@ -52,7 +52,7 @@ def test_spec_render_web_stdout() -> None:
 
 def test_spec_render_web_single_theme_works() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
@@ -66,7 +66,7 @@ def test_spec_render_web_single_theme_works() -> None:
 
 def test_spec_render_web_theme_soft_professional() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
@@ -80,7 +80,7 @@ def test_spec_render_web_theme_soft_professional() -> None:
 
 def test_spec_render_web_output_writes_file() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         out_path = Path("dist/out.html")
         shutil.copy(src, target)
@@ -95,7 +95,7 @@ def test_spec_render_web_output_writes_file() -> None:
 
 def test_spec_render_web_custom_css_appended() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         css = Path("brand.css")
         css.write_text("main { border-width: 3px; }", encoding="utf-8")
@@ -121,7 +121,7 @@ def test_spec_render_web_custom_css_appended() -> None:
 
 def test_spec_render_web_no_css_has_no_style_block() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
@@ -132,7 +132,7 @@ def test_spec_render_web_no_css_has_no_style_block() -> None:
 
 def test_spec_render_web_no_css_keeps_custom_css() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         css = Path("brand.css")
         css.write_text("main { border-width: 3px; }", encoding="utf-8")
@@ -158,7 +158,7 @@ def test_spec_render_web_no_css_keeps_custom_css() -> None:
 
 def test_spec_render_css_flags_rejected_for_non_web() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         css = Path("brand.css")
         css.write_text("x", encoding="utf-8")
@@ -175,7 +175,7 @@ def test_spec_render_css_flags_rejected_for_non_web() -> None:
 
 def test_spec_render_asset_base_url_rejected_for_non_web() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
@@ -199,7 +199,7 @@ def test_spec_render_asset_base_url_rejected_for_non_web() -> None:
 
 def test_spec_render_css_missing_file_fails() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
@@ -214,7 +214,7 @@ def test_spec_render_css_missing_file_fails() -> None:
 
 def test_spec_render_invalid_theme_is_controlled() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
@@ -229,7 +229,7 @@ def test_spec_render_invalid_theme_is_controlled() -> None:
 
 def test_spec_render_removed_format_fails_with_migration_message() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
@@ -240,7 +240,7 @@ def test_spec_render_removed_format_fails_with_migration_message() -> None:
 
 def test_spec_render_json_stdout() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
@@ -284,7 +284,7 @@ components:
 
 def test_spec_inspect_json_output() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 

@@ -18,8 +18,13 @@ You can compose validated page blocks such as header_brand, hero_banner, hero, m
 
 `soft-professional` is rendered from YAML components plus the built-in theme.
 
-- Example: [`examples/danish-job-detail.jobspec.yaml`](examples/danish-job-detail.jobspec.yaml)
+- Example: [`examples/job-detail.jobspec.yaml`](examples/job-detail.jobspec.yaml)
 - Docs: [`docs/specification.md`](docs/specification.md), [`docs/rendering.md`](docs/rendering.md), [`docs/themes.md`](docs/themes.md), [`docs/examples.md`](docs/examples.md)
+- Deep dives: [`docs/soft-professional-guide.md`](docs/soft-professional-guide.md), [`docs/content-vs-theme.md`](docs/content-vs-theme.md), [`docs/render-troubleshooting.md`](docs/render-troubleshooting.md), [`docs/migration-0.1-to-0.2.md`](docs/migration-0.1-to-0.2.md)
+
+Rendered example screenshot:
+
+![Soft Professional Job Detail](docs/assets/job-detail-soft-professional.png)
 
 For portable web output paths, use `rendering.web.asset_base_url` in spec files or `--asset-base-url` in CLI rendering commands.
 
@@ -70,7 +75,7 @@ uv sync
 uv run ruff check .
 uv run ruff format --check .
 uv run pytest
-./scripts/smoke.sh
+uv run pytest -m integration && uv run python -m mkdocs build --strict
 ```
 
 ## Development build commands
@@ -96,6 +101,7 @@ You can also run the publish workflow manually from GitHub Actions (`workflow_di
 
 Release notes are maintained in [`docs/release-notes.md`](docs/release-notes.md), with compatibility expectations defined in [`docs/versioning.md`](docs/versioning.md).
 See full change history in [`CHANGELOG.md`](CHANGELOG.md).
+Security reporting and support policy: [`SECURITY.md`](SECURITY.md).
 
 ## PyPI publishing notes
 
@@ -115,13 +121,13 @@ This repository is owner-maintained and does not use a public external contribut
 Three required layers:
 
 - Unit/CLI layer: `uv run pytest -m "not integration"`
-- Smoke layer: `./scripts/smoke.sh`
+- Smoke layer: `uv run pytest -m integration && uv run python -m mkdocs build --strict`
 - Integration layer: `uv run pytest -m integration`
 
 Recommended local sequence:
 
 ```bash
 uv run pytest -m "not integration"
-./scripts/smoke.sh
+uv run pytest -m integration && uv run python -m mkdocs build --strict
 uv run pytest -m integration
 ```

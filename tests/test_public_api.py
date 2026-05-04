@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from neksus.core.errors import JobSpecParseError, JobSpecValidationError
+from neksus_jobspec.errors import JobSpecParseError, JobSpecValidationError
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -27,7 +27,7 @@ def test_top_level_public_imports() -> None:
 def test_load_jobspec_returns_model_for_valid_fixture() -> None:
     from neksus_jobspec import load_jobspec
 
-    spec = load_jobspec(ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml")
+    spec = load_jobspec(ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml")
     assert spec.id == "backend-engineer"
 
 
@@ -57,7 +57,7 @@ def test_validate_jobspec_accepts_mapping() -> None:
 def test_render_jobspec_web_from_path() -> None:
     from neksus_jobspec import render_jobspec
 
-    content = render_jobspec(ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml")
+    content = render_jobspec(ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml")
     assert "<!doctype html>" in content.lower()
 
 
@@ -65,7 +65,7 @@ def test_render_jobspec_web_with_builtin_theme() -> None:
     from neksus_jobspec import render_jobspec
 
     content = render_jobspec(
-        ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml",
+        ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml",
         format="web",
         theme="soft-professional",
     )
@@ -77,7 +77,7 @@ def test_render_jobspec_writes_output_file(tmp_path: Path) -> None:
 
     out = tmp_path / "dist" / "backend-engineer.html"
     render_jobspec(
-        ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml",
+        ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml",
         format="web",
         theme="soft-professional",
         output=out,

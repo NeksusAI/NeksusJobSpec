@@ -1,4 +1,4 @@
-"""Stable public Python API for neksus-jobspec."""
+"""Public Python API for neksus-jobspec."""
 
 from __future__ import annotations
 
@@ -8,11 +8,12 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from neksus import __version__
-from neksus.core.errors import FileSystemError, JobSpecValidationError
-from neksus.core.jobspec.models import JobSpec
-from neksus.core.jobspec.parser import load_jobspec as _load_jobspec
-from neksus.core.jobspec.renderer import render_jobspec as _render_jobspec
+from neksus_jobspec.errors import FileSystemError, JobSpecValidationError
+from neksus_jobspec.jobspec.models import JobSpec
+from neksus_jobspec.jobspec.parser import load_jobspec as _load_jobspec
+from neksus_jobspec.jobspec.renderer import render_jobspec as _render_jobspec
+
+__version__ = "0.2.0"
 
 
 def load_jobspec(path: str | Path) -> JobSpec:

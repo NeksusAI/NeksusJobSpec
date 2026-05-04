@@ -9,40 +9,40 @@ See [Versioning and Compatibility Policy](versioning.md) for the supported compa
 
 ## CLI entrypoints
 
-- `neksus.cli.main`
+- `neksus_jobspec_cli.main`
   - Registers top-level Typer commands and command groups.
-- `neksus.cli.commands.*`
+- `neksus_jobspec_cli.commands.*`
   - Thin wrappers over core logic.
 
 ## Core JobSpec modules
 
-- `neksus.core.jobspec.models`
+- `neksus_jobspec.jobspec.models`
   - Canonical Pydantic models (`JobSpec`, `Location`, `Employment`).
-- `neksus.core.jobspec.parser`
+- `neksus_jobspec.jobspec.parser`
   - YAML reading and conversion to validated models.
-- `neksus.core.jobspec.validator`
+- `neksus_jobspec.jobspec.validator`
   - Normalizes validation issues and warning collection.
-- `neksus.core.jobspec.renderer`
+- `neksus_jobspec.jobspec.renderer`
   - Compatibility wrapper over render options/backends.
-- `neksus.core.jobspec.inspect`
+- `neksus_jobspec.jobspec.inspect`
   - Inspection metadata for CLI inspect output.
-- `neksus.core.jobspec.schema`
+- `neksus_jobspec.jobspec.schema`
   - JSON Schema generation from live model.
 
 ## Core project modules
 
-- `neksus.core.project.config`
+- `neksus_jobspec.project.config`
   - Project config model, loading, and mutation helpers.
-- `neksus.core.project.discovery`
+- `neksus_jobspec.project.discovery`
   - Project-root discovery.
-- `neksus.core.project.checks`
+- `neksus_jobspec.project.checks`
   - Project-wide validity checks and duplicate-id detection.
 
 ## Result and error contracts
 
-- `neksus.core.results`
+- `neksus_jobspec.results`
   - `ValidationIssue`, `ValidationResult`, `ProjectCheck`, `ProjectCheckResult`.
-- `neksus.core.errors`
+- `neksus_jobspec.errors`
   - Domain exceptions (`ConfigError`, `FileSystemError`, `JobSpecParseError`, etc.).
 
 ## Suggested integration stance

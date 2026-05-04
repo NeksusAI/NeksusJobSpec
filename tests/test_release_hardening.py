@@ -15,14 +15,14 @@ def test_public_api_functions_have_docstrings() -> None:
 
 
 def test_wheel_smoke_script_exists_and_is_executable() -> None:
-    script = ROOT / "scripts" / "smoke_wheel.sh"
+    script = ROOT / ".github" / "scripts" / "smoke_wheel.sh"
     assert script.exists()
     assert script.stat().st_mode & 0o111
 
 
 def test_version_metadata_is_consistent() -> None:
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    package_init = (ROOT / "neksus" / "__init__.py").read_text(encoding="utf-8")
+    package_init = (ROOT / "src" / "neksus_jobspec" / "__init__.py").read_text(encoding="utf-8")
     pyproject_match = re.search(r'^version = "([^"]+)"$', pyproject, re.MULTILINE)
     package_match = re.search(r'^__version__ = "([^"]+)"$', package_init, re.MULTILINE)
     assert pyproject_match is not None

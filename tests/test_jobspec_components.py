@@ -6,8 +6,8 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from neksus.core.jobspec.models import JobSpec
-from neksus.core.jobspec.renderer import render_jobspec
+from neksus_jobspec.jobspec.models import JobSpec
+from neksus_jobspec.jobspec.renderer import render_jobspec
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -302,8 +302,8 @@ def test_component_render_works_for_web_and_json_ld() -> None:
 
 
 def test_danish_example_file_validates_and_renders() -> None:
-    from neksus.core.jobspec.parser import load_jobspec
+    from neksus_jobspec.jobspec.parser import load_jobspec
 
-    example = ROOT / "examples" / "danish-job-detail.jobspec.yaml"
+    example = ROOT / "examples" / "job-detail.jobspec.yaml"
     spec = load_jobspec(example)
     assert "<!doctype html>" in render_jobspec(spec, format="web").lower()

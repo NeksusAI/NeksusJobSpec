@@ -5,7 +5,7 @@ from pathlib import Path
 import yaml
 from typer.testing import CliRunner
 
-from neksus.cli.main import app
+from neksus_jobspec_cli.main import app
 
 runner = CliRunner()
 

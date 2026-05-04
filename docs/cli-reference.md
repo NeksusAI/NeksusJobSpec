@@ -122,7 +122,7 @@ Examples:
 
 ```bash
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web --theme soft-professional --css examples/jobspec.css
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web --theme soft-professional --css examples/theme-overrides.css
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format json-ld --output dist/backend-engineer.json --json
 ```
 

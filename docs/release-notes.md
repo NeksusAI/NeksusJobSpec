@@ -8,7 +8,12 @@ Compatibility expectations for each release are defined by the [Versioning and C
 
 ### Breaking changes
 
-- None.
+- `0.2.0` is not backward compatible with `0.1.0` JobSpec files.
+- Legacy top-level content fields are removed from accepted schema.
+- Internal package layout changed from `neksus/*` to:
+  - `src/neksus_jobspec/*` (library)
+  - `src/neksus_jobspec_cli/*` (CLI)
+- CLI entrypoint now resolves from `neksus_jobspec_cli.main`.
 
 ### Deprecations
 
@@ -16,14 +21,14 @@ Compatibility expectations for each release are defined by the [Versioning and C
 
 ### Notes
 
-- Added a stable top-level public Python API surface:
+- Stable top-level public Python API surface:
   - `from neksus_jobspec import JobSpec, load_jobspec, validate_jobspec, render_jobspec`
-- Added compatibility policy documentation and stable API reference docs.
-- Added installed-wheel smoke validation in CI and local smoke script support.
+- Compatibility policy and API reference docs updated.
+- Installed-wheel smoke validation is owned under `.github/scripts/smoke_wheel.sh`.
 
 ## Release process note
 
 When bumping a release version:
 
-1. Update `pyproject.toml` and `neksus/__init__.py` to the same version.
+1. Update `pyproject.toml` and `src/neksus_jobspec/__init__.py` to the same version.
 2. Add or update the corresponding release notes section on this page.

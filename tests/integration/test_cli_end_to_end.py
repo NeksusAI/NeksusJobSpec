@@ -18,12 +18,12 @@ def test_integration_init_and_validate_flow(tmp_path: Path) -> None:
     jobspecs = tmp_path / "jobspecs"
     jobspecs.mkdir(exist_ok=True)
     shutil.copy(
-        ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml",
-        jobspecs / "backend-engineer.jobspec.yaml",
+        ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml",
+        jobspecs / "minimal-valid.jobspec.yaml",
     )
 
     validate = subprocess.run(
-        [str(CLI_BIN), "spec", "validate", str(jobspecs / "backend-engineer.jobspec.yaml")],
+        [str(CLI_BIN), "spec", "validate", str(jobspecs / "minimal-valid.jobspec.yaml")],
         cwd=tmp_path,
         capture_output=True,
         text=True,
@@ -36,9 +36,9 @@ def test_integration_init_and_validate_flow(tmp_path: Path) -> None:
 @pytest.mark.integration
 def test_integration_render_web_with_css_flow(tmp_path: Path) -> None:
     subprocess.run([str(CLI_BIN), "init", "--empty"], cwd=tmp_path, check=True)
-    jobspec = tmp_path / "jobspecs" / "backend-engineer.jobspec.yaml"
+    jobspec = tmp_path / "jobspecs" / "minimal-valid.jobspec.yaml"
     jobspec.parent.mkdir(exist_ok=True)
-    shutil.copy(ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml", jobspec)
+    shutil.copy(ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml", jobspec)
 
     out_file = tmp_path / "dist" / "backend-engineer.html"
     subprocess.run(
@@ -52,7 +52,7 @@ def test_integration_render_web_with_css_flow(tmp_path: Path) -> None:
             "--theme",
             "soft-professional",
             "--css",
-            str(ROOT / "examples" / "jobspec.css"),
+            str(ROOT / "examples" / "theme-overrides.css"),
             "--output",
             str(out_file),
         ],

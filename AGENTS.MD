@@ -13,6 +13,8 @@ Before considering any task complete:
 1. Documentation must be updated when changes affect behavior, usage, or developer workflow:
    - `README.md`
    - `AGENTS.MD` (when agent workflow/policy expectations change)
+   - `llms.txt` (when canonical docs entry points change)
+   - `SECURITY.md` (when security policy/support/reporting changes)
    - In-code docs and comments where relevant
    - `docs/` content for any user-visible change
 2. Temporary artifacts created during development or verification must be deleted:
@@ -53,7 +55,7 @@ Pipeline stages:
 5. Check
     Project-level checks validate config, folders, all JobSpec files, and duplicate IDs.
 
-The CLI must stay thin. Business logic belongs in neksus/core, not in Typer command functions.
+The CLI must stay thin. Business logic belongs in src/neksus_jobspec, not in Typer command functions.
 
 Commands
 
@@ -70,7 +72,7 @@ uv run neksus-jobspec check
 uv run pytest
 uv run ruff check .
 uv run ruff format .
-./scripts/smoke.sh
+uv run pytest -m integration && uv run python -m mkdocs build --strict
 
 Run a single test:
 
@@ -89,22 +91,12 @@ Source Layout
 
 Expected repository layout:
 
-neksus/
-  __init__.py
-  cli/
-    __init__.py
-    main.py
-    commands/
-      __init__.py
-      init.py
-      spec.py
-      check.py
-      config.py
-      version.py
-  core/
+src/
+  neksus_jobspec/
     __init__.py
     errors.py
     output.py
+    results.py
     project/
       __init__.py
       config.py
@@ -119,6 +111,16 @@ neksus/
       renderer.py
       templates.py
       inspect.py
+  neksus_jobspec_cli/
+    __init__.py
+    main.py
+    commands/
+      __init__.py
+      init.py
+      spec.py
+      check.py
+      config.py
+      version.py
 tests/
   test_cli_init.py
   test_cli_spec_validate.py
@@ -127,7 +129,7 @@ tests/
   test_project_checks.py
 fixtures/
   valid/
-    backend-engineer.jobspec.yaml
+    minimal-valid.jobspec.yaml
   invalid/
     missing-job-title.jobspec.yaml
     empty-requirements.jobspec.yaml
@@ -136,20 +138,20 @@ Architecture Rules
 
 Keep these boundaries strict:
 
-Typer CLI  →  neksus.core
+Typer CLI  →  neksus_jobspec
 
 Allowed:
 
-from neksus.core.jobspec.parser import load_jobspec
-from neksus.core.jobspec.renderer import render_jobspec
+from neksus_jobspec.jobspec.parser import load_jobspec
+from neksus_jobspec.jobspec.renderer import render_jobspec
 
 Not allowed:
 
-from neksus.cli.commands.spec import validate
+from neksus_jobspec_cli.commands.spec import validate
 
 Core modules must never import CLI modules.
 
-The future FastAPI layer should be able to reuse neksus.core without importing Typer, Rich, or CLI command code.
+The future FastAPI layer should be able to reuse neksus_jobspec without importing Typer, Rich, or CLI command code.
 
 CLI Design
 
@@ -377,7 +379,7 @@ Expected fixture layout:
 
 fixtures/
   valid/
-    backend-engineer.jobspec.yaml
+    minimal-valid.jobspec.yaml
   invalid/
     missing-job-title.jobspec.yaml
     empty-requirements.jobspec.yaml
@@ -563,7 +565,7 @@ For documentation site work, use MkDocs + Material:
 pip install -r requirements-docs.txt
 mkdocs serve
 mkdocs build --strict
-./scripts/smoke.sh
+uv run pytest -m integration && uv run python -m mkdocs build --strict
 ```
 
 Documentation deploys to GitHub Pages through `.github/workflows/deploy-docs.yml`.
@@ -575,6 +577,6 @@ Run three layers before completion:
 
 ```bash
 uv run pytest -m "not integration"
-./scripts/smoke.sh
+uv run pytest -m integration && uv run python -m mkdocs build --strict
 uv run pytest -m integration
 ```

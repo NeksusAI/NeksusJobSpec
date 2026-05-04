@@ -64,4 +64,4 @@ components:
     steps: [Apply, Interview, Offer]
 ```
 
-For a full production-style example, use `examples/danish-job-detail.jobspec.yaml`.
+For a full production-style example, use `examples/job-detail.jobspec.yaml`.

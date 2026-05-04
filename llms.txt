@@ -38,6 +38,12 @@ Documentation
 - CHANGELOG.md
 - docs/specification.md
 - docs/rendering.md
+- docs/soft-professional-guide.md
+- docs/content-vs-theme.md
+- docs/render-troubleshooting.md
+- docs/migration-0.1-to-0.2.md
 - docs/python-api.md
 - docs/api-reference.md
 - docs/versioning.md
+- SECURITY.md
+- docs/security.md

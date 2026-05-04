@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from neksus.core.jobspec.models import JobSpec
+from neksus_jobspec.jobspec.models import JobSpec
 
 
 def test_jobspec_model_rejects_invalid_id() -> None:

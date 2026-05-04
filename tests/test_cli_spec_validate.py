@@ -6,7 +6,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from neksus.cli.main import app
+from neksus_jobspec_cli.main import app
 
 runner = CliRunner()
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_spec_validate_returns_zero_for_valid_jobspec() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 
@@ -36,7 +36,7 @@ def test_spec_validate_fails_for_missing_title() -> None:
 
 def test_spec_validate_json_output_shape() -> None:
     with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "backend-engineer.jobspec.yaml"
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
         shutil.copy(src, target)
 

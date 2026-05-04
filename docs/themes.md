@@ -24,7 +24,7 @@ Current built-in:
 Use it at render time:
 
 ```bash
-neksus-jobspec spec render examples/danish-job-detail.jobspec.yaml --format web --theme soft-professional --output dist/danish-job-detail.html
+neksus-jobspec spec render examples/job-detail.jobspec.yaml --format web --theme soft-professional --output dist/job-detail.html
 ```
 
 ## CSS customization
@@ -32,13 +32,13 @@ neksus-jobspec spec render examples/danish-job-detail.jobspec.yaml --format web 
 Layer your CSS on top of the embedded base theme:
 
 ```bash
-neksus-jobspec spec render examples/danish-job-detail.jobspec.yaml --format web --theme soft-professional --css examples/jobspec.css --output dist/danish-job-detail-custom.html
+neksus-jobspec spec render examples/job-detail.jobspec.yaml --format web --theme soft-professional --css examples/theme-overrides.css --output dist/job-detail-custom.html
 ```
 
 Disable embedded base CSS (advanced):
 
 ```bash
-neksus-jobspec spec render examples/danish-job-detail.jobspec.yaml --format web --no-css --css examples/jobspec.css
+neksus-jobspec spec render examples/job-detail.jobspec.yaml --format web --no-css --css examples/theme-overrides.css
 ```
 
 ## Theme selection in JobSpec YAML
@@ -53,4 +53,10 @@ rendering:
 
 Built-in theme CSS is file-based under:
 
-- `neksus/core/jobspec/rendering/theme_css/soft-professional.css`
+- `src/neksus_jobspec/jobspec/rendering/theme_css/soft-professional.css`
+
+## Real render example
+
+The screenshot below was generated from `examples/job-detail.jobspec.yaml` with `--theme soft-professional`.
+
+![Soft Professional Theme Render](assets/job-detail-soft-professional.png)
