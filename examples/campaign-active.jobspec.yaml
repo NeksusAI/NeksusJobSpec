@@ -1,0 +1,37 @@
+schema_version: 1
+id: danish-service-role
+page:
+  layout: job_detail
+  language: da
+  theme: soft-professional
+job:
+  title: Tjener til aftenservice
+  intro: Vi soeger en erfaren tjener til aftenservice i Aarhus.
+  apply:
+    method: email
+    email: jobs@example.dk
+    label: Apply by email
+campaign:
+  starts_at: 2026-05-04
+  expires_at: 2026-07-03
+  status: active
+components:
+  - type: hero
+    id: hero
+    variant: default
+    title: Tjener til aftenservice
+    intro: Vi soeger en erfaren tjener til aftenservice i Aarhus.
+  - type: list
+    id: responsibilities
+    variant: bullets
+    title: Ansvar
+    items:
+      - Betjene gaester med hoej servicekvalitet.
+      - Koordinere med koekkenet i travle perioder.
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Krav
+    items:
+      - Erfaring fra restaurant eller cafe.
+      - Dansk og engelsk paa samtaleniveau.

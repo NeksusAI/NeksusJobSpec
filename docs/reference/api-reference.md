@@ -10,7 +10,7 @@ See [Versioning and Compatibility Policy](../project/versioning.md).
 
 ## `JobSpec`
 
-Purpose: validated v0.2.x component-based JobSpec model.
+Purpose: validated v0.3.x component-based JobSpec model.
 
 ## `load_jobspec(path)`
 

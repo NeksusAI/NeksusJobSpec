@@ -45,6 +45,8 @@ nav:
       - Soft-Professional Guide: guides/soft-professional-guide.md
       - Content vs Theme: guides/content-vs-theme.md
       - Render Troubleshooting: guides/render-troubleshooting.md
+      - LLM Usage: llm-usage.md
+      - Exports: exports.md
   - Reference:
       - CLI Reference: reference/cli-reference.md
       - Python API: reference/python-api.md
@@ -68,3 +70,4 @@ nav:
       - Security: project/security.md
       - Versioning and Compatibility: project/versioning.md
       - Release Notes: project/release-notes.md
+      - Roadmap Boundaries: roadmap-boundaries.md

@@ -128,6 +128,32 @@ neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format json-
 
 JSON notes: includes render metadata and either `content` (stdout mode) or `output` path (file mode).
 
+## `spec status`
+
+Purpose: Show campaign status metadata for one JobSpec.
+
+Syntax:
+
+```bash
+neksus-jobspec spec status PATH [--json]
+```
+
+## `spec export`
+
+Purpose: Export one JobSpec into deterministic machine-readable formats.
+
+Syntax:
+
+```bash
+neksus-jobspec spec export PATH --target TARGET --out PATH [--json]
+```
+
+Targets:
+
+- `generic-json`
+- `generic-xml`
+- `linkedin-ready-json`
+
 ## `spec templates`
 
 Purpose: List built-in templates.
@@ -243,6 +269,26 @@ Examples:
 neksus-jobspec render --format web
 neksus-jobspec render --format web --theme soft-professional --clean
 neksus-jobspec render --profile website --json
+```
+
+## `feed export`
+
+Purpose: Export multiple JobSpecs into jobs feed formats.
+
+Syntax:
+
+```bash
+neksus-jobspec feed export INPUTS... --target jobs-json|jobs-xml --out PATH [--skip-invalid] [--json]
+```
+
+## `feed sitemap`
+
+Purpose: Generate sitemap XML from multiple JobSpecs.
+
+Syntax:
+
+```bash
+neksus-jobspec feed sitemap INPUTS... --base-url URL --out PATH [--exclude-closed] [--json]
 ```
 
 ## `check`

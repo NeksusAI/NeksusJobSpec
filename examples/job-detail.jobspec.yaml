@@ -29,6 +29,7 @@ job:
   title: Senior Systems Architect
   intro: We are seeking a Senior Systems Architect to lead the design and evolution of our containerized CLI ecosystem.
   apply:
+    method: external_url
     label: Apply Now
     url: https://example.com/jobs/senior-systems-architect
 

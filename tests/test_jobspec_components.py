@@ -25,7 +25,11 @@ def _component_spec() -> dict:
         "job": {
             "title": "Senior IT-Security Manager",
             "intro": "Vil du være med til at styrke vores sikkerhed?",
-            "apply": {"label": "Send ansøgning", "url": "https://example.com/apply"},
+            "apply": {
+                "method": "external_url",
+                "label": "Send ansøgning",
+                "url": "https://example.com/apply",
+            },
         },
         "components": [
             {

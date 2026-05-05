@@ -1,0 +1,46 @@
+schema_version: 1
+id: startup-engineer
+page:
+  layout: job_detail
+  language: en
+  theme: soft-professional
+job:
+  title: Startup Platform Engineer
+  intro: Build and maintain backend services for a product-stage startup.
+  apply:
+    method: agent_ready
+    url: https://example.com/jobs/startup-engineer/apply
+    job_reference: startup-engineer
+    label: Apply manually or with an assistant
+campaign:
+  starts_at: 2026-03-01
+  expires_at: 2026-04-01
+  status: closed
+components:
+  - type: hero
+    id: hero
+    variant: split
+    title: Startup Platform Engineer
+    intro: Build and maintain backend services for a product-stage startup.
+  - type: meta_chips
+    id: chips
+    variant: pills
+    items:
+      - label: Location
+        value: Copenhagen, Denmark
+        icon: location_on
+      - label: Employment
+        value: FULL_TIME
+        icon: work
+  - type: rich_text
+    id: about
+    variant: default
+    title: About
+    body: Work with product and design teams to deliver reliable platform capabilities.
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items:
+      - 4+ years Python or Go experience.
+      - Experience with cloud-native services.

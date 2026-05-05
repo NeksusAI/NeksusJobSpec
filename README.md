@@ -5,15 +5,17 @@
 [![PyPI version](https://img.shields.io/pypi/v/neksus-jobspec)](https://pypi.org/project/neksus-jobspec/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/neksus-jobspec)](https://pypi.org/project/neksus-jobspec/)
 
-Neksus JobSpec is an open-source, local-first CLI and Python package for creating, validating, and rendering structured job specifications written in YAML.
+Neksus JobSpec is an open, local-first CLI and Python package for structured, branded, machine-readable job campaigns.
+
+This package does not collect applications, upload CVs, send emails, take payments, or manage candidates.
 
 ## Status
 
-Current focus is a stable CLI and reusable core library. Hosted API and MCP server capabilities are planned, not yet implemented.
+Current focus is a stable CLI and reusable core library with deterministic exports, feeds, and sitemap generation.
 
 ## Job page composition
 
-v0.2.x uses controlled, Lego-brick-like job-detail page components.
+v0.3.x uses controlled, Lego-brick-like job-detail page components.
 You can compose validated page blocks such as header_brand, hero_banner, hero, meta_panel, CTA, responsibilities, requirements, benefits, quote, social_links, location_map, company profile, and legal blocks without defaulting to arbitrary HTML.
 
 `soft-professional` is rendered from YAML components plus the built-in theme.
@@ -44,6 +46,11 @@ neksus-jobspec init
 neksus-jobspec spec new backend-engineer
 neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web --output dist/backend-engineer.html
+neksus-jobspec spec export jobspecs/backend-engineer.jobspec.yaml --target generic-json --out dist/backend-engineer.json
+neksus-jobspec spec export jobspecs/backend-engineer.jobspec.yaml --target generic-xml --out dist/backend-engineer.xml
+neksus-jobspec spec export jobspecs/backend-engineer.jobspec.yaml --target linkedin-ready-json --out dist/backend-engineer-linkedin.json
+neksus-jobspec feed export "examples/*.jobspec.yaml" --target jobs-json --out dist/jobs.json
+neksus-jobspec feed sitemap "examples/*.jobspec.yaml" --base-url https://company.dk/jobs --out dist/sitemap.xml
 ```
 
 ## Python API
@@ -64,6 +71,9 @@ neksus-jobspec init
 neksus-jobspec spec new backend-engineer
 neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web
+neksus-jobspec spec export jobspecs/backend-engineer.jobspec.yaml --target generic-json --out dist/backend-engineer.json
+neksus-jobspec feed export "examples/*.jobspec.yaml" --target jobs-json --out dist/jobs.json
+neksus-jobspec feed sitemap "examples/*.jobspec.yaml" --base-url https://company.dk/jobs --out dist/sitemap.xml
 neksus-jobspec themes
 neksus-jobspec themes show soft-professional
 ```
@@ -93,8 +103,8 @@ python -c "import neksus_jobspec; print(neksus_jobspec.__version__)"
 Create and push a semantic version tag to trigger publishing:
 
 ```bash
-git tag v0.2.0
-git push origin v0.2.0
+git tag v0.3.0
+git push origin v0.3.0
 ```
 
 You can also run the publish workflow manually from GitHub Actions (`workflow_dispatch`).
@@ -102,6 +112,14 @@ You can also run the publish workflow manually from GitHub Actions (`workflow_di
 Release notes are maintained in [`docs/project/release-notes.md`](docs/project/release-notes.md), with compatibility expectations defined in [`docs/project/versioning.md`](docs/project/versioning.md).
 See full change history in [`CHANGELOG.md`](CHANGELOG.md).
 Security reporting and support policy: [`SECURITY.md`](SECURITY.md).
+
+## Documentation and assistant packs
+
+- Docs index: [`docs/`](docs/)
+- Export docs: [`docs/exports.md`](docs/exports.md)
+- LLM usage: [`docs/llm-usage.md`](docs/llm-usage.md)
+- Scope boundaries: [`docs/roadmap-boundaries.md`](docs/roadmap-boundaries.md)
+- Optional assistant prompt packs: [`skills/`](skills/)
 
 ## PyPI publishing notes
 

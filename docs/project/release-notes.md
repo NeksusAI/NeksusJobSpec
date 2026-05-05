@@ -4,6 +4,21 @@ This page tracks user-visible changes by release.
 
 Compatibility expectations for each release are defined by the [Versioning and Compatibility Policy](versioning.md).
 
+## 0.3.0
+
+### Breaking changes
+
+- `job.apply` moved to strict method-based metadata (`email`, `external_url`, `ats_url`, `custom`, `agent_ready`).
+- Legacy `job.apply: {label, url}` shape is no longer accepted.
+
+### Notes
+
+- Added optional `campaign` metadata with validated status and date ordering.
+- Added deterministic export targets for single-job (`generic-json`, `generic-xml`, `linkedin-ready-json`).
+- Added feed commands for multi-job exports (`jobs-json`, `jobs-xml`) and sitemap generation.
+- Added assistant/LLM docs and optional local prompt packs under `skills/`.
+- Scope boundary remains free/core only. Hosted/commercial features are intentionally excluded.
+
 ## 0.2.0
 
 ### Breaking changes

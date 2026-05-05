@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from datetime import date
 from urllib.parse import urlparse
 from typing import Annotated, Any, Literal
 
@@ -43,21 +44,63 @@ class PageConfig(StrictModel):
 
 
 class JobApply(StrictModel):
-    label: str
-    url: str
+    method: Literal["email", "external_url", "ats_url", "custom", "agent_ready"]
+    label: str | None = None
+    email: str | None = None
+    url: str | None = None
+    job_reference: str | None = None
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        cleaned = value.strip()
+        if not cleaned or "@" not in cleaned:
+            raise ValueError("email must be a valid email address")
+        return cleaned
 
     @field_validator("url")
     @classmethod
-    def validate_url(cls, value: str) -> str:
+    def validate_url(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
         if not _is_safe_url(value):
             raise ValueError("url must use a safe scheme or a safe relative path")
         return value
+
+    @model_validator(mode="after")
+    def validate_method_fields(self) -> JobApply:
+        if self.method == "email":
+            if not self.email:
+                raise ValueError("apply.email is required when apply.method=email")
+            return self
+        if self.method in {"external_url", "ats_url", "custom"} and not self.url:
+            raise ValueError(f"apply.url is required when apply.method={self.method}")
+        if self.method == "agent_ready":
+            if not self.url:
+                raise ValueError("apply.url is required when apply.method=agent_ready")
+            if not self.job_reference:
+                raise ValueError("apply.job_reference is required when apply.method=agent_ready")
+        return self
 
 
 class JobConfig(StrictModel):
     title: str
     intro: str | None = None
     apply: JobApply | None = None
+
+
+class CampaignConfig(StrictModel):
+    starts_at: date | None = None
+    expires_at: date | None = None
+    status: Literal["draft", "active", "expired", "closed"] | None = None
+
+    @model_validator(mode="after")
+    def validate_dates(self) -> CampaignConfig:
+        if self.starts_at and self.expires_at and self.expires_at < self.starts_at:
+            raise ValueError("campaign.expires_at must not be before campaign.starts_at")
+        return self
 
 
 class WebLabels(StrictModel):
@@ -479,12 +522,13 @@ Component = Annotated[
 
 
 class JobSpec(StrictModel):
-    """Top-level JobSpec model for v0.2.x component composition."""
+    """Top-level JobSpec model for v0.3.x component composition."""
 
     schema_version: int = 1
     id: str = Field(pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
     page: PageConfig = Field(default_factory=PageConfig)
     job: JobConfig
+    campaign: CampaignConfig | None = None
     components: list[Component] = Field(min_length=1)
     rendering: RenderingConfig = Field(default_factory=RenderingConfig)
 
