@@ -1,6 +1,6 @@
 # Claude Pack
 
-Use `neksus-jobspec-skill.md` in Claude/Claude Code instructions.
+Use `neksus-jobspec-skill.md` in Claude or Claude Code instructions.
 
 Claude Desktop can run local MCP servers. Use:
 

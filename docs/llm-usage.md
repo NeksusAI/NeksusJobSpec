@@ -1,6 +1,7 @@
 # LLM Usage
 
-Use this guide when asking assistants to generate or repair Neksus JobSpec files.
+Use this guide when asking assistants to generate or repair Neksus JobSpec
+files.
 
 ## Required top-level fields
 
@@ -67,6 +68,9 @@ Supported methods:
 - candidate profile fields
 - payment fields
 - hosted backend/API fields
+
+NeksusJobSpec v0.3.0 does not include application collection, CV upload,
+email delivery, payments, candidate management, hosted APIs, or ATS workflows.
 
 ## Validate and render
 
