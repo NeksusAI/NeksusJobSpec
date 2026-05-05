@@ -1,10 +1,10 @@
 # Rendering
 
-Neksus v0.2.x renders component-based JobSpecs to `web` and `json-ld`.
+Neksus v0.3.x renders component-based JobSpecs to `web` and `json-ld`.
 
 ## Input model
 
-Rendering expects a v0.2.x component JobSpec (`page` + `job` + `components`).
+Rendering expects a v0.3.x component JobSpec (`page` + `job` + `components`).
 
 ## Web
 
@@ -25,6 +25,14 @@ See also:
 ## JSON-LD
 
 - Outputs `schema.org` `JobPosting` JSON-LD from the validated model.
+- `campaign.expires_at` maps to `validThrough` when present.
+- `campaign.starts_at` maps to `datePosted` when present.
+
+## Campaign status rendering
+
+- Jobs with `campaign.status: closed` or `campaign.status: expired` still render.
+- Web output includes a visible status notice.
+- Apply CTA remains visible but de-emphasized for closed/expired campaigns.
 
 ## Security boundaries
 

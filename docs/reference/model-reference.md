@@ -1,6 +1,6 @@
 # Model Reference
 
-This page documents the v0.2.0 component-based `JobSpec` model (`schema_version: 1`).
+This page documents the v0.3.0 component-based `JobSpec` model (`schema_version: 1`).
 
 ## Top-level model: `JobSpec`
 
@@ -8,6 +8,7 @@ This page documents the v0.2.0 component-based `JobSpec` model (`schema_version:
 - `id: str` (pattern `^[a-z0-9]+(?:-[a-z0-9]+)*$`)
 - `page: PageConfig`
 - `job: JobConfig`
+- `campaign: CampaignConfig | None`
 - `components: list[Component]` (min length 1)
 - `rendering: RenderingConfig` (optional with defaults)
 
@@ -22,7 +23,21 @@ This page documents the v0.2.0 component-based `JobSpec` model (`schema_version:
 
 - `title: str` (required)
 - `intro: str | None`
-- `apply: {label: str, url: str} | None`
+- `apply: JobApply | None`
+
+## `CampaignConfig`
+
+- `starts_at: date | None`
+- `expires_at: date | None`
+- `status: Literal["draft", "active", "expired", "closed"] | None`
+
+## `JobApply`
+
+- `method: Literal["email", "external_url", "ats_url", "custom", "agent_ready"]`
+- `label: str | None`
+- `email: str | None`
+- `url: str | None`
+- `job_reference: str | None`
 
 ## Components
 

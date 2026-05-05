@@ -8,9 +8,9 @@ Install:
 pip install neksus-jobspec
 ```
 
-## v0.2.x model
+## v0.3.x model
 
-v0.2.x uses typed page components and is not backward compatible with legacy simple-schema JobSpec files.
+v0.3.x uses typed page components and is not backward compatible with legacy simple-schema JobSpec files.
 
 ## Short example
 

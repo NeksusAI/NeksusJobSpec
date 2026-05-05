@@ -8,7 +8,7 @@
 
 ## Components-first guidance
 
-For v0.2.x job-detail pages, assistants should prefer typed `components` over arbitrary HTML.
+For v0.3.x job-detail pages, assistants should prefer typed `components` over arbitrary HTML.
 
 - Use only documented component types and variants.
 - Do not invent unknown component types or variant names.
@@ -17,7 +17,7 @@ For v0.2.x job-detail pages, assistants should prefer typed `components` over ar
 ## Security and trust boundaries
 
 - Custom CSS is supported.
-- Do not rely on JavaScript for theme behavior in v0.2.x.
+- Do not rely on JavaScript for theme behavior in v0.3.x.
 - Rendering emits text output; it does not execute scripts.
 
 ## Automation recommendation

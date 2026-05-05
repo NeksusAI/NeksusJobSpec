@@ -7,6 +7,7 @@ The command layer stays thin and delegates business logic to `neksus_jobspec`.
 from __future__ import annotations
 
 from pathlib import Path
+from datetime import date
 from typing import Annotated
 
 import click
@@ -22,6 +23,11 @@ from neksus_jobspec_cli.commands.common import (
     print_warning,
 )
 from neksus_jobspec.errors import ConfigError, FileSystemError, NeksusError
+from neksus_jobspec.jobspec.exports import (
+    render_generic_json,
+    render_generic_xml,
+    render_linkedin_ready_json,
+)
 from neksus_jobspec.jobspec.inspect import inspect_jobspec
 from neksus_jobspec.jobspec.migrate import inspect_schema_version
 from neksus_jobspec.jobspec.models import JobSpec
@@ -52,6 +58,12 @@ EXPECTED_COMMAND_ERRORS = (
     ValidationError,
     ValueError,
 )
+
+
+def _days_remaining(expires_at: date | None) -> int | None:
+    if not expires_at:
+        return None
+    return (expires_at - date.today()).days
 
 
 def _resolve_new_path(name: str, output: Path | None) -> Path:
@@ -329,6 +341,101 @@ def spec_inspect(
             ("Valid", "yes" if bool(metadata["valid"]) else "no"),
         ],
     )
+
+
+@app.command("status")
+def spec_status(
+    path: Annotated[Path, typer.Argument(help="Path to a JobSpec YAML file.")],
+    json: Annotated[bool, typer.Option("--json", help="Output machine-readable JSON.")] = False,
+) -> None:
+    """Show campaign status metadata for a JobSpec."""
+    try:
+        spec = load_jobspec(path)
+        campaign = spec.campaign
+        payload = {
+            "ok": True,
+            "file": str(path),
+            "id": spec.id,
+            "title": spec.job.title,
+            "campaign_status": campaign.status if campaign else None,
+            "starts_at": campaign.starts_at.isoformat()
+            if campaign and campaign.starts_at
+            else None,
+            "expires_at": campaign.expires_at.isoformat()
+            if campaign and campaign.expires_at
+            else None,
+            "days_remaining": _days_remaining(campaign.expires_at) if campaign else None,
+        }
+    except EXPECTED_COMMAND_ERRORS as exc:
+        handle_expected_error(exc, as_json=json)
+        return
+
+    if json:
+        print_json(payload)
+        return
+    print_kv_table(
+        "JobSpec Status",
+        [
+            ("ID", payload["id"]),
+            ("Title", payload["title"]),
+            ("Campaign status", str(payload["campaign_status"] or "-")),
+            ("Starts at", str(payload["starts_at"] or "-")),
+            ("Expires at", str(payload["expires_at"] or "-")),
+            (
+                "Days remaining",
+                str(payload["days_remaining"] if payload["days_remaining"] is not None else "-"),
+            ),
+        ],
+    )
+
+
+@app.command("export")
+def spec_export(
+    path: Annotated[Path, typer.Argument(help="Path to a JobSpec YAML file.")],
+    target: Annotated[
+        str,
+        typer.Option(
+            "--target",
+            help="Export target: generic-json, generic-xml, linkedin-ready-json.",
+        ),
+    ],
+    out: Annotated[Path, typer.Option("--out", help="Output path.")],
+    json: Annotated[bool, typer.Option("--json", help="Output machine-readable JSON.")] = False,
+) -> None:
+    """Export a single JobSpec into deterministic machine-readable formats."""
+    try:
+        spec = load_jobspec(path)
+        warnings: list[str] = []
+        if target == "generic-json":
+            content = render_generic_json(spec)
+        elif target == "generic-xml":
+            content = render_generic_xml(spec)
+        elif target == "linkedin-ready-json":
+            content, warnings = render_linkedin_ready_json(spec)
+        else:
+            raise typer.BadParameter(
+                "Unsupported target. Use: generic-json, generic-xml, linkedin-ready-json",
+                param_hint="--target",
+            )
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(content, encoding="utf-8")
+    except EXPECTED_COMMAND_ERRORS as exc:
+        handle_expected_error(exc, as_json=json)
+        return
+
+    payload = {
+        "ok": True,
+        "file": str(path),
+        "target": target,
+        "output": str(out),
+        "warnings": warnings,
+    }
+    if json:
+        print_json(payload)
+        return
+    print_success(f"Exported {path} to {out} ({target})")
+    for warning in warnings:
+        print_warning(warning)
 
 
 @app.command("schema")

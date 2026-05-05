@@ -126,6 +126,7 @@ class SoftProfessionalData:
     salary: str
     employment: str
     apply_label: str
+    campaign_notice: str | None
     about_title: str
     about_body: str
     responsibilities_title: str
@@ -174,6 +175,11 @@ def _to_soft_professional_data(spec) -> SoftProfessionalData:
 
     title = hero.title if isinstance(hero, HeroComponent) and hero.title else normalized.title
     apply_label = normalized.apply_label or "Apply"
+    campaign_notice: str | None = None
+    if normalized.campaign_status == "closed":
+        campaign_notice = "This position is closed."
+    elif normalized.campaign_status == "expired":
+        campaign_notice = "This job campaign has expired."
 
     location = ""
     salary = ""
@@ -263,6 +269,7 @@ def _to_soft_professional_data(spec) -> SoftProfessionalData:
         salary=salary,
         employment=employment,
         apply_label=apply_label,
+        campaign_notice=campaign_notice,
         about_title=about_title,
         about_body=about_body,
         responsibilities_title=responsibilities_title,
@@ -321,6 +328,12 @@ def _render_soft_professional_web(spec, options: RenderOptions) -> str:
         f'<span class="material-symbols-outlined text-sm" data-icon="{_escape(icon)}">{_escape(icon)}</span>'
         for icon in data.footer_icons
     )
+    campaign_notice_html = ""
+    if data.campaign_notice:
+        campaign_notice_html = (
+            '<div class="bg-error-container text-on-error-container technical-border rounded p-sm mt-sm">'
+            f"{_escape(data.campaign_notice)}</div>"
+        )
 
     return (
         "<!DOCTYPE html>\n\n"
@@ -350,6 +363,7 @@ def _render_soft_professional_web(spec, options: RenderOptions) -> str:
         "</div>\n"
         '<div class="flex-grow">\n'
         f'<h1 class="font-h1 text-h1 text-on-surface mb-xs">{_escape(data.title)}</h1>\n'
+        f"{campaign_notice_html}\n"
         '<div class="flex flex-wrap gap-sm items-center">\n'
         '<div class="flex items-center bg-surface-container-high px-3 py-1 rounded">\n'
         '<span class="material-symbols-outlined text-sm mr-2" data-icon="location_on">location_on</span>\n'
@@ -366,7 +380,7 @@ def _render_soft_professional_web(spec, options: RenderOptions) -> str:
         "</div>\n"
         "</div>\n"
         '<div class="flex gap-sm">\n'
-        f'<button class="bg-primary text-on-primary px-6 py-3 font-semibold rounded hover:bg-primary-container transition-colors">{_escape(data.apply_label)}</button>\n'
+        f'<button class="bg-primary text-on-primary px-6 py-3 font-semibold rounded hover:bg-primary-container transition-colors{" opacity-70" if data.campaign_notice else ""}">{_escape(data.apply_label)}</button>\n'
         '<button class="border border-primary text-primary px-4 py-3 font-semibold rounded hover:bg-primary hover:text-on-primary transition-colors">\n'
         '<span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>\n'
         "</button>\n"

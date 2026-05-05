@@ -13,7 +13,7 @@ from neksus_jobspec.jobspec.models import JobSpec
 from neksus_jobspec.jobspec.parser import load_jobspec as _load_jobspec
 from neksus_jobspec.jobspec.renderer import render_jobspec as _render_jobspec
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 
 def load_jobspec(path: str | Path) -> JobSpec:

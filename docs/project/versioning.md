@@ -30,7 +30,7 @@ Documented component types, variants, and placement fields are part of the compa
 
 ## Breaking changes and cleanup
 
-`0.2.x` contains a breaking cleanup relative to early/transitional `0.2.0` compatibility behavior.
+`0.3.x` contains a breaking cleanup relative to early/transitional `0.2.0` compatibility behavior.
 
 Legacy simple-schema payloads are removed and component schema is authoritative.
 
@@ -42,6 +42,8 @@ Deprecations should be preferred before removals when practical.
 
 Internal modules under `neksus_jobspec.*` and `neksus_jobspec_cli.*` are implementation details and not stable contracts.
 
-## Out of scope for v0.2.x contract
+## Out of scope for v0.3.x contract
 
-Hosted API and MCP capabilities are planned but are not part of the v0.2.x compatibility contract.
+Hosted API capabilities are planned but are not part of the v0.3.x compatibility contract.
+
+Note: local stdio MCP server support is included in v0.3.x as an optional package extra.

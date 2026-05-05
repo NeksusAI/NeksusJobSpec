@@ -245,3 +245,73 @@ def test_stitch_layout_mode_requires_meta_panel_icons() -> None:
                 ],
             }
         )
+
+
+def test_campaign_metadata_validates() -> None:
+    spec = JobSpec.model_validate(
+        {
+            "schema_version": 1,
+            "id": "campaign-valid",
+            "page": {"layout": "job_detail"},
+            "job": {"title": "Role"},
+            "campaign": {"starts_at": "2026-05-04", "expires_at": "2026-07-03", "status": "active"},
+            "components": [{"type": "list", "id": "requirements", "items": ["One"]}],
+        }
+    )
+    assert spec.campaign is not None
+    assert spec.campaign.status == "active"
+
+
+def test_campaign_invalid_status_fails() -> None:
+    with pytest.raises(ValidationError):
+        JobSpec.model_validate(
+            {
+                "schema_version": 1,
+                "id": "campaign-invalid-status",
+                "page": {"layout": "job_detail"},
+                "job": {"title": "Role"},
+                "campaign": {"status": "paused"},
+                "components": [{"type": "list", "id": "requirements", "items": ["One"]}],
+            }
+        )
+
+
+def test_campaign_expiry_before_start_fails() -> None:
+    with pytest.raises(ValidationError):
+        JobSpec.model_validate(
+            {
+                "schema_version": 1,
+                "id": "campaign-invalid-dates",
+                "page": {"layout": "job_detail"},
+                "job": {"title": "Role"},
+                "campaign": {"starts_at": "2026-07-03", "expires_at": "2026-05-04"},
+                "components": [{"type": "list", "id": "requirements", "items": ["One"]}],
+            }
+        )
+
+
+def test_apply_email_validates() -> None:
+    spec = JobSpec.model_validate(
+        {
+            "schema_version": 1,
+            "id": "apply-email",
+            "page": {"layout": "job_detail"},
+            "job": {"title": "Role", "apply": {"method": "email", "email": "jobs@example.com"}},
+            "components": [{"type": "list", "id": "requirements", "items": ["One"]}],
+        }
+    )
+    assert spec.job.apply is not None
+    assert spec.job.apply.method == "email"
+
+
+def test_apply_missing_url_for_url_method_fails() -> None:
+    with pytest.raises(ValidationError):
+        JobSpec.model_validate(
+            {
+                "schema_version": 1,
+                "id": "apply-url-missing",
+                "page": {"layout": "job_detail"},
+                "job": {"title": "Role", "apply": {"method": "external_url"}},
+                "components": [{"type": "list", "id": "requirements", "items": ["One"]}],
+            }
+        )

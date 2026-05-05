@@ -1,10 +1,10 @@
 # Schema
 
-Neksus JobSpec v0.2.x uses a component-based schema (`schema_version: 1`).
+Neksus JobSpec v0.3.x uses a component-based schema (`schema_version: 1`).
 
 ## Breaking compatibility
 
-v0.2.x is not backward compatible with legacy simple top-level content fields.
+v0.3.x is not backward compatible with legacy simple top-level content fields.
 
 ## Required fields
 
@@ -16,6 +16,7 @@ v0.2.x is not backward compatible with legacy simple top-level content fields.
 
 Optional:
 
+- `campaign: object`
 - `rendering: object`
 
 ## Core nested blocks
@@ -33,8 +34,16 @@ job:
   title: string
   intro: string | null
   apply:
-    label: string
-    url: string
+    method: email | external_url | ats_url | custom | agent_ready
+    label: string | null
+    email: string | null
+    url: string | null
+    job_reference: string | null
+
+campaign:
+  starts_at: YYYY-MM-DD | null
+  expires_at: YYYY-MM-DD | null
+  status: draft | active | expired | closed | null
 ```
 
 ## Validation behavior
@@ -44,6 +53,8 @@ job:
 - Unknown variants fail validation.
 - Component IDs must be unique.
 - `page.component_order`, when set, must include every component ID exactly once.
+- `campaign.expires_at` must not be before `campaign.starts_at`.
+- `job.apply` must satisfy method-specific required fields.
 
 ## Versioning
 

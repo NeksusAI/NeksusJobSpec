@@ -282,6 +282,68 @@ components:
         assert "&lt;script&gt;alert(1)&lt;/script&gt;" in result.stdout
 
 
+def test_spec_render_json_ld_maps_campaign_valid_through() -> None:
+    with runner.isolated_filesystem():
+        target = Path("campaign.jobspec.yaml")
+        target.write_text(
+            """schema_version: 1
+id: campaign
+page:
+  layout: job_detail
+job:
+  title: Campaign Role
+  apply:
+    method: external_url
+    url: https://example.com/apply
+campaign:
+  starts_at: 2026-05-04
+  expires_at: 2026-07-03
+  status: active
+components:
+  - type: list
+    id: requirements
+    items:
+      - One
+""",
+            encoding="utf-8",
+        )
+        result = runner.invoke(
+            app, ["spec", "render", str(target), "--format", "json-ld", "--json"]
+        )
+        assert result.exit_code == 0
+        payload = json.loads(result.stdout)
+        content = json.loads(payload["content"])
+        assert content["validThrough"] == "2026-07-03"
+
+
+def test_spec_render_web_closed_notice_visible() -> None:
+    with runner.isolated_filesystem():
+        target = Path("closed.jobspec.yaml")
+        target.write_text(
+            """schema_version: 1
+id: closed-role
+page:
+  layout: job_detail
+job:
+  title: Closed Role
+  apply:
+    method: external_url
+    url: https://example.com/apply
+campaign:
+  status: closed
+components:
+  - type: list
+    id: requirements
+    items:
+      - One
+""",
+            encoding="utf-8",
+        )
+        result = runner.invoke(app, ["spec", "render", str(target), "--format", "web"])
+        assert result.exit_code == 0
+        assert "This position is closed." in result.stdout
+
+
 def test_spec_inspect_json_output() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"

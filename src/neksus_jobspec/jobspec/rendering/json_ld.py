@@ -85,6 +85,13 @@ def render_json_ld(spec) -> str:
                     if text:
                         benefits.append(text)
 
+    campaign_start = (
+        normalized.campaign_starts_at.isoformat() if normalized.campaign_starts_at else None
+    )
+    campaign_expiry = (
+        normalized.campaign_expires_at.isoformat() if normalized.campaign_expires_at else None
+    )
+
     payload = {
         "@context": "https://schema.org",
         "@type": "JobPosting",
@@ -95,8 +102,8 @@ def render_json_ld(spec) -> str:
         },
         "title": normalized.title,
         "description": normalized.intro or normalized.title,
-        "datePosted": date.today().isoformat(),
-        "validThrough": deadline,
+        "datePosted": campaign_start or date.today().isoformat(),
+        "validThrough": campaign_expiry or deadline,
         "employmentType": job_type,
         "hiringOrganization": {
             "@type": "Organization",

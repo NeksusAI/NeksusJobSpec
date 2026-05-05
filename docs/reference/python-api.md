@@ -8,7 +8,7 @@ from neksus_jobspec import JobSpec, load_jobspec, validate_jobspec, render_jobsp
 
 See [API Reference](api-reference.md) and [Versioning and Compatibility Policy](../project/versioning.md).
 
-v0.2.x accepts the component schema (`page`, `job`, `components`) and no longer accepts legacy simple-schema payloads.
+v0.3.x accepts the component schema (`page`, `job`, `components`) and no longer accepts legacy simple-schema payloads.
 
 ## Component page example
 
