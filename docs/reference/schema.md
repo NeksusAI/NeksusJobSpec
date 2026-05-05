@@ -51,4 +51,4 @@ job:
 - Other schema versions are rejected.
 - Use `spec migrate` only for version inspection; write mode is not implemented.
 
-See [Model Reference](model-reference.md) and [Specification](specification.md).
+See [Model Reference](model-reference.md) and [Specification](../concepts/specification.md).

@@ -36,14 +36,14 @@ Security and boundaries
 Documentation
 - README.md
 - CHANGELOG.md
-- docs/specification.md
-- docs/rendering.md
-- docs/soft-professional-guide.md
-- docs/content-vs-theme.md
-- docs/render-troubleshooting.md
-- docs/migration-0.1-to-0.2.md
-- docs/python-api.md
-- docs/api-reference.md
-- docs/versioning.md
+- docs/concepts/specification.md
+- docs/concepts/rendering.md
+- docs/guides/soft-professional-guide.md
+- docs/guides/content-vs-theme.md
+- docs/guides/render-troubleshooting.md
+- docs/guides/migration-0.1-to-0.2.md
+- docs/reference/python-api.md
+- docs/reference/api-reference.md
+- docs/project/versioning.md
 - SECURITY.md
-- docs/security.md
+- docs/project/security.md

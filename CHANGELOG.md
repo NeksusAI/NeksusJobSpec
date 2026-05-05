@@ -12,7 +12,7 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 - Built-in `soft-professional` web theme.
 - Public Python API from `neksus_jobspec`.
 - `SECURITY.md` with private vulnerability reporting policy and supported-version guidance.
-- Documentation page for security policy in `docs/security.md`.
+- Documentation page for security policy in `docs/project/security.md`.
 - Real rendered screenshot example (`docs/assets/job-detail-soft-professional.png`) referenced by README and docs.
 - Expanded user documentation with:
   - soft-professional YAML-to-UI mapping guide

@@ -44,4 +44,4 @@ Out-of-scope:
 After a fix is available, relevant details are documented in:
 
 - `CHANGELOG.md` (`Security` section when applicable)
-- `docs/release-notes.md`
+- `docs/project/release-notes.md`

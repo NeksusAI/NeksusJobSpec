@@ -48,4 +48,4 @@ neksus-jobspec render --format web
 neksus-jobspec render --format web --theme soft-professional
 ```
 
-For all commands and options, see [CLI Reference](cli-reference.md).
+For all commands and options, see [CLI Reference](../reference/cli-reference.md).

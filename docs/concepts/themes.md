@@ -59,4 +59,4 @@ Built-in theme CSS is file-based under:
 
 The screenshot below was generated from `examples/job-detail.jobspec.yaml` with `--theme soft-professional`.
 
-![Soft Professional Theme Render](assets/job-detail-soft-professional.png)
+![Soft Professional Theme Render](../assets/job-detail-soft-professional.png)

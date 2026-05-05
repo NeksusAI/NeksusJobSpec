@@ -6,7 +6,7 @@ This page documents the stable public Python API.
 from neksus_jobspec import JobSpec, load_jobspec, validate_jobspec, render_jobspec, __version__
 ```
 
-See [Versioning and Compatibility Policy](versioning.md).
+See [Versioning and Compatibility Policy](../project/versioning.md).
 
 ## `JobSpec`
 

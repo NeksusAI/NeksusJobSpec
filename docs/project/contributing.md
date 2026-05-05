@@ -6,4 +6,4 @@ This repository is owner-maintained.
 - External contribution intake and review are not expected.
 - Roadmap and implementation decisions are owner-directed.
 
-For project usage and architecture, see [Getting Started](getting-started.md) and [Architecture](architecture.md).
+For project usage and architecture, see [Getting Started](../guides/getting-started.md) and [Architecture](../concepts/architecture.md).

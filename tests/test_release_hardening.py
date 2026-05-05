@@ -44,7 +44,7 @@ def test_version_metadata_is_consistent() -> None:
 
 def test_release_notes_include_current_version_heading() -> None:
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    release_notes = (ROOT / "docs" / "release-notes.md").read_text(encoding="utf-8")
+    release_notes = (ROOT / "docs" / "project" / "release-notes.md").read_text(encoding="utf-8")
     pyproject_match = re.search(r'^version = "([^"]+)"$', pyproject, re.MULTILINE)
     assert pyproject_match is not None
     version = pyproject_match.group(1)

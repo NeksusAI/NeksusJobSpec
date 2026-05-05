@@ -19,8 +19,8 @@ You can compose validated page blocks such as header_brand, hero_banner, hero, m
 `soft-professional` is rendered from YAML components plus the built-in theme.
 
 - Example: [`examples/job-detail.jobspec.yaml`](examples/job-detail.jobspec.yaml)
-- Docs: [`docs/specification.md`](docs/specification.md), [`docs/rendering.md`](docs/rendering.md), [`docs/themes.md`](docs/themes.md), [`docs/examples.md`](docs/examples.md)
-- Deep dives: [`docs/soft-professional-guide.md`](docs/soft-professional-guide.md), [`docs/content-vs-theme.md`](docs/content-vs-theme.md), [`docs/render-troubleshooting.md`](docs/render-troubleshooting.md), [`docs/migration-0.1-to-0.2.md`](docs/migration-0.1-to-0.2.md)
+- Docs: [`docs/concepts/specification.md`](docs/concepts/specification.md), [`docs/concepts/rendering.md`](docs/concepts/rendering.md), [`docs/concepts/themes.md`](docs/concepts/themes.md), [`docs/guides/examples.md`](docs/guides/examples.md)
+- Deep dives: [`docs/guides/soft-professional-guide.md`](docs/guides/soft-professional-guide.md), [`docs/guides/content-vs-theme.md`](docs/guides/content-vs-theme.md), [`docs/guides/render-troubleshooting.md`](docs/guides/render-troubleshooting.md), [`docs/guides/migration-0.1-to-0.2.md`](docs/guides/migration-0.1-to-0.2.md)
 
 Rendered example screenshot:
 
@@ -99,7 +99,7 @@ git push origin v0.2.0
 
 You can also run the publish workflow manually from GitHub Actions (`workflow_dispatch`).
 
-Release notes are maintained in [`docs/release-notes.md`](docs/release-notes.md), with compatibility expectations defined in [`docs/versioning.md`](docs/versioning.md).
+Release notes are maintained in [`docs/project/release-notes.md`](docs/project/release-notes.md), with compatibility expectations defined in [`docs/project/versioning.md`](docs/project/versioning.md).
 See full change history in [`CHANGELOG.md`](CHANGELOG.md).
 Security reporting and support policy: [`SECURITY.md`](SECURITY.md).
 

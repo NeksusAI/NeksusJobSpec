@@ -35,37 +35,36 @@ markdown_extensions:
       custom_checkbox: true
 nav:
   - Home: index.md
-  - Getting Started:
-      - Overview: getting-started.md
-      - Installation: installation.md
-      - Quickstart: quickstart.md
-  - Specification:
-      - JobSpec Format: specification.md
-      - Schema: schema.md
-      - Schema Editor Integration: schema-editor-integration.md
-      - Model Reference: model-reference.md
-      - Examples: examples.md
-      - Examples Library: examples-library.md
-      - Migration 0.1.0 to 0.2.x: migration-0.1-to-0.2.md
+  - Guides:
+      - Getting Started: guides/getting-started.md
+      - Installation: guides/installation.md
+      - Quickstart: guides/quickstart.md
+      - Examples: guides/examples.md
+      - Examples Library: guides/examples-library.md
+      - Migration 0.1.0 to 0.2.x: guides/migration-0.1-to-0.2.md
+      - Soft-Professional Guide: guides/soft-professional-guide.md
+      - Content vs Theme: guides/content-vs-theme.md
+      - Render Troubleshooting: guides/render-troubleshooting.md
   - Reference:
-      - CLI Reference: cli-reference.md
-      - Python API: python-api.md
-      - API Reference: api-reference.md
-      - Internal API Reference: internal-api-reference.md
+      - CLI Reference: reference/cli-reference.md
+      - Python API: reference/python-api.md
+      - API Reference: reference/api-reference.md
+      - Internal API Reference: reference/internal-api-reference.md
+      - Schema: reference/schema.md
+      - Schema Editor Integration: reference/schema-editor-integration.md
+      - Model Reference: reference/model-reference.md
   - Concepts:
-      - How It Works: how-it-works.md
-      - Architecture: architecture.md
-      - Rendering: rendering.md
-      - Themes: themes.md
-      - Soft-Professional Guide: soft-professional-guide.md
-      - Content vs Theme: content-vs-theme.md
-      - Render Troubleshooting: render-troubleshooting.md
+      - JobSpec Format: concepts/specification.md
+      - How It Works: concepts/how-it-works.md
+      - Architecture: concepts/architecture.md
+      - Rendering: concepts/rendering.md
+      - Themes: concepts/themes.md
   - Integrations:
-      - Assistant Usage: assistant-usage.md
-      - LLM Integrations: integrations.md
-      - MCP Server: mcp-server.md
+      - Assistant Usage: integrations/assistant-usage.md
+      - LLM Integrations: integrations/llm-integrations.md
+      - MCP Server: integrations/mcp-server.md
   - Project Policy:
-      - Contributing: contributing.md
-      - Security: security.md
-      - Versioning and Compatibility: versioning.md
-      - Release Notes: release-notes.md
+      - Contributing: project/contributing.md
+      - Security: project/security.md
+      - Versioning and Compatibility: project/versioning.md
+      - Release Notes: project/release-notes.md

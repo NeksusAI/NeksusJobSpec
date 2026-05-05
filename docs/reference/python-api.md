@@ -6,7 +6,7 @@ Stable public API is exposed from `neksus_jobspec`:
 from neksus_jobspec import JobSpec, load_jobspec, validate_jobspec, render_jobspec
 ```
 
-See [API Reference](api-reference.md) and [Versioning and Compatibility Policy](versioning.md).
+See [API Reference](api-reference.md) and [Versioning and Compatibility Policy](../project/versioning.md).
 
 v0.2.x accepts the component schema (`page`, `job`, `components`) and no longer accepts legacy simple-schema payloads.
 

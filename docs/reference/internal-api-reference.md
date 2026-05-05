@@ -5,7 +5,7 @@ This page is for power users exploring internals programmatically.
 ## Stability disclaimer
 
 Internal Python APIs are **not guaranteed stable** and may change without notice between releases.
-See [Versioning and Compatibility Policy](versioning.md) for the supported compatibility contract.
+See [Versioning and Compatibility Policy](../project/versioning.md) for the supported compatibility contract.
 
 ## CLI entrypoints
 

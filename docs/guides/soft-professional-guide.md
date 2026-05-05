@@ -39,4 +39,4 @@ neksus-jobspec spec render examples/job-detail.jobspec.yaml --format web --theme
 
 Reference screenshot:
 
-![Soft Professional Job Detail](assets/job-detail-soft-professional.png)
+![Soft Professional Job Detail](../assets/job-detail-soft-professional.png)

@@ -38,8 +38,8 @@ components:
 
 ## Next steps
 
-- [Quickstart](quickstart.md)
-- [Specification](specification.md)
-- [Schema](schema.md)
-- [Examples](examples.md)
-- [Python API](python-api.md)
+- [Quickstart](guides/quickstart.md)
+- [Specification](concepts/specification.md)
+- [Schema](reference/schema.md)
+- [Examples](guides/examples.md)
+- [Python API](reference/python-api.md)

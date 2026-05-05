@@ -18,9 +18,9 @@ Rendering expects a v0.2.x component JobSpec (`page` + `job` + `components`).
 
 See also:
 
-- [Soft-Professional Guide](soft-professional-guide.md)
-- [Content vs Theme](content-vs-theme.md)
-- [Render Troubleshooting](render-troubleshooting.md)
+- [Soft-Professional Guide](../guides/soft-professional-guide.md)
+- [Content vs Theme](../guides/content-vs-theme.md)
+- [Render Troubleshooting](../guides/render-troubleshooting.md)
 
 ## JSON-LD
 

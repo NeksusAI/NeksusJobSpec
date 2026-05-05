@@ -20,4 +20,4 @@ For more scenarios, see [Examples Library](examples-library.md).
 
 Reference render (soft-professional theme):
 
-![Soft Professional Job Detail](assets/job-detail-soft-professional.png)
+![Soft Professional Job Detail](../assets/job-detail-soft-professional.png)
