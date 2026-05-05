@@ -78,6 +78,63 @@ def test_spec_render_web_theme_soft_professional() -> None:
         assert "<!doctype html>" in result.stdout.lower()
 
 
+def test_spec_render_web_theme_classic() -> None:
+    with runner.isolated_filesystem():
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
+        target = Path("valid.jobspec.yaml")
+        shutil.copy(src, target)
+
+        result = runner.invoke(
+            app, ["spec", "render", str(target), "--format", "web", "--theme", "classic"]
+        )
+        assert result.exit_code == 0
+        assert '<html class="light"' in result.stdout
+        assert "Overview" in result.stdout
+
+
+def test_spec_render_web_theme_classic_dark() -> None:
+    with runner.isolated_filesystem():
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
+        target = Path("valid.jobspec.yaml")
+        shutil.copy(src, target)
+
+        result = runner.invoke(
+            app, ["spec", "render", str(target), "--format", "web", "--theme", "classic-dark"]
+        )
+        assert result.exit_code == 0
+        assert '<html class="dark"' in result.stdout
+        assert 'style="background:#141313;color:#e5e2e1;"' in result.stdout
+
+
+def test_spec_render_classic_omits_missing_optional_sections() -> None:
+    with runner.isolated_filesystem():
+        target = Path("minimal.jobspec.yaml")
+        target.write_text(
+            """schema_version: 1
+id: minimal-classic
+page:
+  layout: job_detail
+job:
+  title: Minimal Classic
+  intro: Short intro
+components:
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items:
+      - One requirement
+""",
+            encoding="utf-8",
+        )
+        result = runner.invoke(
+            app, ["spec", "render", str(target), "--format", "web", "--theme", "classic"]
+        )
+        assert result.exit_code == 0
+        assert "Application Process" not in result.stdout
+        assert "Contact" not in result.stdout
+
+
 def test_spec_render_web_output_writes_file() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
@@ -117,6 +174,71 @@ def test_spec_render_web_custom_css_appended() -> None:
         )
         assert result.exit_code == 0
         assert "main { border-width: 3px; }" in result.stdout
+
+
+def test_spec_render_web_custom_css_appended_for_classic_theme() -> None:
+    with runner.isolated_filesystem():
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
+        target = Path("valid.jobspec.yaml")
+        css = Path("brand.css")
+        css.write_text("body { letter-spacing: 0.01em; }", encoding="utf-8")
+        shutil.copy(src, target)
+
+        result = runner.invoke(
+            app,
+            [
+                "spec",
+                "render",
+                str(target),
+                "--format",
+                "web",
+                "--theme",
+                "classic",
+                "--css",
+                str(css),
+            ],
+        )
+        assert result.exit_code == 0
+        assert "body { letter-spacing: 0.01em; }" in result.stdout
+
+
+def test_spec_render_web_theme_custom_requires_css() -> None:
+    with runner.isolated_filesystem():
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
+        target = Path("valid.jobspec.yaml")
+        shutil.copy(src, target)
+
+        result = runner.invoke(
+            app, ["spec", "render", str(target), "--format", "web", "--theme", "custom", "--json"]
+        )
+        assert result.exit_code == 4
+        payload = json.loads(result.stdout)
+        assert payload["ok"] is False
+
+
+def test_spec_render_web_theme_custom_uses_user_css_as_theme() -> None:
+    with runner.isolated_filesystem():
+        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
+        target = Path("valid.jobspec.yaml")
+        theme_dir = ROOT / "fixtures" / "themes" / "custom-basic"
+        shutil.copy(src, target)
+
+        result = runner.invoke(
+            app,
+            [
+                "spec",
+                "render",
+                str(target),
+                "--format",
+                "web",
+                "--theme",
+                str(theme_dir),
+            ],
+        )
+        assert result.exit_code == 0
+        assert "jobspec-page" in result.stdout
+        assert "font-size:40px" in result.stdout
+        assert 'class="jobspec-page"' in result.stdout
 
 
 def test_spec_render_web_no_css_has_no_style_block() -> None:
@@ -222,7 +344,7 @@ def test_spec_render_invalid_theme_is_controlled() -> None:
             app,
             ["spec", "render", str(target), "--format", "web", "--theme", "unknown", "--json"],
         )
-        assert result.exit_code == 1
+        assert result.exit_code == 4
         payload = json.loads(result.stdout)
         assert payload["ok"] is False
 

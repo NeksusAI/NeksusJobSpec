@@ -1,0 +1,8 @@
+{
+  "name": "custom-basic",
+  "version": 1,
+  "template": "template.html.j2",
+  "styles": ["theme.css"],
+  "supported_components": ["hero", "list", "feature_grid", "benefits", "application_process", "contact", "meta_panel", "header_brand", "header_actions", "footer_brand", "rich_text", "meta_chips"],
+  "supported_regions": ["header", "hero", "main", "sidebar", "footer"]
+}

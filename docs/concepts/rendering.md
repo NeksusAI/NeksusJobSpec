@@ -8,10 +8,12 @@ Rendering expects a v0.3.x component JobSpec (`page` + `job` + `components`).
 
 ## Web
 
-- Uses the built-in `soft-professional` HTML contract for component-based job-detail pages.
+- Uses built-in HTML contracts for `soft-professional`, `classic`, and `classic-dark` themes.
+- Supports filesystem custom theme packages (`manifest.json` + Jinja template + CSS assets).
 - Derives visible job content from YAML components and rendering config.
 - Supports apply CTA, share links, and print-link icon toggle from `rendering.web`.
-- Supports CSS overrides from CLI (`--css`) and YAML (`rendering.web.css`).
+- Supports CSS overrides from CLI (`--css`) for built-in themes.
+- Custom theme packages own their full visual contract through package template/CSS assets.
 - Supports `rendering.web.asset_base_url` (or CLI `--asset-base-url`) to prefix relative component media/asset URLs.
 - Supports built-in theme names via `--theme`.
 - JSON-LD output remains model-driven.
@@ -19,6 +21,8 @@ Rendering expects a v0.3.x component JobSpec (`page` + `job` + `components`).
 See also:
 
 - [Soft-Professional Guide](../guides/soft-professional-guide.md)
+- [Classic Theme Guide](../guides/classic-guide.md)
+- [Classic-Dark Theme Guide](../guides/classic-dark-guide.md)
 - [Content vs Theme](../guides/content-vs-theme.md)
 - [Render Troubleshooting](../guides/render-troubleshooting.md)
 

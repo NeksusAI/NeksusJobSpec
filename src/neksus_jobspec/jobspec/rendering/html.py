@@ -5,9 +5,15 @@ from __future__ import annotations
 import html
 from dataclasses import dataclass
 
+from neksus_jobspec.errors import ConfigError
 from neksus_jobspec.jobspec.models import (
+    ApplicationProcessComponent,
     BenefitsComponent,
+    ContactComponent,
+    FooterBrandComponent,
     FeatureGridComponent,
+    HeaderActionsComponent,
+    HeaderBrandComponent,
     HeroBannerComponent,
     HeroComponent,
     ListComponent,
@@ -18,6 +24,7 @@ from neksus_jobspec.jobspec.models import (
 )
 from neksus_jobspec.jobspec.rendering.normalize import normalize_jobspec_for_render
 from neksus_jobspec.jobspec.rendering.options import RenderOptions
+from neksus_jobspec.jobspec.rendering.theme_engine import render_theme, resolve_theme_package
 
 TAILWIND_CONFIG = """        tailwind.config = {
             darkMode: \"class\",
@@ -144,6 +151,23 @@ class SoftProfessionalData:
     cta_label: str
     footer_brand: str
     footer_icons: list[str]
+
+
+@dataclass
+class ClassicData:
+    brand_name: str
+    top_action_label: str
+    title: str
+    subtitle: str
+    apply_label: str
+    overview_body: str
+    responsibilities: list[tuple[str, str, str]]
+    requirements: list[str]
+    benefits: list[str]
+    process_body: str
+    process_steps: list[str]
+    contact_lines: list[str]
+    footer_text: str
 
 
 def _escape(value: str) -> str:
@@ -463,6 +487,494 @@ def _render_soft_professional_web(spec, options: RenderOptions) -> str:
     )
 
 
+def _to_classic_data(spec) -> ClassicData:
+    normalized = normalize_jobspec_for_render(spec)
+    components = normalized.components
+    hero = _component_by_type(components, "hero")
+    chips = _component_by_type(components, "meta_chips")
+    about = _component_by_type(components, "rich_text")
+    grid = _component_by_type(components, "feature_grid")
+    req = _component_by_type(components, "list")
+    benefits = _component_by_type(components, "benefits")
+    process = _component_by_type(components, "application_process")
+    contact = _component_by_type(components, "contact")
+    meta = _component_by_type(components, "meta_panel")
+    header_brand = _component_by_type(components, "header_brand")
+    header_actions = _component_by_type(components, "header_actions")
+    footer_brand = _component_by_type(components, "footer_brand")
+
+    title = hero.title if isinstance(hero, HeroComponent) and hero.title else normalized.title
+    subtitle = ""
+    if isinstance(hero, HeroComponent) and hero.subtitle:
+        subtitle = hero.subtitle
+    elif isinstance(chips, MetaChipsComponent):
+        subtitle = " · ".join(item.value for item in chips.items[:3])
+
+    responsibilities: list[tuple[str, str, str]] = []
+    if isinstance(grid, FeatureGridComponent):
+        responsibilities = [(item.icon or "hub", item.title, item.body) for item in grid.items]
+
+    requirements = list(req.items) if isinstance(req, ListComponent) else []
+
+    benefit_values: list[str] = []
+    if isinstance(benefits, BenefitsComponent):
+        for item in benefits.items:
+            benefit_values.append(item if isinstance(item, str) else item.get("text", ""))
+        benefit_values = [value for value in benefit_values if value]
+
+    process_body = ""
+    process_steps: list[str] = []
+    if isinstance(process, ApplicationProcessComponent):
+        process_body = process.body or ""
+        process_steps = list(process.steps)
+
+    contact_lines: list[str] = []
+    if isinstance(contact, ContactComponent):
+        for value in [contact.name, contact.role, contact.phone, contact.mobile, contact.email]:
+            if value:
+                contact_lines.append(value)
+    elif isinstance(meta, MetaPanelComponent):
+        for value in [
+            meta.contact_name,
+            meta.contact_role,
+            meta.contact_phone,
+            meta.contact_mobile,
+            meta.contact_email,
+        ]:
+            if value:
+                contact_lines.append(value)
+
+    brand_name = "NeksusJobSpec"
+    if isinstance(header_brand, HeaderBrandComponent):
+        brand_name = header_brand.brand_name
+
+    top_action_label = normalized.apply_label or "Apply Now"
+    if isinstance(header_actions, HeaderActionsComponent) and header_actions.actions:
+        top_action_label = header_actions.actions[0].label
+
+    footer_text = f"{brand_name} • {_escape(title)}"
+    if isinstance(footer_brand, FooterBrandComponent):
+        footer_text = footer_brand.body
+
+    return ClassicData(
+        brand_name=brand_name,
+        top_action_label=top_action_label,
+        title=title,
+        subtitle=subtitle,
+        apply_label=normalized.apply_label or "Apply Now",
+        overview_body=(
+            about.body if isinstance(about, RichTextComponent) else (normalized.intro or "")
+        ),
+        responsibilities=responsibilities,
+        requirements=requirements,
+        benefits=benefit_values,
+        process_body=process_body,
+        process_steps=process_steps,
+        contact_lines=contact_lines,
+        footer_text=footer_text,
+    )
+
+
+def _render_classic_section(title: str, body: str) -> str:
+    return (
+        '<section class="mb-16 border-t pt-4">'
+        f'<h2 class="mb-6 text-[12px] font-bold uppercase tracking-[0.05em] text-[#444748]">{_escape(title)}</h2>'
+        f'<p class="text-[18px] leading-[1.6] text-[#191c1e]">{_escape(body)}</p>'
+        "</section>"
+    )
+
+
+def _render_classic_web(spec, options: RenderOptions, *, dark: bool) -> str:
+    data = _to_classic_data(spec)
+    extra_css = ""
+    if options.custom_css:
+        extra_css = f"\n{options.custom_css.strip()}\n"
+    classic_config = spec.rendering.web.classic
+    palette = classic_config.palette
+    html_class = "dark" if dark else "light"
+    body_bg = palette.background or ("#141313" if dark else "#f8f9fb")
+    text_color = palette.text or ("#e5e2e1" if dark else "#191c1e")
+    muted_color = palette.muted_text or ("#c4c7c8" if dark else "#444748")
+    border_color = palette.border or ("#444748" if dark else "#c4c7c7")
+    card_bg = palette.card_background or ("#1c1b1b" if dark else "#f2f4f6")
+    footer_bg = palette.footer_background or ("#0e0e0e" if dark else "#ffffff")
+    button_bg = palette.button_background or "#000000"
+    button_text = palette.button_text or "#ffffff"
+    max_width_px = classic_config.content_max_width_px
+    section_gap_px = classic_config.section_gap_px
+    process_container_tag = "ol" if classic_config.process_style == "ordered" else "ul"
+    process_item_class = "mb-2" if classic_config.process_style == "ordered" else "mb-2 list-disc"
+    requirements_icon = "check" if classic_config.requirements_marker == "check" else "remove"
+    divider_style = (
+        f'border-t pt-4" style="border-color:{border_color};'
+        if classic_config.show_section_dividers
+        else f'pt-4" style="border-color:{border_color};'
+    )
+    footer_text = (
+        data.footer_text
+        if classic_config.footer_style == "minimal"
+        else f"{data.brand_name} · {data.title}"
+    )
+
+    responsibilities_html = ""
+    if data.responsibilities:
+        if classic_config.responsibilities_style == "cards":
+            cards = []
+            for icon, title, body in data.responsibilities:
+                cards.append(
+                    f'<div class="rounded-lg border p-6" style="border-color:{border_color};background:{card_bg};">'
+                    f'<span class="material-symbols-outlined mb-4 block text-[20px]" style="color:{text_color};">{_escape(icon)}</span>'
+                    f'<h3 class="mb-2 text-[18px] font-semibold" style="color:{text_color};">{_escape(title)}</h3>'
+                    f'<p class="text-[16px] leading-[1.6]" style="color:{muted_color};">{_escape(body)}</p>'
+                    "</div>"
+                )
+            body_html = (
+                '<div class="grid grid-cols-1 gap-6 md:grid-cols-2">' + "".join(cards) + "</div>"
+            )
+        else:
+            items = "".join(
+                f'<li class="mb-4"><p class="mb-1 text-[18px] font-semibold" style="color:{text_color};">{_escape(title)}</p><p class="text-[16px] leading-[1.6]" style="color:{muted_color};">{_escape(body)}</p></li>'
+                for _, title, body in data.responsibilities
+            )
+            body_html = f'<ul class="m-0 list-none p-0">{items}</ul>'
+        responsibilities_html = (
+            f'<section class="mb-16 {divider_style}">'
+            f'<h2 class="mb-6 text-[12px] font-bold uppercase tracking-[0.05em]" style="color:{muted_color};">Responsibilities</h2>'
+            + body_html
+            + "</section>"
+        )
+
+    requirements_html = ""
+    if data.requirements:
+        requirements_html = (
+            f'<section class="mb-16 {divider_style}">'
+            f'<h2 class="mb-6 text-[12px] font-bold uppercase tracking-[0.05em]" style="color:{muted_color};">Requirements</h2>'
+            + "".join(
+                f'<div class="mb-3 flex items-start gap-3"><span class="material-symbols-outlined mt-[2px] text-[16px]" style="color:{text_color};">{requirements_icon}</span><p class="m-0" style="color:{muted_color};">{_escape(item)}</p></div>'
+                for item in data.requirements
+            )
+            + "</section>"
+        )
+
+    benefits_html = ""
+    if data.benefits:
+        benefits_html = (
+            f'<section class="mb-16 {divider_style}">'
+            f'<h2 class="mb-6 text-[12px] font-bold uppercase tracking-[0.05em]" style="color:{muted_color};">Benefits</h2>'
+            '<div class="grid grid-cols-1 md:grid-cols-2 gap-3">'
+            + "".join(
+                f'<div class="rounded-lg border px-4 py-3" style="border-color:{border_color};background:{card_bg};color:{text_color};">{_escape(item)}</div>'
+                for item in data.benefits
+            )
+            + "</div></section>"
+        )
+
+    process_html = ""
+    if data.process_body or data.process_steps:
+        process_html = (
+            f'<section class="mb-16 {divider_style}">'
+            f'<h2 class="mb-6 text-[12px] font-bold uppercase tracking-[0.05em]" style="color:{muted_color};">Application Process</h2>'
+            + (
+                f'<p class="mb-4 text-[16px] leading-[1.6]" style="color:{text_color};">{_escape(data.process_body)}</p>'
+                if data.process_body
+                else ""
+            )
+            + (
+                f'<{process_container_tag} class="pl-5 m-0">'
+                + "".join(
+                    f'<li class="{process_item_class}" style="color:{muted_color};">{_escape(item)}</li>'
+                    for item in data.process_steps
+                )
+                + f"</{process_container_tag}>"
+                if data.process_steps
+                else ""
+            )
+            + "</section>"
+        )
+
+    contact_html = ""
+    if data.contact_lines:
+        contact_html = (
+            f'<section class="mb-16 {divider_style}">'
+            f'<h2 class="mb-6 text-[12px] font-bold uppercase tracking-[0.05em]" style="color:{muted_color};">Contact</h2>'
+            + "".join(
+                f'<p class="mb-2 text-[16px]" style="color:{muted_color};">{_escape(line)}</p>'
+                for line in data.contact_lines
+            )
+            + "</section>"
+        )
+
+    return (
+        "<!DOCTYPE html>\n\n"
+        f'<html class="{html_class}" lang="en"><head>\n'
+        '<meta charset="utf-8"/>\n'
+        '<meta content="width=device-width, initial-scale=1.0" name="viewport"/>\n'
+        f"<title>{_escape(data.title)} - NeksusJobSpec</title>\n"
+        '<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>\n'
+        '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>\n'
+        '<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>\n'
+        '<script id="tailwind-config">tailwind.config = {darkMode: "class"};</script>\n'
+        "<style>body{-webkit-font-smoothing:antialiased;}"
+        f"{extra_css}"
+        "</style>\n"
+        "</head>\n"
+        f'<body class="antialiased" style="background:{body_bg};color:{text_color};">\n'
+        f'<header class="fixed left-0 top-0 z-50 flex w-full justify-center border-b px-6 backdrop-blur-sm" style="background:{body_bg};border-color:{border_color};">\n'
+        f'<nav class="flex h-16 w-full items-center justify-between" style="max-width:{max_width_px}px;">\n'
+        f'<span class="text-[24px] font-bold">{_escape(data.brand_name)}</span>\n'
+        '<div class="flex items-center gap-6">\n'
+        f'<button class="cursor-pointer rounded-lg px-6 py-2 text-[12px] font-bold uppercase tracking-[0.05em] transition-all duration-200 hover:opacity-90" style="background:{button_bg};color:{button_text};">{_escape(data.top_action_label)}</button>\n'
+        "</div></nav></header>\n"
+        f'<main class="mx-auto px-6 pb-16 pt-32" style="max-width:{max_width_px}px;">\n'
+        f'<section style="margin-bottom:{section_gap_px}px;">\n'
+        f'<h1 class="mb-4 text-[32px] font-bold leading-[1.2] tracking-[-0.01em]">{_escape(data.title)}</h1>\n'
+        + (
+            f'<p class="mb-6 text-[18px] leading-[1.6]" style="color:{muted_color};">{_escape(data.subtitle)}</p>\n'
+            if data.subtitle
+            else ""
+        )
+        + f'<button class="rounded-lg px-8 py-3 text-[12px] font-bold uppercase tracking-[0.05em] transition-opacity hover:opacity-90" style="background:{button_bg};color:{button_text};">'
+        f"{_escape(data.apply_label)}</button>\n"
+        "</section>\n"
+        + (_render_classic_section("Overview", data.overview_body) if data.overview_body else "")
+        + responsibilities_html
+        + requirements_html
+        + benefits_html
+        + process_html
+        + contact_html
+        + "</main>\n"
+        f'<footer class="border-t py-16" style="border-color:{border_color};background:{footer_bg};">'
+        f'<div class="mx-auto px-6" style="max-width:{max_width_px}px;"><p class="m-0 text-[12px] font-semibold uppercase tracking-[0.05em]" style="color:{muted_color};">{_escape(footer_text)}</p></div>'
+        "</footer>\n"
+        "</body></html>"
+    )
+
+
+def _render_custom_web(spec, options: RenderOptions) -> str:
+    data = _to_classic_data(spec)
+    css = (options.custom_css or spec.rendering.web.css.inline).strip()
+    if not css:
+        raise ConfigError("Theme 'custom' requires CSS via --css or rendering.web.css.inline")
+
+    responsibilities_html = ""
+    if data.responsibilities:
+        items = "".join(
+            '<li class="jobspec-responsibility-item">'
+            f'<h3 class="jobspec-responsibility-title">{_escape(title)}</h3>'
+            f'<p class="jobspec-responsibility-body">{_escape(body)}</p>'
+            "</li>"
+            for _, title, body in data.responsibilities
+        )
+        responsibilities_html = (
+            '<section class="jobspec-section jobspec-section-responsibilities">'
+            '<h2 class="jobspec-section-title">Responsibilities</h2>'
+            f'<ul class="jobspec-responsibility-list">{items}</ul>'
+            "</section>"
+        )
+
+    requirements_html = ""
+    if data.requirements:
+        items = "".join(
+            f'<li class="jobspec-requirement-item">{_escape(item)}</li>'
+            for item in data.requirements
+        )
+        requirements_html = (
+            '<section class="jobspec-section jobspec-section-requirements">'
+            '<h2 class="jobspec-section-title">Requirements</h2>'
+            f'<ul class="jobspec-requirement-list">{items}</ul>'
+            "</section>"
+        )
+
+    benefits_html = ""
+    if data.benefits:
+        items = "".join(
+            f'<li class="jobspec-benefit-item">{_escape(item)}</li>' for item in data.benefits
+        )
+        benefits_html = (
+            '<section class="jobspec-section jobspec-section-benefits">'
+            '<h2 class="jobspec-section-title">Benefits</h2>'
+            f'<ul class="jobspec-benefit-list">{items}</ul>'
+            "</section>"
+        )
+
+    process_html = ""
+    if data.process_body or data.process_steps:
+        items = "".join(
+            f'<li class="jobspec-process-step">{_escape(item)}</li>' for item in data.process_steps
+        )
+        process_html = (
+            '<section class="jobspec-section jobspec-section-process">'
+            '<h2 class="jobspec-section-title">Application Process</h2>'
+            + (
+                f'<p class="jobspec-process-body">{_escape(data.process_body)}</p>'
+                if data.process_body
+                else ""
+            )
+            + (f'<ol class="jobspec-process-steps">{items}</ol>' if items else "")
+            + "</section>"
+        )
+
+    contact_html = ""
+    if data.contact_lines:
+        lines = "".join(
+            f'<p class="jobspec-contact-line">{_escape(line)}</p>' for line in data.contact_lines
+        )
+        contact_html = (
+            '<section class="jobspec-section jobspec-section-contact">'
+            '<h2 class="jobspec-section-title">Contact</h2>'
+            f"{lines}</section>"
+        )
+
+    return (
+        "<!DOCTYPE html>\n\n"
+        '<html lang="en"><head>\n'
+        '<meta charset="utf-8"/>\n'
+        '<meta content="width=device-width, initial-scale=1.0" name="viewport"/>\n'
+        f"<title>{_escape(data.title)} - NeksusJobSpec</title>\n"
+        "<style>\n"
+        f"{css}\n"
+        "</style>\n"
+        "</head>\n"
+        '<body class="jobspec-page">\n'
+        '<header class="jobspec-header">\n'
+        '<div class="jobspec-header-inner">\n'
+        f'<div class="jobspec-brand">{_escape(data.brand_name)}</div>\n'
+        f'<div class="jobspec-header-action">{_escape(data.top_action_label)}</div>\n'
+        "</div>\n"
+        "</header>\n"
+        '<main class="jobspec-main">\n'
+        '<section class="jobspec-section jobspec-section-hero">\n'
+        f'<h1 class="jobspec-title">{_escape(data.title)}</h1>\n'
+        f'<p class="jobspec-subtitle">{_escape(data.subtitle)}</p>\n'
+        f'<div class="jobspec-apply">{_escape(data.apply_label)}</div>\n'
+        "</section>\n"
+        + (
+            '<section class="jobspec-section jobspec-section-overview">'
+            '<h2 class="jobspec-section-title">Overview</h2>'
+            f'<p class="jobspec-overview">{_escape(data.overview_body)}</p>'
+            "</section>"
+            if data.overview_body
+            else ""
+        )
+        + responsibilities_html
+        + requirements_html
+        + benefits_html
+        + process_html
+        + contact_html
+        + "</main>\n"
+        '<footer class="jobspec-footer">\n'
+        f'<div class="jobspec-footer-inner">{_escape(data.footer_text)}</div>\n'
+        "</footer>\n"
+        "</body></html>"
+    )
+
+
+def _build_soft_professional_context(spec) -> dict[str, object]:
+    data = _to_soft_professional_data(spec)
+    return {
+        "tailwind_config": TAILWIND_CONFIG,
+        "base_style": BASE_STYLE,
+        "title": data.title,
+        "location": data.location,
+        "salary": data.salary,
+        "employment": data.employment,
+        "apply_label": data.apply_label,
+        "campaign_notice": data.campaign_notice,
+        "about_title": data.about_title,
+        "about_body": data.about_body,
+        "responsibilities_title": data.responsibilities_title,
+        "responsibility_cards": data.responsibility_cards[:3],
+        "requirements_title": data.requirements_title,
+        "requirements": data.requirements,
+        "quick_facts": data.quick_facts,
+        "benefits_title": data.benefits_title,
+        "benefits": data.benefits,
+        "map_image": data.map_image,
+        "map_alt": data.map_alt,
+        "map_label": data.map_label,
+        "cta_title": data.cta_title,
+        "cta_body": data.cta_body,
+        "cta_label": data.cta_label,
+        "footer_brand": data.footer_brand,
+        "footer_icons": data.footer_icons,
+    }
+
+
+def _build_classic_context(spec, *, dark: bool) -> dict[str, object]:
+    data = _to_classic_data(spec)
+    classic_config = spec.rendering.web.classic
+    palette = classic_config.palette
+    footer_text = (
+        data.footer_text
+        if classic_config.footer_style == "minimal"
+        else f"{data.brand_name} · {data.title}"
+    )
+    return {
+        "html_class": "dark" if dark else "light",
+        "title": data.title,
+        "brand_name": data.brand_name,
+        "top_action_label": data.top_action_label,
+        "subtitle": data.subtitle,
+        "apply_label": data.apply_label,
+        "overview_body": data.overview_body,
+        "responsibilities": data.responsibilities,
+        "requirements": data.requirements,
+        "benefits": data.benefits,
+        "process_body": data.process_body,
+        "process_steps": data.process_steps,
+        "contact_lines": data.contact_lines,
+        "footer_text": footer_text,
+        "body_bg": palette.background or ("#141313" if dark else "#f8f9fb"),
+        "text_color": palette.text or ("#e5e2e1" if dark else "#191c1e"),
+        "muted_color": palette.muted_text or ("#c4c7c8" if dark else "#444748"),
+        "border_color": palette.border or ("#444748" if dark else "#c4c7c7"),
+        "card_bg": palette.card_background or ("#1c1b1b" if dark else "#f2f4f6"),
+        "footer_bg": palette.footer_background or ("#0e0e0e" if dark else "#ffffff"),
+        "button_bg": palette.button_background or "#000000",
+        "button_text": palette.button_text or "#ffffff",
+        "max_width_px": classic_config.content_max_width_px,
+        "section_gap_px": classic_config.section_gap_px,
+        "responsibilities_style": classic_config.responsibilities_style,
+        "requirements_icon": "check" if classic_config.requirements_marker == "check" else "remove",
+        "process_style": classic_config.process_style,
+    }
+
+
+def _build_custom_context(spec) -> dict[str, object]:
+    data = _to_classic_data(spec)
+    normalized = normalize_jobspec_for_render(spec)
+    return {
+        "title": data.title,
+        "brand_name": data.brand_name,
+        "top_action_label": data.top_action_label,
+        "subtitle": data.subtitle,
+        "apply_label": data.apply_label,
+        "overview_body": data.overview_body,
+        "responsibilities": data.responsibilities,
+        "requirements": data.requirements,
+        "benefits": data.benefits,
+        "process_body": data.process_body,
+        "process_steps": data.process_steps,
+        "contact_lines": data.contact_lines,
+        "footer_text": data.footer_text,
+        "spec": spec.model_dump(mode="json"),
+        "components": [component.model_dump(mode="json") for component in normalized.components],
+    }
+
+
+def _render_with_theme_package(spec, options: RenderOptions) -> str:
+    package = resolve_theme_package(options.theme, spec.rendering.web.template)
+    if package.theme_id == "soft-professional":
+        context = _build_soft_professional_context(spec)
+    elif package.theme_id == "classic":
+        context = _build_classic_context(spec, dark=False)
+    elif package.theme_id == "classic-dark":
+        context = _build_classic_context(spec, dark=True)
+    else:
+        context = _build_custom_context(spec)
+    return render_theme(package, context=context, custom_css=options.custom_css)
+
+
 def render_html(spec, options: RenderOptions) -> str:
     """Render a JobSpec into HTML."""
-    return _render_soft_professional_web(spec, options)
+    return _render_with_theme_package(spec, options)

@@ -48,11 +48,11 @@ def test_jobspec_model_rejects_empty_requirements_component() -> None:
         )
 
 
-def test_jobspec_model_accepts_stitch_structural_components() -> None:
+def test_jobspec_model_accepts_structural_components() -> None:
     spec = JobSpec.model_validate(
         {
             "schema_version": 1,
-            "id": "stitch-shape",
+            "id": "shape-reference",
             "page": {
                 "layout": "job_detail",
                 "component_order": [
@@ -121,18 +121,18 @@ def test_jobspec_model_accepts_stitch_structural_components() -> None:
             ],
         }
     )
-    assert spec.id == "stitch-shape"
+    assert spec.id == "shape-reference"
 
 
-def test_stitch_layout_mode_requires_region_clusters() -> None:
+def test_layout_mode_requires_region_clusters() -> None:
     with pytest.raises(ValidationError):
         JobSpec.model_validate(
             {
                 "schema_version": 1,
-                "id": "stitch-missing",
+                "id": "layout-missing",
                 "page": {
                     "layout": "job_detail",
-                    "layout_mode": "stitch_job_detail",
+                    "layout_mode": "structured_job_detail",
                     "component_order": ["hero"],
                 },
                 "job": {"title": "Role", "intro": "Intro"},
@@ -149,15 +149,15 @@ def test_stitch_layout_mode_requires_region_clusters() -> None:
         )
 
 
-def test_stitch_layout_mode_requires_meta_panel_icons() -> None:
+def test_layout_mode_requires_meta_panel_icons() -> None:
     with pytest.raises(ValidationError):
         JobSpec.model_validate(
             {
                 "schema_version": 1,
-                "id": "stitch-icons",
+                "id": "layout-icons",
                 "page": {
                     "layout": "job_detail",
-                    "layout_mode": "stitch_job_detail",
+                    "layout_mode": "structured_job_detail",
                     "component_order": [
                         "hb",
                         "nav",

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+{{ tailwind_config | safe }}
+</script>
+<style>
+{{ base_style | safe }}
+{{ theme_css | safe }}
+</style>
+</head>
+<body class="bg-surface-container-low font-body-md text-on-surface">
+<div class="max-w-[1100px] mx-auto min-h-screen bg-surface-container-low">
+<header class="bg-surface-container-lowest py-lg px-md technical-border border-t-0 border-x-0">
+<div class="max-w-[1100px] mx-auto flex flex-col md:flex-row items-start md:items-center gap-md">
+<div class="w-16 h-16 bg-primary flex items-center justify-center rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-on-primary text-3xl" data-icon="terminal">terminal</span>
+</div>
+<div class="flex-grow">
+<h1 class="font-h1 text-h1 text-on-surface mb-xs">{{ title }}</h1>
+{% if campaign_notice %}<div class="bg-error-container text-on-error-container technical-border rounded p-sm mt-sm">{{ campaign_notice }}</div>{% endif %}
+<div class="flex flex-wrap gap-sm items-center">
+<div class="flex items-center bg-surface-container-high px-3 py-1 rounded">
+<span class="material-symbols-outlined text-sm mr-2" data-icon="location_on">location_on</span>
+<span class="font-label-sm text-label-sm uppercase">{{ location }}</span>
+</div>
+<div class="flex items-center bg-surface-container-high px-3 py-1 rounded">
+<span class="material-symbols-outlined text-sm mr-2" data-icon="payments">payments</span>
+<span class="font-label-sm text-label-sm uppercase">{{ salary }}</span>
+</div>
+<div class="flex items-center bg-surface-container-high px-3 py-1 rounded">
+<span class="material-symbols-outlined text-sm mr-2" data-icon="work">work</span>
+<span class="font-label-sm text-label-sm uppercase">{{ employment }}</span>
+</div>
+</div>
+</div>
+<div class="flex gap-sm">
+<button class="bg-primary text-on-primary px-6 py-3 font-semibold rounded hover:bg-primary-container transition-colors{% if campaign_notice %} opacity-70{% endif %}">{{ apply_label }}</button>
+<button class="border border-primary text-primary px-4 py-3 font-semibold rounded hover:bg-primary hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-[1100px] mx-auto px-md py-xl grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<div class="lg:col-span-8 flex flex-col gap-xl">
+{% if about_body %}<section>
+<h2 class="font-h2 text-h2 text-on-surface mb-md">{{ about_title }}</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[720px]">{{ about_body }}</p>
+</section>{% endif %}
+{% if responsibility_cards %}<section>
+<h2 class="font-h2 text-h2 text-on-surface mb-md">{{ responsibilities_title }}</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+{% for card in responsibility_cards %}
+<div class="p-md bg-surface-container-lowest technical-border rounded-lg{% if loop.index0 == 2 %} md:col-span-2{% endif %}">
+<span class="material-symbols-outlined text-primary mb-sm block" data-icon="{{ card[0] }}">{{ card[0] }}</span>
+<h3 class="font-semibold text-lg mb-xs">{{ card[1] }}</h3>
+<p class="text-sm text-on-surface-variant">{{ card[2] }}</p>
+</div>
+{% endfor %}
+</div>
+</section>{% endif %}
+<section>
+<h2 class="font-h2 text-h2 text-on-surface mb-md">{{ requirements_title }}</h2>
+<ul class="space-y-sm">
+{% for item in requirements %}<li class="flex items-start"><span class="custom-bullet mt-2"></span><span class="font-body-md text-body-md text-on-surface-variant">{{ item }}</span></li>{% endfor %}
+</ul>
+</section>
+</div>
+<aside class="lg:col-span-4 flex flex-col gap-md">
+{% if quick_facts %}<div class="p-md bg-surface-container-highest technical-border rounded-lg">
+<h3 class="font-label-sm text-label-sm uppercase text-on-surface-variant mb-md border-b border-surface-dim pb-sm">Quick Facts</h3>
+<div class="space-y-md">
+{% for fact in quick_facts %}<div class="flex justify-between items-center"><span class="text-sm font-medium text-on-surface-variant">{{ fact[0] }}</span><span class="text-sm font-bold">{{ fact[1] }}</span></div>{% endfor %}
+</div>
+</div>{% endif %}
+{% if benefits %}<div class="p-md bg-surface-container-lowest technical-border rounded-lg">
+<h3 class="font-label-sm text-label-sm uppercase text-on-surface-variant mb-md">{{ benefits_title }}</h3>
+<div class="flex flex-wrap gap-xs">
+{% for item in benefits %}<span class="bg-surface-container-low text-primary text-[10px] font-bold px-2 py-1 rounded uppercase">{{ item }}</span>{% endfor %}
+</div>
+</div>{% endif %}
+{% if map_image %}<div class="technical-border rounded-lg overflow-hidden"><div class="h-48 bg-surface-variant relative"><img class="w-full h-full object-cover grayscale opacity-60" data-alt="{{ map_alt }}" data-location="{{ location }}" src="{{ map_image }}" alt="{{ map_alt }}"/><div class="absolute inset-0 flex items-center justify-center"><div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center border-2 border-white shadow-lg"><span class="material-symbols-outlined text-white text-sm" data-icon="location_on">location_on</span></div></div></div><div class="p-3 bg-surface-container-lowest"><p class="text-xs font-bold text-on-surface">{{ map_label }}</p></div></div>{% endif %}
+{% if cta_title or cta_body or cta_label %}<div class="p-md bg-primary rounded-lg text-on-primary"><h4 class="font-bold mb-2">{{ cta_title }}</h4><p class="text-xs mb-4 opacity-90">{{ cta_body }}</p><button class="w-full bg-on-primary text-primary py-2 text-xs font-bold rounded hover:bg-secondary-container transition-colors">{{ cta_label }}</button></div>{% endif %}
+</aside>
+</main>
+<footer class="py-md px-md border-t border-surface-variant mt-lg flex justify-between items-center opacity-60"><span class="text-xs font-label-sm uppercase tracking-widest">{{ footer_brand }}</span><div class="flex gap-md">{% for icon in footer_icons %}<span class="material-symbols-outlined text-sm" data-icon="{{ icon }}">{{ icon }}</span>{% endfor %}</div></footer>
+</div>
+</body></html>

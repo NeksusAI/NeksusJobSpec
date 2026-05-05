@@ -53,6 +53,26 @@ def test_config_set_accepts_default_theme_soft_professional() -> None:
         assert payload["config"]["default_theme"] == "soft-professional"
 
 
+def test_config_set_accepts_default_theme_classic_dark() -> None:
+    with runner.isolated_filesystem():
+        runner.invoke(app, ["init"])
+        result = runner.invoke(app, ["config", "set", "default_theme", "classic-dark", "--json"])
+        assert result.exit_code == 0
+        payload = json.loads(result.stdout)
+        assert payload["ok"] is True
+        assert payload["config"]["default_theme"] == "classic-dark"
+
+
+def test_config_set_accepts_default_theme_custom() -> None:
+    with runner.isolated_filesystem():
+        runner.invoke(app, ["init"])
+        result = runner.invoke(app, ["config", "set", "default_theme", "custom", "--json"])
+        assert result.exit_code == 0
+        payload = json.loads(result.stdout)
+        assert payload["ok"] is True
+        assert payload["config"]["default_theme"] == "custom"
+
+
 def test_config_set_rejects_unknown_theme() -> None:
     with runner.isolated_filesystem():
         runner.invoke(app, ["init"])

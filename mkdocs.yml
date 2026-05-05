@@ -42,6 +42,8 @@ nav:
       - Examples: guides/examples.md
       - Examples Library: guides/examples-library.md
       - Soft-Professional Guide: guides/soft-professional-guide.md
+      - Classic Theme Guide: guides/classic-guide.md
+      - Classic-Dark Theme Guide: guides/classic-dark-guide.md
       - Content vs Theme: guides/content-vs-theme.md
       - Render Troubleshooting: guides/render-troubleshooting.md
       - LLM Usage: llm-usage.md

@@ -63,6 +63,17 @@ neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml \
   --output dist/backend-engineer.html
 ```
 
+Available built-in `web` themes: `classic`, `classic-dark`, `soft-professional`.
+
+Use a custom theme package directory:
+
+```bash
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml \
+  --format web \
+  --theme ./my-theme-package \
+  --output dist/backend-engineer-custom.html
+```
+
 ## Render JSON-LD
 
 ```bash

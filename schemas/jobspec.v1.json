@@ -3250,7 +3250,7 @@
         "layout_mode": {
           "anyOf": [
             {
-              "const": "stitch_job_detail",
+              "const": "structured_job_detail",
               "type": "string"
             },
             {

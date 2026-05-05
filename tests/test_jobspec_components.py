@@ -225,8 +225,8 @@ def test_fullwidth_footer_renders_after_main_layout() -> None:
     )
     spec = JobSpec.model_validate(data)
     output = render_jobspec(spec, format="web", theme="soft-professional")
-    assert "Container Footer/End State" in output
-    assert output.index("Main Content Grid") < output.index("Container Footer/End State")
+    assert "Footer text" in output
+    assert output.index("Quick Facts") < output.index("Footer text")
 
 
 def test_component_json_ld_render_contains_jobposting_shape() -> None:

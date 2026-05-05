@@ -6,7 +6,19 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 
 ## [Unreleased]
 
-- No unreleased entries.
+### Added
+
+- Added two built-in web themes: `classic` and `classic-dark`.
+- Added prototype-aligned web rendering variants for `classic` and `classic-dark` with graceful omission of missing optional sections.
+- Added Jinja2-based theme package rendering infrastructure.
+- Added filesystem custom theme package support (`manifest.json` + Jinja template + CSS assets).
+
+### Changed
+
+- Web renderer now dispatches through theme package resolution and Jinja templates.
+- Theme/config validation now accepts `classic`, `classic-dark`, and `custom` for project defaults and render profiles.
+- Custom theme validation now enforces known component/region contracts and required package files.
+- Documentation now includes dedicated user guides and one screenshot per built-in theme (`soft-professional`, `classic`, `classic-dark`).
 
 ## [0.3.0]
 

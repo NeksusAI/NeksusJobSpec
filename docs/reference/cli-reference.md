@@ -357,7 +357,12 @@ Examples:
 ```bash
 neksus-jobspec themes show soft-professional
 neksus-jobspec themes show soft-professional --json
+neksus-jobspec themes show classic
+neksus-jobspec themes show classic-dark
+neksus-jobspec themes show custom
 ```
+
+For rendering, `--theme` also accepts a filesystem directory path to a custom theme package (`manifest.json` + template + css).
 
 ## `config get` and `config set`
 

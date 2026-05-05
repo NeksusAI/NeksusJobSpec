@@ -37,7 +37,7 @@ def _is_safe_url(value: str) -> bool:
 
 class PageConfig(StrictModel):
     layout: Literal["job_detail"] = "job_detail"
-    layout_mode: Literal["stitch_job_detail"] | None = None
+    layout_mode: Literal["structured_job_detail"] | None = None
     language: str | None = None
     theme: str | None = None
     component_order: list[str] = Field(default_factory=list)
@@ -113,6 +113,52 @@ class WebLabels(StrictModel):
     deadline: str = "Deadline"
 
 
+class ClassicThemePalette(StrictModel):
+    background: str | None = None
+    text: str | None = None
+    muted_text: str | None = None
+    border: str | None = None
+    card_background: str | None = None
+    footer_background: str | None = None
+    button_background: str | None = None
+    button_text: str | None = None
+
+    @field_validator("*")
+    @classmethod
+    def validate_color(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        cleaned = value.strip()
+        if not cleaned:
+            raise ValueError("color value must not be empty")
+        return cleaned
+
+
+class ClassicThemeConfig(StrictModel):
+    content_max_width_px: int = 720
+    section_gap_px: int = 64
+    show_section_dividers: bool = True
+    responsibilities_style: Literal["cards", "list"] = "cards"
+    requirements_marker: Literal["check", "dash"] = "check"
+    process_style: Literal["ordered", "bullets"] = "ordered"
+    footer_style: Literal["minimal", "detailed"] = "minimal"
+    palette: ClassicThemePalette = Field(default_factory=ClassicThemePalette)
+
+    @field_validator("content_max_width_px")
+    @classmethod
+    def validate_content_max_width_px(cls, value: int) -> int:
+        if value < 480 or value > 1400:
+            raise ValueError("content_max_width_px must be between 480 and 1400")
+        return value
+
+    @field_validator("section_gap_px")
+    @classmethod
+    def validate_section_gap_px(cls, value: int) -> int:
+        if value < 24 or value > 200:
+            raise ValueError("section_gap_px must be between 24 and 200")
+        return value
+
+
 class RenderingCssTokens(StrictModel):
     color_primary: str | None = None
     color_background: str | None = None
@@ -138,6 +184,7 @@ class RenderingWebConfig(StrictModel):
     show_share_links: bool = False
     show_print_link: bool = False
     repeat_cta: bool = False
+    classic: ClassicThemeConfig = Field(default_factory=ClassicThemeConfig)
 
     @field_validator("template")
     @classmethod
@@ -560,7 +607,7 @@ class JobSpec(StrictModel):
                     f"page.component_order must include every component ID; missing in order: {extras_csv}"
                 )
 
-        if self.page.layout_mode == "stitch_job_detail":
+        if self.page.layout_mode == "structured_job_detail":
 
             def infer_region(component: Component) -> str:
                 if component.region:
@@ -604,11 +651,11 @@ class JobSpec(StrictModel):
                 if component.type == "meta_panel":
                     if not component.facts:
                         raise ValueError(
-                            "meta_panel must include facts in stitch_job_detail layout mode"
+                            "meta_panel must include facts in structured_job_detail layout mode"
                         )
                     if any(not fact.icon for fact in component.facts):
                         raise ValueError(
-                            "meta_panel facts must include icon in stitch_job_detail layout mode"
+                            "meta_panel facts must include icon in structured_job_detail layout mode"
                         )
 
             missing: list[str] = []
@@ -619,7 +666,7 @@ class JobSpec(StrictModel):
                     missing.append(f"{region}: {', '.join(absent)}")
             if missing:
                 raise ValueError(
-                    "stitch_job_detail missing required region components: " + "; ".join(missing)
+                    "structured_job_detail missing required region components: " + "; ".join(missing)
                 )
 
             if self.page.component_order:

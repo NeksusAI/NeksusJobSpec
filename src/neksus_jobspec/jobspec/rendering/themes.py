@@ -21,6 +21,30 @@ class ThemeMetadata(BaseModel):
 
 
 _THEME_METADATA: dict[str, ThemeMetadata] = {
+    "custom": ThemeMetadata(
+        name="custom",
+        description="User-supplied CSS defines the full visual theme.",
+        supported_formats=["web"],
+        css_embedded=False,
+        layout_notes="Semantic HTML contract rendered without built-in theme styles.",
+        token_hints=["density:user-defined", "tone:user-defined", "contrast:user-defined"],
+    ),
+    "classic": ThemeMetadata(
+        name="classic",
+        description="Minimalist light job posting layout aligned with classic prototype.",
+        supported_formats=["web"],
+        css_embedded=True,
+        layout_notes="Fixed top bar, single-column editorial sections, understated footer.",
+        token_hints=["density:medium", "tone:minimal", "contrast:high"],
+    ),
+    "classic-dark": ThemeMetadata(
+        name="classic-dark",
+        description="Minimalist dark job posting layout aligned with dark prototype.",
+        supported_formats=["web"],
+        css_embedded=True,
+        layout_notes="Dark top bar and body palette with same classic section structure.",
+        token_hints=["density:medium", "tone:minimal-dark", "contrast:high"],
+    ),
     "soft-professional": ThemeMetadata(
         name="soft-professional",
         description="Modern editorial job-detail layout inspired by professional career sites.",
@@ -28,7 +52,7 @@ _THEME_METADATA: dict[str, ThemeMetadata] = {
         css_embedded=True,
         layout_notes="Header + hero + two-column content/sidebar + branded footer layout.",
         token_hints=["density:medium", "tone:professional", "contrast:balanced"],
-    )
+    ),
 }
 
 _THEME_CSS_DIR = Path(__file__).with_name("theme_css")
@@ -66,6 +90,11 @@ def get_theme_css(theme_or_template: str) -> str:
         raise ConfigError("Theme/template value must not be empty")
 
     if key in _THEME_METADATA:
+        if key == "custom":
+            raise ConfigError(
+                "Theme 'custom' is package-based and has no single built-in CSS file. "
+                "Provide a custom theme directory with manifest/template/css assets."
+            )
         return _read_css_file(_THEME_CSS_DIR / f"{key}.css")
 
     template_path = Path(key)

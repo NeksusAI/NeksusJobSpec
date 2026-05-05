@@ -3,7 +3,7 @@ id: isolated-jobspec-output
 
 page:
   layout: job_detail
-  layout_mode: stitch_job_detail
+  layout_mode: structured_job_detail
   language: en
   theme: soft-professional
   component_order:

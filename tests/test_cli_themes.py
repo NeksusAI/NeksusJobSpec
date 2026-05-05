@@ -15,7 +15,7 @@ def test_themes_lists_builtin_themes_json() -> None:
     payload = json.loads(result.stdout)
     assert payload["ok"] is True
     names = [theme["name"] for theme in payload["themes"]]
-    assert names == ["soft-professional"]
+    assert names == ["classic", "classic-dark", "custom", "soft-professional"]
 
 
 def test_themes_show_soft_professional_json() -> None:
@@ -25,6 +25,14 @@ def test_themes_show_soft_professional_json() -> None:
     assert payload["ok"] is True
     assert payload["theme"]["name"] == "soft-professional"
     assert "token_hints" in payload["theme"]
+
+
+def test_themes_show_classic_dark_json() -> None:
+    result = runner.invoke(app, ["themes", "show", "classic-dark", "--json"])
+    assert result.exit_code == 0
+    payload = json.loads(result.stdout)
+    assert payload["ok"] is True
+    assert payload["theme"]["name"] == "classic-dark"
 
 
 def test_themes_show_unknown_fails_controlled() -> None:

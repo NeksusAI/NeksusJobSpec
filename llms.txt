@@ -77,3 +77,5 @@ Docs entry points
 - `docs/integrations/mcp-server.md`
 - `docs/integrations/mcp-install-matrix.md`
 - `docs/roadmap-boundaries.md`
+- Built-in web themes: `classic`, `classic-dark`, `soft-professional`
+- Custom themes are filesystem theme packages with `manifest.json`, Jinja template, and CSS assets

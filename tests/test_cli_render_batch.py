@@ -225,11 +225,12 @@ render_profiles:
 
         override_result = runner.invoke(
             app,
-            ["render", "--profile", "public", "--format", "web", "--theme", "soft-professional"],
+            ["render", "--profile", "public", "--format", "web", "--theme", "classic-dark"],
         )
         assert override_result.exit_code == 0
         html = Path("dist/public/role.html").read_text(encoding="utf-8")
         assert "<!doctype html>" in html.lower()
+        assert '<html class="dark"' in html
 
 
 def test_render_batch_unknown_profile_fails_with_config_error() -> None:
