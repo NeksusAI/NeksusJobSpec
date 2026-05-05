@@ -6,3 +6,8 @@ Focus:
 - Optional campaign metadata with valid status and dates.
 - Method-based apply metadata only.
 - Scope boundaries: no application forms, CV handling, payments, or hosted features.
+
+Local MCP:
+- Gemini CLI supports MCP server configuration.
+- Use `neksus-jobspec-mcp` for local MCP integration when available.
+- Use CLI + prompt-pack fallback in environments without MCP configuration access.

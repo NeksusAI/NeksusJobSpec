@@ -8,3 +8,8 @@ These are optional assistant instruction packs for Neksus JobSpec.
 - They do not implement hosted/commercial functionality.
 
 Keep these files aligned with the public schema, CLI commands, and changelog.
+
+For MCP-capable environments, see:
+
+- `docs/integrations/mcp-server.md`
+- `docs/integrations/mcp-install-matrix.md`

@@ -1,31 +1,47 @@
-# MCP Server (Planned)
+# Local MCP Server
 
-This page describes the intended MCP/server direction. It is planned, not currently implemented.
+Neksus JobSpec includes a local-only stdio MCP server.
 
-## Why MCP for JobSpec
+It is designed for running on your own machine and exposing JobSpec tooling to MCP-capable assistants.
+It does not add hosted deployment behavior.
 
-MCP clients typically need a running server process that can expose tools and structured resources. For Neksus JobSpec, this would let AI clients request schema info, validate specs, and generate outputs from a single source of truth.
+## Install
 
-## Intended server responsibilities
+```bash
+pip install "neksus-jobspec[mcp]"
+```
 
-- Expose JobSpec schema and version metadata
-- Validate JobSpec documents
-- Generate/export Markdown, HTML, and JSON outputs
-- Provide reusable templates and examples
-- Support LLM clients through stable tool contracts
+Using `uv`:
 
-## Proposed tool surface
+```bash
+uv sync --extra mcp
+```
 
-- `get_schema`
-- `validate_jobspec`
-- `render_jobspec`
-- `list_templates`
-- `convert_to_format`
+## Run
 
-## Status
+```bash
+neksus-jobspec-mcp
+```
 
-Current repository status:
+The server uses stdio transport and is intended to be launched by your MCP client.
 
-- CLI and reusable Python core: available now
-- MCP server process: planned
-- Hosted API deployment: planned
+## Tool surface
+
+The local MCP server exposes CLI-parity-oriented tools, including:
+
+- `version`, `init`, `check`
+- `config_get`, `config_set`
+- `themes_list`, `themes_show`
+- `spec_schema`, `spec_templates`, `spec_new`
+- `spec_validate`, `spec_render`, `spec_inspect`, `spec_status`, `spec_migrate`, `spec_export`
+- `feed_export`, `feed_sitemap`
+
+All tool responses use stable JSON payloads with `ok` and explicit error payloads when failures occur.
+
+## Scope boundary
+
+- Local-only tooling.
+- No hosted API behavior.
+- No application intake, CV handling, payments, or commercial SaaS functionality.
+
+See [MCP Install Matrix](mcp-install-matrix.md) for Claude, ChatGPT, Gemini, and Copilot setup paths.

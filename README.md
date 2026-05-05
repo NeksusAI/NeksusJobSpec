@@ -22,7 +22,7 @@ You can compose validated page blocks such as header_brand, hero_banner, hero, m
 
 - Example: [`examples/job-detail.jobspec.yaml`](examples/job-detail.jobspec.yaml)
 - Docs: [`docs/concepts/specification.md`](docs/concepts/specification.md), [`docs/concepts/rendering.md`](docs/concepts/rendering.md), [`docs/concepts/themes.md`](docs/concepts/themes.md), [`docs/guides/examples.md`](docs/guides/examples.md)
-- Deep dives: [`docs/guides/soft-professional-guide.md`](docs/guides/soft-professional-guide.md), [`docs/guides/content-vs-theme.md`](docs/guides/content-vs-theme.md), [`docs/guides/render-troubleshooting.md`](docs/guides/render-troubleshooting.md), [`docs/guides/migration-0.1-to-0.2.md`](docs/guides/migration-0.1-to-0.2.md)
+- Deep dives: [`docs/guides/soft-professional-guide.md`](docs/guides/soft-professional-guide.md), [`docs/guides/content-vs-theme.md`](docs/guides/content-vs-theme.md), [`docs/guides/render-troubleshooting.md`](docs/guides/render-troubleshooting.md)
 
 Rendered example screenshot:
 
@@ -34,6 +34,13 @@ For portable web output paths, use `rendering.web.asset_base_url` in spec files 
 
 ```bash
 pip install neksus-jobspec
+```
+
+Local MCP server (optional extra):
+
+```bash
+pip install "neksus-jobspec[mcp]"
+neksus-jobspec-mcp
 ```
 
 ## Quickstart
@@ -118,6 +125,8 @@ Security reporting and support policy: [`SECURITY.md`](SECURITY.md).
 - Docs index: [`docs/`](docs/)
 - Export docs: [`docs/exports.md`](docs/exports.md)
 - LLM usage: [`docs/llm-usage.md`](docs/llm-usage.md)
+- Local MCP server: [`docs/integrations/mcp-server.md`](docs/integrations/mcp-server.md)
+- MCP install matrix: [`docs/integrations/mcp-install-matrix.md`](docs/integrations/mcp-install-matrix.md)
 - Scope boundaries: [`docs/roadmap-boundaries.md`](docs/roadmap-boundaries.md)
 - Optional assistant prompt packs: [`skills/`](skills/)
 

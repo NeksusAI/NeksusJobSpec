@@ -16,3 +16,8 @@ Useful commands:
 - neksus-jobspec spec export <path> --target linkedin-ready-json --out dist/linkedin.json
 - neksus-jobspec feed export "examples/*.jobspec.yaml" --target jobs-json --out dist/jobs.json
 - neksus-jobspec feed sitemap "examples/*.jobspec.yaml" --base-url https://company.dk/jobs --out dist/sitemap.xml
+
+Local MCP:
+- Optional local MCP server command: `neksus-jobspec-mcp`
+- If your ChatGPT environment supports MCP custom connectors, connect to the local server.
+- If not, use CLI commands + this prompt pack as fallback.

@@ -1,0 +1,4073 @@
+{
+  "$defs": {
+    "ApplicationProcessComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "body": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Body"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "deadline": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Deadline"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "steps": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Steps",
+          "type": "array"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "application_process",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "text",
+          "enum": [
+            "text",
+            "steps"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "title": "ApplicationProcessComponent",
+      "type": "object"
+    },
+    "BenefitsComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              }
+            ]
+          },
+          "minItems": 1,
+          "title": "Items",
+          "type": "array"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "benefits",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "list",
+          "enum": [
+            "list",
+            "cards"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "items"
+      ],
+      "title": "BenefitsComponent",
+      "type": "object"
+    },
+    "CampaignConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "expires_at": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expires At"
+        },
+        "starts_at": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Starts At"
+        },
+        "status": {
+          "anyOf": [
+            {
+              "enum": [
+                "draft",
+                "active",
+                "expired",
+                "closed"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Status"
+        }
+      },
+      "title": "CampaignConfig",
+      "type": "object"
+    },
+    "CompanyProfileComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "body": {
+          "title": "Body",
+          "type": "string"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "company_profile",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "default",
+          "enum": [
+            "default",
+            "card"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "body"
+      ],
+      "title": "CompanyProfileComponent",
+      "type": "object"
+    },
+    "ContactComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "email": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Email"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "mobile": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mobile"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "phone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phone"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "contact",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "card",
+          "enum": [
+            "card",
+            "compact"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "name"
+      ],
+      "title": "ContactComponent",
+      "type": "object"
+    },
+    "CtaComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "cta",
+          "title": "Type",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "variant": {
+          "default": "primary",
+          "enum": [
+            "primary",
+            "secondary",
+            "full_width"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "label",
+        "url"
+      ],
+      "title": "CtaComponent",
+      "type": "object"
+    },
+    "CtaData": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "url"
+      ],
+      "title": "CtaData",
+      "type": "object"
+    },
+    "FactsComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/FactsItem"
+          },
+          "minItems": 1,
+          "title": "Items",
+          "type": "array"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "facts",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "sidebar",
+          "enum": [
+            "sidebar",
+            "topbar",
+            "grid"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "items"
+      ],
+      "title": "FactsComponent",
+      "type": "object"
+    },
+    "FactsItem": {
+      "additionalProperties": false,
+      "properties": {
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Icon"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "title": "FactsItem",
+      "type": "object"
+    },
+    "FeatureCard": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "title": "Body",
+          "type": "string"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Icon"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "body"
+      ],
+      "title": "FeatureCard",
+      "type": "object"
+    },
+    "FeatureGridComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "columns_desktop": {
+          "default": 2,
+          "enum": [
+            1,
+            2,
+            3
+          ],
+          "title": "Columns Desktop",
+          "type": "integer"
+        },
+        "columns_mobile": {
+          "const": 1,
+          "default": 1,
+          "title": "Columns Mobile",
+          "type": "integer"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/FeatureCard"
+          },
+          "minItems": 1,
+          "title": "Items",
+          "type": "array"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "feature_grid",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "cards",
+          "enum": [
+            "cards",
+            "compact"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "items"
+      ],
+      "title": "FeatureGridComponent",
+      "type": "object"
+    },
+    "FooterBrandComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "body": {
+          "title": "Body",
+          "type": "string"
+        },
+        "brand_name": {
+          "title": "Brand Name",
+          "type": "string"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "links": {
+          "items": {
+            "$ref": "#/$defs/LinkItem"
+          },
+          "title": "Links",
+          "type": "array"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "footer_brand",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "default",
+          "enum": [
+            "default",
+            "minimal"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "brand_name",
+        "body"
+      ],
+      "title": "FooterBrandComponent",
+      "type": "object"
+    },
+    "HeaderAction": {
+      "additionalProperties": false,
+      "properties": {
+        "intent": {
+          "anyOf": [
+            {
+              "enum": [
+                "primary",
+                "secondary"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Intent"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "size": {
+          "default": "md",
+          "enum": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "title": "Size",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "variant": {
+          "default": "secondary",
+          "enum": [
+            "primary",
+            "secondary"
+          ],
+          "title": "Variant",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "url"
+      ],
+      "title": "HeaderAction",
+      "type": "object"
+    },
+    "HeaderActionsComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "items": {
+            "$ref": "#/$defs/HeaderAction"
+          },
+          "minItems": 1,
+          "title": "Actions",
+          "type": "array"
+        },
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "header_actions",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "buttons",
+          "enum": [
+            "buttons",
+            "links"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "actions"
+      ],
+      "title": "HeaderActionsComponent",
+      "type": "object"
+    },
+    "HeaderBrandComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "brand_name": {
+          "title": "Brand Name",
+          "type": "string"
+        },
+        "brand_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Brand Url"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "logo_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Logo Url"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "strapline": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Strapline"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "header_brand",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "bar",
+          "enum": [
+            "simple",
+            "bar"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "brand_name"
+      ],
+      "title": "HeaderBrandComponent",
+      "type": "object"
+    },
+    "HeroBannerComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "alt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Alt"
+        },
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "caption": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Caption"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "image_url": {
+          "title": "Image Url",
+          "type": "string"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "hero_banner",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "cover",
+          "enum": [
+            "image",
+            "cover"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "image_url"
+      ],
+      "title": "HeroBannerComponent",
+      "type": "object"
+    },
+    "HeroComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "cta": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CtaData"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "image": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Image"
+        },
+        "intro": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Intro"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "subtitle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subtitle"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "hero",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "default",
+          "enum": [
+            "default",
+            "centered",
+            "split"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "title": "HeroComponent",
+      "type": "object"
+    },
+    "JobApply": {
+      "additionalProperties": false,
+      "properties": {
+        "email": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Email"
+        },
+        "job_reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Job Reference"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "method": {
+          "enum": [
+            "email",
+            "external_url",
+            "ats_url",
+            "custom",
+            "agent_ready"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        }
+      },
+      "required": [
+        "method"
+      ],
+      "title": "JobApply",
+      "type": "object"
+    },
+    "JobConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "apply": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/JobApply"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "intro": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Intro"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "title": "JobConfig",
+      "type": "object"
+    },
+    "LegalComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "body": {
+          "title": "Body",
+          "type": "string"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "legal",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "standard",
+          "enum": [
+            "muted",
+            "standard"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "body"
+      ],
+      "title": "LegalComponent",
+      "type": "object"
+    },
+    "LinkItem": {
+      "additionalProperties": false,
+      "properties": {
+        "active": {
+          "default": false,
+          "title": "Active",
+          "type": "boolean"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Icon"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "url"
+      ],
+      "title": "LinkItem",
+      "type": "object"
+    },
+    "ListComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Items",
+          "type": "array"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "list",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "bullets",
+          "enum": [
+            "bullets",
+            "numbered",
+            "checklist"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "items"
+      ],
+      "title": "ListComponent",
+      "type": "object"
+    },
+    "LocationMapComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Address"
+        },
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "caption": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Caption"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "embed": {
+          "default": true,
+          "title": "Embed",
+          "type": "boolean"
+        },
+        "embed_height": {
+          "default": 220,
+          "title": "Embed Height",
+          "type": "integer"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "map_url": {
+          "title": "Map Url",
+          "type": "string"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "location_map",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "map",
+          "enum": [
+            "map",
+            "compact"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "map_url"
+      ],
+      "title": "LocationMapComponent",
+      "type": "object"
+    },
+    "MediaComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "alt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Alt"
+        },
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "caption": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Caption"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "media",
+          "title": "Type",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "variant": {
+          "default": "image",
+          "enum": [
+            "image",
+            "video"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "url"
+      ],
+      "title": "MediaComponent",
+      "type": "object"
+    },
+    "MetaChip": {
+      "additionalProperties": false,
+      "properties": {
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Icon"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "title": "MetaChip",
+      "type": "object"
+    },
+    "MetaChipsComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/MetaChip"
+          },
+          "minItems": 1,
+          "title": "Items",
+          "type": "array"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "meta_chips",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "pills",
+          "enum": [
+            "pills",
+            "tags"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "items"
+      ],
+      "title": "MetaChipsComponent",
+      "type": "object"
+    },
+    "MetaPanelComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "contact_email": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Contact Email"
+        },
+        "contact_mobile": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Contact Mobile"
+        },
+        "contact_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Contact Name"
+        },
+        "contact_phone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Contact Phone"
+        },
+        "contact_role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Contact Role"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "facts": {
+          "items": {
+            "$ref": "#/$defs/FactsItem"
+          },
+          "title": "Facts",
+          "type": "array"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "meta_panel",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "card",
+          "enum": [
+            "card",
+            "stacked"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "title": "MetaPanelComponent",
+      "type": "object"
+    },
+    "NavLinksComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "links": {
+          "items": {
+            "$ref": "#/$defs/LinkItem"
+          },
+          "minItems": 1,
+          "title": "Links",
+          "type": "array"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "nav_links",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "top",
+          "enum": [
+            "top",
+            "inline"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "links"
+      ],
+      "title": "NavLinksComponent",
+      "type": "object"
+    },
+    "PageConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "component_order": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Component Order",
+          "type": "array"
+        },
+        "language": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language"
+        },
+        "layout": {
+          "const": "job_detail",
+          "default": "job_detail",
+          "title": "Layout",
+          "type": "string"
+        },
+        "layout_mode": {
+          "anyOf": [
+            {
+              "const": "stitch_job_detail",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Layout Mode"
+        },
+        "theme": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Theme"
+        }
+      },
+      "title": "PageConfig",
+      "type": "object"
+    },
+    "QuoteComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "author": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Author"
+        },
+        "author_title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Author Title"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "image": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Image"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "quote": {
+          "title": "Quote",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "quote",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "plain",
+          "enum": [
+            "plain",
+            "card",
+            "pullquote"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "quote"
+      ],
+      "title": "QuoteComponent",
+      "type": "object"
+    },
+    "RenderingConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "web": {
+          "$ref": "#/$defs/RenderingWebConfig"
+        }
+      },
+      "title": "RenderingConfig",
+      "type": "object"
+    },
+    "RenderingCssConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "files": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Files",
+          "type": "array"
+        },
+        "inline": {
+          "default": "",
+          "title": "Inline",
+          "type": "string"
+        },
+        "tokens": {
+          "$ref": "#/$defs/RenderingCssTokens"
+        }
+      },
+      "title": "RenderingCssConfig",
+      "type": "object"
+    },
+    "RenderingCssTokens": {
+      "additionalProperties": false,
+      "properties": {
+        "border_radius": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Border Radius"
+        },
+        "color_background": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Color Background"
+        },
+        "color_primary": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Color Primary"
+        },
+        "font_body": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Font Body"
+        },
+        "font_heading": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Font Heading"
+        },
+        "spacing_scale": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Spacing Scale"
+        }
+      },
+      "title": "RenderingCssTokens",
+      "type": "object"
+    },
+    "RenderingWebConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "asset_base_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Asset Base Url"
+        },
+        "css": {
+          "$ref": "#/$defs/RenderingCssConfig"
+        },
+        "facts_position": {
+          "default": "sidebar",
+          "enum": [
+            "sidebar",
+            "topbar",
+            "grid"
+          ],
+          "title": "Facts Position",
+          "type": "string"
+        },
+        "labels": {
+          "$ref": "#/$defs/WebLabels"
+        },
+        "repeat_cta": {
+          "default": false,
+          "title": "Repeat Cta",
+          "type": "boolean"
+        },
+        "show_print_link": {
+          "default": false,
+          "title": "Show Print Link",
+          "type": "boolean"
+        },
+        "show_share_links": {
+          "default": false,
+          "title": "Show Share Links",
+          "type": "boolean"
+        },
+        "show_top_apply": {
+          "default": true,
+          "title": "Show Top Apply",
+          "type": "boolean"
+        },
+        "template": {
+          "default": "soft-professional",
+          "title": "Template",
+          "type": "string"
+        }
+      },
+      "title": "RenderingWebConfig",
+      "type": "object"
+    },
+    "RichTextComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "body": {
+          "title": "Body",
+          "type": "string"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "rich_text",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "default",
+          "enum": [
+            "default",
+            "narrow",
+            "highlighted"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "body"
+      ],
+      "title": "RichTextComponent",
+      "type": "object"
+    },
+    "SocialLinksComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "class_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Class Name"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "links": {
+          "items": {
+            "$ref": "#/$defs/LinkItem"
+          },
+          "minItems": 1,
+          "title": "Links",
+          "type": "array"
+        },
+        "placement": {
+          "default": "main",
+          "enum": [
+            "main",
+            "sidebar",
+            "fullwidth"
+          ],
+          "title": "Placement",
+          "type": "string"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "enum": [
+                "header",
+                "hero",
+                "main",
+                "sidebar",
+                "footer"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "render_if": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Render If"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "type": {
+          "const": "social_links",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "icons",
+          "enum": [
+            "icons",
+            "text"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visibility"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "links"
+      ],
+      "title": "SocialLinksComponent",
+      "type": "object"
+    },
+    "WebLabels": {
+      "additionalProperties": false,
+      "properties": {
+        "deadline": {
+          "default": "Deadline",
+          "title": "Deadline",
+          "type": "string"
+        },
+        "email": {
+          "default": "Email",
+          "title": "Email",
+          "type": "string"
+        },
+        "mobile": {
+          "default": "Mobile",
+          "title": "Mobile",
+          "type": "string"
+        },
+        "open_map": {
+          "default": "Open map",
+          "title": "Open Map",
+          "type": "string"
+        },
+        "phone": {
+          "default": "Phone",
+          "title": "Phone",
+          "type": "string"
+        },
+        "print": {
+          "default": "Print",
+          "title": "Print",
+          "type": "string"
+        },
+        "share": {
+          "default": "Share",
+          "title": "Share",
+          "type": "string"
+        }
+      },
+      "title": "WebLabels",
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.neksus.dev/jobspec.v1.json",
+  "additionalProperties": false,
+  "description": "Top-level JobSpec model for v0.3.x component composition.",
+  "properties": {
+    "campaign": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CampaignConfig"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "components": {
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "application_process": "#/$defs/ApplicationProcessComponent",
+            "benefits": "#/$defs/BenefitsComponent",
+            "company_profile": "#/$defs/CompanyProfileComponent",
+            "contact": "#/$defs/ContactComponent",
+            "cta": "#/$defs/CtaComponent",
+            "facts": "#/$defs/FactsComponent",
+            "feature_grid": "#/$defs/FeatureGridComponent",
+            "footer_brand": "#/$defs/FooterBrandComponent",
+            "header_actions": "#/$defs/HeaderActionsComponent",
+            "header_brand": "#/$defs/HeaderBrandComponent",
+            "hero": "#/$defs/HeroComponent",
+            "hero_banner": "#/$defs/HeroBannerComponent",
+            "legal": "#/$defs/LegalComponent",
+            "list": "#/$defs/ListComponent",
+            "location_map": "#/$defs/LocationMapComponent",
+            "media": "#/$defs/MediaComponent",
+            "meta_chips": "#/$defs/MetaChipsComponent",
+            "meta_panel": "#/$defs/MetaPanelComponent",
+            "nav_links": "#/$defs/NavLinksComponent",
+            "quote": "#/$defs/QuoteComponent",
+            "rich_text": "#/$defs/RichTextComponent",
+            "social_links": "#/$defs/SocialLinksComponent"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/HeroComponent"
+          },
+          {
+            "$ref": "#/$defs/FactsComponent"
+          },
+          {
+            "$ref": "#/$defs/RichTextComponent"
+          },
+          {
+            "$ref": "#/$defs/ListComponent"
+          },
+          {
+            "$ref": "#/$defs/QuoteComponent"
+          },
+          {
+            "$ref": "#/$defs/BenefitsComponent"
+          },
+          {
+            "$ref": "#/$defs/ContactComponent"
+          },
+          {
+            "$ref": "#/$defs/CompanyProfileComponent"
+          },
+          {
+            "$ref": "#/$defs/LegalComponent"
+          },
+          {
+            "$ref": "#/$defs/CtaComponent"
+          },
+          {
+            "$ref": "#/$defs/MediaComponent"
+          },
+          {
+            "$ref": "#/$defs/ApplicationProcessComponent"
+          },
+          {
+            "$ref": "#/$defs/HeaderBrandComponent"
+          },
+          {
+            "$ref": "#/$defs/HeroBannerComponent"
+          },
+          {
+            "$ref": "#/$defs/MetaPanelComponent"
+          },
+          {
+            "$ref": "#/$defs/SocialLinksComponent"
+          },
+          {
+            "$ref": "#/$defs/LocationMapComponent"
+          },
+          {
+            "$ref": "#/$defs/FooterBrandComponent"
+          },
+          {
+            "$ref": "#/$defs/NavLinksComponent"
+          },
+          {
+            "$ref": "#/$defs/HeaderActionsComponent"
+          },
+          {
+            "$ref": "#/$defs/FeatureGridComponent"
+          },
+          {
+            "$ref": "#/$defs/MetaChipsComponent"
+          }
+        ]
+      },
+      "minItems": 1,
+      "title": "Components",
+      "type": "array"
+    },
+    "id": {
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "title": "Id",
+      "type": "string"
+    },
+    "job": {
+      "$ref": "#/$defs/JobConfig"
+    },
+    "page": {
+      "$ref": "#/$defs/PageConfig"
+    },
+    "rendering": {
+      "$ref": "#/$defs/RenderingConfig"
+    },
+    "schema_version": {
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "id",
+    "job",
+    "components"
+  ],
+  "title": "Neksus JobSpec",
+  "type": "object",
+  "x-schema-version": 1
+}

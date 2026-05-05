@@ -28,12 +28,20 @@ Neksus JobSpec is intentionally split into simple layers to keep open-source usa
 - Version-controlled Markdown docs
 - GitHub Pages deployment workflow
 
+## Local MCP architecture
+
+### 5. Local MCP server
+
+- Optional local stdio MCP server (`neksus-jobspec-mcp`)
+- Wraps core validation/rendering/export/feed tooling as MCP tools
+- Keeps local-first usage with no hosted deployment requirement
+
 ## Planned hosted/server architecture
 
-### 5. Future MCP/API server (planned)
+### 6. Future hosted API (planned)
 
-- Wrap core validation/rendering as networked tools
-- Expose stable contracts for AI clients and pipelines
+- Wrap core validation/rendering as networked services
+- Expose stable contracts for organization-scale automation
 - Keep schema/versioning explicit to reduce integration risk
 
 ## Design principles

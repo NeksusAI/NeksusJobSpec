@@ -48,6 +48,7 @@ Common CLI commands
 - `neksus-jobspec spec export <path> --target linkedin-ready-json --out dist/linkedin-job.json`
 - `neksus-jobspec feed export "examples/*.jobspec.yaml" --target jobs-json --out dist/jobs.json`
 - `neksus-jobspec feed sitemap "examples/*.jobspec.yaml" --base-url https://company.dk/jobs --out dist/sitemap.xml`
+- `neksus-jobspec-mcp` (local MCP server, optional extra install)
 
 Common mistakes
 - Using legacy `job.apply: {label, url}` instead of method-based apply.
@@ -61,4 +62,6 @@ Docs entry points
 - `docs/concepts/rendering.md`
 - `docs/exports.md`
 - `docs/llm-usage.md`
+- `docs/integrations/mcp-server.md`
+- `docs/integrations/mcp-install-matrix.md`
 - `docs/roadmap-boundaries.md`

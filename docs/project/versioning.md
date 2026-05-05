@@ -44,4 +44,6 @@ Internal modules under `neksus_jobspec.*` and `neksus_jobspec_cli.*` are impleme
 
 ## Out of scope for v0.3.x contract
 
-Hosted API and MCP capabilities are planned but are not part of the v0.3.x compatibility contract.
+Hosted API capabilities are planned but are not part of the v0.3.x compatibility contract.
+
+Note: local stdio MCP server support is included in v0.3.x as an optional package extra.
