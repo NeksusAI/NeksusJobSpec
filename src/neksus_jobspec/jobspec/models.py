@@ -666,7 +666,8 @@ class JobSpec(StrictModel):
                     missing.append(f"{region}: {', '.join(absent)}")
             if missing:
                 raise ValueError(
-                    "structured_job_detail missing required region components: " + "; ".join(missing)
+                    "structured_job_detail missing required region components: "
+                    + "; ".join(missing)
                 )
 
             if self.page.component_order:

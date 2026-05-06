@@ -14,15 +14,19 @@ def test_public_api_functions_have_docstrings() -> None:
         ("validate_jobspec", module.validate_jobspec),
         ("render_jobspec", module.render_jobspec),
     ]
-    key_elements = ("Args:", "Parameters", "Returns:", "Raises:")
+    key_element_groups = (
+        ("Args:", "Parameters"),
+        ("Returns:",),
+        ("Raises:",),
+    )
 
     for name, func in public_functions:
         doc = (func.__doc__ or "").strip()
         assert doc, f"{name} must have a non-empty docstring"
         assert len(doc) >= 20, f"{name} docstring is too short to be useful"
-        assert any(token in doc for token in key_elements), (
+        assert any(any(token in doc for token in group) for group in key_element_groups), (
             f"{name} docstring should include at least one documentation section "
-            f"({', '.join(key_elements)})"
+            f"({', '.join('/'.join(group) for group in key_element_groups)})"
         )
 
 
