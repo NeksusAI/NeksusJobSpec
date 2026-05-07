@@ -53,6 +53,7 @@ nav:
       - Python API: reference/python-api.md
       - API Reference: reference/api-reference.md
       - Internal API Reference: reference/internal-api-reference.md
+      - Code Structure: reference/code-structure.md
       - Schema: reference/schema.md
       - Schema Editor Integration: reference/schema-editor-integration.md
       - Model Reference: reference/model-reference.md

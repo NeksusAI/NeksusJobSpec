@@ -63,7 +63,9 @@ class JobspecMcpService:
 
     def config_get(self, key: str | None = None, root: str | None = None) -> dict[str, Any]:
         project_root = Path(root).resolve() if root else None
-        return self._project_use_case.config_get(key, root=project_root).model_dump(exclude_none=True)
+        return self._project_use_case.config_get(key, root=project_root).model_dump(
+            exclude_none=True
+        )
 
     def config_set(self, key: str, value: str, root: str | None = None) -> dict[str, Any]:
         project_root = Path(root).resolve() if root else None

@@ -69,7 +69,9 @@ class SpecUseCase:
         self, name: str, template: str, target: Path, force: bool = False
     ) -> NewFileResult:
         """Create a new JobSpec file from a named template."""
-        return NewFileResult.model_validate(create_jobspec_file(name, template, target, force=force))
+        return NewFileResult.model_validate(
+            create_jobspec_file(name, template, target, force=force)
+        )
 
     def migrate_status(self, path: Path) -> MigrateStatusResult:
         """Inspect schema migration status for a specific JobSpec file."""

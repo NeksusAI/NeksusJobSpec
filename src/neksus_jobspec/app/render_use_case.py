@@ -99,7 +99,9 @@ class RenderUseCase:
             for issue in validation.errors:
                 errors.append({"source": str(path.relative_to(context.root)), **issue.model_dump()})
             for issue in validation.warnings:
-                warnings.append({"source": str(path.relative_to(context.root)), **issue.model_dump()})
+                warnings.append(
+                    {"source": str(path.relative_to(context.root)), **issue.model_dump()}
+                )
             if not validation.valid:
                 continue
 

@@ -221,8 +221,12 @@ def build_json_ld_target(spec: JobSpec) -> JsonLdJobPosting:
                     if text:
                         benefits.append(text)
 
-    campaign_start = normalized.campaign_starts_at.isoformat() if normalized.campaign_starts_at else None
-    campaign_expiry = normalized.campaign_expires_at.isoformat() if normalized.campaign_expires_at else None
+    campaign_start = (
+        normalized.campaign_starts_at.isoformat() if normalized.campaign_starts_at else None
+    )
+    campaign_expiry = (
+        normalized.campaign_expires_at.isoformat() if normalized.campaign_expires_at else None
+    )
 
     return JsonLdJobPosting(
         identifier=JsonLdPropertyValue(name=reference_number or spec.id, value=spec.id),
@@ -231,8 +235,12 @@ def build_json_ld_target(spec: JobSpec) -> JsonLdJobPosting:
         datePosted=campaign_start or date.today().isoformat(),
         validThrough=campaign_expiry or deadline,
         employmentType=job_type,
-        hiringOrganization=JsonLdOrganization(name=company_name or "Hiring Organization", sameAs=company_url),
-        jobLocation=JsonLdPlace(address=JsonLdPostalAddress(streetAddress=location, addressRegion=region)),
+        hiringOrganization=JsonLdOrganization(
+            name=company_name or "Hiring Organization", sameAs=company_url
+        ),
+        jobLocation=JsonLdPlace(
+            address=JsonLdPostalAddress(streetAddress=location, addressRegion=region)
+        ),
         applicationContact=JsonLdContactPoint(name=contact_name, email=contact_email),
         url=normalized.apply_url,
         directApply=bool(normalized.apply_url),
@@ -271,7 +279,9 @@ def build_jobs_json_feed_target(specs: list[JobSpec]) -> JobsJsonFeed:
                 campaign=FeedCampaign(
                     status=str(campaign.get("status")) if campaign.get("status") else None,
                     starts_at=str(campaign.get("starts_at")) if campaign.get("starts_at") else None,
-                    expires_at=str(campaign.get("expires_at")) if campaign.get("expires_at") else None,
+                    expires_at=str(campaign.get("expires_at"))
+                    if campaign.get("expires_at")
+                    else None,
                 ),
                 raw=payload,
             )
@@ -312,7 +322,9 @@ def build_jobs_xml_feed_target(specs: list[JobSpec]) -> JobsXmlFeed:
                 campaign=FeedCampaign(
                     status=str(campaign.get("status")) if campaign.get("status") else None,
                     starts_at=str(campaign.get("starts_at")) if campaign.get("starts_at") else None,
-                    expires_at=str(campaign.get("expires_at")) if campaign.get("expires_at") else None,
+                    expires_at=str(campaign.get("expires_at"))
+                    if campaign.get("expires_at")
+                    else None,
                 ),
             )
         )
@@ -355,7 +367,11 @@ def build_sitemap_target(
         if exclude_closed and status in {"closed", "expired"}:
             continue
         loc = base_url.rstrip("/") + "/" + spec.id
-        lastmod = spec.campaign.starts_at.isoformat() if spec.campaign and spec.campaign.starts_at else None
+        lastmod = (
+            spec.campaign.starts_at.isoformat()
+            if spec.campaign and spec.campaign.starts_at
+            else None
+        )
         urls.append(SitemapUrlEntry(loc=loc, lastmod=lastmod))
     return SitemapDocument(urls=urls)
 

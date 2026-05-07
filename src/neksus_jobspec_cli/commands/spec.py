@@ -36,6 +36,8 @@ EXPECTED_COMMAND_ERRORS = (
     ValidationError,
     ValueError,
 )
+
+
 @app.command("new")
 def spec_new(
     name: Annotated[str, typer.Argument(help="Name used to generate JobSpec id and file name.")],

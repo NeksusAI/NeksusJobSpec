@@ -18,7 +18,9 @@ def list_templates() -> list[str]:
     return list(list_template_names())
 
 
-def create_jobspec_file(name: str, template: str, target: Path, force: bool = False) -> dict[str, str | bool]:
+def create_jobspec_file(
+    name: str, template: str, target: Path, force: bool = False
+) -> dict[str, str | bool]:
     """Create a new JobSpec file from a template.
 
     Raises:

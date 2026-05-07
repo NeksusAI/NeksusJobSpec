@@ -661,8 +661,12 @@ class JobSpec(StrictModel):
             "id": self.id,
             "title": self.job.title,
             "campaign_status": campaign.status if campaign else None,
-            "starts_at": campaign.starts_at.isoformat() if campaign and campaign.starts_at else None,
-            "expires_at": campaign.expires_at.isoformat() if campaign and campaign.expires_at else None,
+            "starts_at": campaign.starts_at.isoformat()
+            if campaign and campaign.starts_at
+            else None,
+            "expires_at": campaign.expires_at.isoformat()
+            if campaign and campaign.expires_at
+            else None,
             "days_remaining": self.days_remaining(today=today),
         }
 

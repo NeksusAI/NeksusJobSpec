@@ -28,7 +28,9 @@ def export_jobspec(path: Path, target: str, out: Path) -> dict[str, object]:
     elif target == "linkedin-ready-json":
         content, warnings = render_linkedin_ready_json(spec)
     else:
-        raise InvalidInputError("Unsupported target. Use: generic-json, generic-xml, linkedin-ready-json")
+        raise InvalidInputError(
+            "Unsupported target. Use: generic-json, generic-xml, linkedin-ready-json"
+        )
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(content, encoding="utf-8")
     return {
