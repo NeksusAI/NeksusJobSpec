@@ -9,7 +9,7 @@ from typer.testing import CliRunner
 from neksus_jobspec_cli.main import app
 
 runner = CliRunner()
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_spec_validate_returns_zero_for_valid_jobspec() -> None:

@@ -2,43 +2,18 @@
 
 from __future__ import annotations
 
-from datetime import date
 from pathlib import Path
 from typing import Any
 
 from pydantic import ValidationError
 
 from neksus_jobspec import __version__
+from neksus_jobspec.app import FeedUseCase, ProjectUseCase, SpecUseCase
 from neksus_jobspec.errors import ConfigError, FileSystemError, NeksusError
-from neksus_jobspec.jobspec.exports import (
-    render_generic_json,
-    render_generic_xml,
-    render_linkedin_ready_json,
-)
-from neksus_jobspec.jobspec.feeds import (
-    expand_input_paths,
-    render_jobs_json_feed,
-    render_jobs_xml_feed,
-    render_sitemap,
-)
-from neksus_jobspec.jobspec.inspect import inspect_jobspec
-from neksus_jobspec.jobspec.migrate import inspect_schema_version
-from neksus_jobspec.jobspec.models import JobSpec
-from neksus_jobspec.jobspec.parser import load_jobspec, load_yaml_file
-from neksus_jobspec.jobspec.renderer import render_jobspec
-from neksus_jobspec.jobspec.schema import jobspec_json_schema
 from neksus_jobspec.jobspec.templates import (
-    build_jobspec_template,
-    dump_jobspec_yaml,
-    list_template_names,
     slugify_name,
 )
-from neksus_jobspec.jobspec.validator import validate_spec_data, validate_spec_model
 from neksus_jobspec.jobspec.rendering import get_theme_metadata, list_theme_metadata
-from neksus_jobspec.output import to_json
-from neksus_jobspec.project.checks import run_project_checks
-from neksus_jobspec.project.config import load_project_config, set_config_key
-from neksus_jobspec.project.discovery import find_project_root
 from neksus_jobspec.project.init_project import init_project
 
 
@@ -54,14 +29,13 @@ def _error_code(exc: Exception) -> int:
     return 5
 
 
-def _days_remaining(expires_at: date | None) -> int | None:
-    if not expires_at:
-        return None
-    return (expires_at - date.today()).days
-
-
 class JobspecMcpService:
     """Service layer for local MCP tools."""
+
+    def __init__(self) -> None:
+        self._feed_use_case = FeedUseCase()
+        self._project_use_case = ProjectUseCase()
+        self._spec_use_case = SpecUseCase()
 
     def safe_call(self, fn_name: str, **kwargs: Any) -> dict[str, Any]:
         try:
@@ -84,28 +58,16 @@ class JobspecMcpService:
         return {"ok": True, "root": str(project_root), "created": created}
 
     def check(self, root: str | None = None, strict: bool = False) -> dict[str, Any]:
-        project_root = find_project_root(Path(root).resolve() if root else None)
-        result = run_project_checks(project_root, strict=strict)
-        return {
-            "ok": result.ok,
-            "checks": [item.model_dump() for item in result.checks],
-            "errors": [item.model_dump() for item in result.errors],
-            "warnings": [item.model_dump() for item in result.warnings],
-        }
+        project_root = Path(root).resolve() if root else None
+        return self._project_use_case.check(root=project_root, strict=strict).model_dump()
 
     def config_get(self, key: str | None = None, root: str | None = None) -> dict[str, Any]:
-        project_root = find_project_root(Path(root).resolve() if root else None)
-        config = load_project_config(project_root).model_dump()
-        if key is None:
-            return {"ok": True, "config": config}
-        if key not in config:
-            raise ValueError(f"Unknown config key: {key}")
-        return {"ok": True, "key": key, "value": config[key]}
+        project_root = Path(root).resolve() if root else None
+        return self._project_use_case.config_get(key, root=project_root).model_dump(exclude_none=True)
 
     def config_set(self, key: str, value: str, root: str | None = None) -> dict[str, Any]:
-        project_root = find_project_root(Path(root).resolve() if root else None)
-        updated = set_config_key(project_root, key, value)
-        return {"ok": True, "config": updated.model_dump()}
+        project_root = Path(root).resolve() if root else None
+        return self._project_use_case.config_set(key, value, root=project_root).model_dump()
 
     def themes_list(self) -> dict[str, Any]:
         return {"ok": True, "themes": [item.model_dump() for item in list_theme_metadata()]}
@@ -114,16 +76,12 @@ class JobspecMcpService:
         return {"ok": True, "theme": get_theme_metadata(name).model_dump()}
 
     def spec_schema(self, output: str | None = None) -> dict[str, Any]:
-        schema = jobspec_json_schema()
-        if output:
-            target = Path(output)
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text(to_json(schema), encoding="utf-8")
-            return {"ok": True, "format": "json-schema", "schema_version": 1, "output": str(target)}
-        return {"ok": True, "format": "json-schema", "schema_version": 1, "schema": schema}
+        return self._spec_use_case.write_schema(Path(output) if output else None).model_dump(
+            exclude_none=True, by_alias=True
+        )
 
     def spec_templates(self) -> dict[str, Any]:
-        return {"ok": True, "templates": list(list_template_names())}
+        return self._spec_use_case.list_templates().model_dump()
 
     def spec_new(
         self,
@@ -132,32 +90,15 @@ class JobspecMcpService:
         output: str | None = None,
         force: bool = False,
     ) -> dict[str, Any]:
-        if template not in list_template_names():
-            raise ValueError(f"Unknown template: {template}")
         slug = slugify_name(name)
         if not slug:
             raise FileSystemError("Name produces an empty slug.")
         target = Path(output) if output else Path.cwd() / f"{slug}.jobspec.yaml"
-        if target.exists() and not force:
-            raise FileSystemError(f"File already exists: {target}. Use force=true to overwrite.")
-        target.parent.mkdir(parents=True, exist_ok=True)
-        template_data = build_jobspec_template(name, template=template)
-        JobSpec.model_validate(template_data)
-        target.write_text(dump_jobspec_yaml(template_data), encoding="utf-8")
-        return {"ok": True, "file": str(target), "template": template}
+        return self._spec_use_case.create_new_file(name, template, target, force=force).model_dump()
 
     def spec_validate(self, path: str, strict: bool = False) -> dict[str, Any]:
         file_path = Path(path)
-        data = load_yaml_file(file_path)
-        result = validate_spec_data(data)
-        ok = result.valid and not (strict and result.warnings)
-        return {
-            "ok": ok,
-            "file": str(file_path),
-            "valid": result.valid,
-            "errors": [issue.model_dump() for issue in result.errors],
-            "warnings": [issue.model_dump() for issue in result.warnings],
-        }
+        return self._spec_use_case.validate_file(file_path, strict=strict).model_dump()
 
     def spec_render(
         self,
@@ -175,76 +116,33 @@ class JobspecMcpService:
             raise ValueError("css_path/no_css/asset_base_url are only supported for web rendering")
         if format not in {"web", "json-ld"}:
             raise ValueError("Unsupported render format. Use: web or json-ld")
-        spec = load_jobspec(file_path)
-        validation = validate_spec_model(spec)
-        if not no_validate and not validation.valid:
-            return {
-                "ok": False,
-                "file": str(file_path),
-                "valid": False,
-                "errors": [issue.model_dump() for issue in validation.errors],
-                "warnings": [issue.model_dump() for issue in validation.warnings],
-            }
         selected_theme = theme or "soft-professional"
         custom_css: str | None = None
         if css_path is not None:
             custom_css = Path(css_path).read_text(encoding="utf-8")
-        content = render_jobspec(
-            spec,
+        result = self._spec_use_case.render_file(
+            file_path,
             format=format,
             theme=selected_theme,
+            no_validate=no_validate,
             embed_css=not no_css,
             custom_css=custom_css,
             asset_base_url=asset_base_url,
+            output=Path(output) if output else None,
         )
-        if output:
-            target = Path(output)
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text(content, encoding="utf-8")
-            return {
-                "ok": True,
-                "file": str(file_path),
-                "format": format,
-                "theme": selected_theme,
-                "output": str(target),
-            }
-        return {
-            "ok": True,
-            "file": str(file_path),
-            "format": format,
-            "theme": selected_theme,
-            "content": content,
-        }
+        return result.model_dump(exclude_none=True)
 
     def spec_inspect(self, path: str) -> dict[str, Any]:
         file_path = Path(path)
-        spec = load_jobspec(file_path)
-        validation = validate_spec_model(spec)
-        metadata = inspect_jobspec(spec, validation)
-        return {"ok": True, "file": str(file_path), "metadata": metadata}
+        return self._spec_use_case.inspect_file(file_path).model_dump()
 
     def spec_status(self, path: str) -> dict[str, Any]:
         file_path = Path(path)
-        spec = load_jobspec(file_path)
-        campaign = spec.campaign
-        return {
-            "ok": True,
-            "file": str(file_path),
-            "id": spec.id,
-            "title": spec.job.title,
-            "campaign_status": campaign.status if campaign else None,
-            "starts_at": campaign.starts_at.isoformat()
-            if campaign and campaign.starts_at
-            else None,
-            "expires_at": campaign.expires_at.isoformat()
-            if campaign and campaign.expires_at
-            else None,
-            "days_remaining": _days_remaining(campaign.expires_at) if campaign else None,
-        }
+        return self._spec_use_case.status_file(file_path).model_dump()
 
     def spec_migrate(self, path: str, write: bool = False) -> dict[str, Any]:
         file_path = Path(path)
-        result = inspect_schema_version(file_path)
+        result = self._spec_use_case.migrate_status(file_path).model_dump()
         if write:
             return {
                 "ok": False,
@@ -256,28 +154,11 @@ class JobspecMcpService:
 
     def spec_export(self, path: str, target: str, out: str) -> dict[str, Any]:
         file_path = Path(path)
-        output = Path(out)
-        spec = load_jobspec(file_path)
-        warnings: list[str] = []
-        if target == "generic-json":
-            content = render_generic_json(spec)
-        elif target == "generic-xml":
-            content = render_generic_xml(spec)
-        elif target == "linkedin-ready-json":
-            content, warnings = render_linkedin_ready_json(spec)
-        else:
+        if target not in {"generic-json", "generic-xml", "linkedin-ready-json"}:
             raise ValueError(
                 "Unsupported target. Use: generic-json, generic-xml, linkedin-ready-json"
             )
-        output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(content, encoding="utf-8")
-        return {
-            "ok": True,
-            "file": str(file_path),
-            "target": target,
-            "output": str(output),
-            "warnings": warnings,
-        }
+        return self._spec_use_case.export_file(file_path, target, Path(out)).model_dump()
 
     def feed_export(
         self,
@@ -286,34 +167,12 @@ class JobspecMcpService:
         out: str,
         skip_invalid: bool = False,
     ) -> dict[str, Any]:
-        paths = expand_input_paths(inputs)
-        if not paths:
-            raise ValueError("No input files found.")
-        specs = []
-        invalid: list[str] = []
-        for path in paths:
-            try:
-                specs.append(load_jobspec(path))
-            except Exception:  # noqa: BLE001
-                invalid.append(str(path))
-        if invalid and not skip_invalid:
-            raise NeksusError(f"Invalid JobSpec input(s): {', '.join(invalid)}")
-        if target == "jobs-json":
-            content = render_jobs_json_feed(specs)
-        elif target == "jobs-xml":
-            content = render_jobs_xml_feed(specs)
-        else:
-            raise ValueError("Unsupported target. Use: jobs-json or jobs-xml")
-        output = Path(out)
-        output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(content, encoding="utf-8")
-        return {
-            "ok": True,
-            "target": target,
-            "output": str(output),
-            "count": len(specs),
-            "invalid": invalid,
-        }
+        return self._feed_use_case.export(
+            inputs=inputs,
+            target=target,
+            out=Path(out),
+            skip_invalid=skip_invalid,
+        )
 
     def feed_sitemap(
         self,
@@ -322,17 +181,9 @@ class JobspecMcpService:
         out: str,
         exclude_closed: bool = False,
     ) -> dict[str, Any]:
-        paths = expand_input_paths(inputs)
-        if not paths:
-            raise ValueError("No input files found.")
-        specs = [load_jobspec(path) for path in paths]
-        content = render_sitemap(specs, base_url, exclude_closed=exclude_closed)
-        output = Path(out)
-        output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(content, encoding="utf-8")
-        return {
-            "ok": True,
-            "output": str(output),
-            "count": len(specs),
-            "exclude_closed": exclude_closed,
-        }
+        return self._feed_use_case.sitemap(
+            inputs=inputs,
+            base_url=base_url,
+            out=Path(out),
+            exclude_closed=exclude_closed,
+        )

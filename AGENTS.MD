@@ -17,11 +17,36 @@ Before considering any task complete:
    - `SECURITY.md` (when security policy/support/reporting changes)
    - In-code docs and comments where relevant
    - `docs/` content for any user-visible change
+   - Internal `README.md` files for changed areas (module/sub-module scope)
 2. Temporary artifacts created during development or verification must be deleted:
    - scratch files
    - temporary output files
    - temporary test artifacts not intended to be committed
    - any other non-source transient files
+
+## Documentation Governance (Required)
+
+Documentation quality is a release blocker.
+
+When code changes are made, documentation must be maintained from a **real user perspective**:
+
+- Explain user-visible behavior, command usage, defaults, limitations, and examples.
+- Avoid internal-only wording as the primary explanation in user docs.
+- Ensure examples match actual current behavior and commands.
+
+Repository documentation structure must stay hierarchical:
+
+1. Root `README.md` is the entrypoint and index.
+2. Sub-README files (or equivalent Markdown docs) must exist for meaningful sub-areas.
+3. Root `README.md` must link to those sub-documents.
+4. Sub-documents must link back to their parent context where appropriate.
+5. If `README.md` is not suitable for a sub-area, an equivalent `*.md` file is acceptable, but it must be indexed from parent docs.
+
+For every significant module/sub-module:
+
+- Include a local documentation file (`README.md` or equivalent) describing purpose, responsibilities, and key public APIs.
+- Keep docs colocated with the code area they describe.
+- Update docs in the same change set as code changes.
 
 ## Release and changelog policy
 
@@ -440,6 +465,14 @@ def load_jobspec(path: Path) -> JobSpec:
     """
 
 Do not add noisy docstrings to obvious one-line helpers.
+
+In-code documentation expectations (required):
+
+1. Every public class must include a clear docstring describing purpose and role in the architecture.
+2. Every public method/function must include a docstring with behavior, arguments, returns, and raised exceptions when relevant.
+3. Complex logic blocks must include explanatory comments describing *why* the logic exists, not only *what* it does.
+4. Comments should be comprehensive enough that another engineer can follow intent without external context.
+5. Keep comments accurate and synchronized with behavior changes; stale comments are treated as defects.
 
 Dependency Rules
 

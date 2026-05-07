@@ -7,7 +7,7 @@ from typer.testing import CliRunner
 from neksus_jobspec_cli.main import app
 
 runner = CliRunner()
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_cli_validate_job_detail_example() -> None:

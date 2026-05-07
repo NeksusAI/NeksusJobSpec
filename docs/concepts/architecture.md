@@ -16,13 +16,27 @@ Neksus JobSpec is intentionally split into simple layers to keep open-source usa
 - Parse and validation normalization
 - Structured errors and warnings
 
-### 3. Renderer/export layer
+### 3. Application use-case layer
+
+- Core orchestration use cases under `neksus_jobspec.app`
+- Reusable spec/project/feed workflows shared by CLI and MCP
+- Typed DTO payloads for app-layer contracts
+- Shared `ProjectContext` for root/config discovery in project workflows
+- Shared filesystem gateway for app-layer side effects
+
+### 4. JobSpec operation layer
+
+- Vertical slices under `neksus_jobspec.jobspec.spec_ops`
+- File-oriented operations grouped by use case (`new`, `validate`, `render`, `inspect`, `export`, `migrate`)
+- Thin wrappers around stable domain modules in `neksus_jobspec.jobspec`
+
+### 5. Renderer/export layer
 
 - Markdown, HTML, and JSON rendering
 - Theme support for HTML rendering
 - Schema export for editor/tooling integration
 
-### 4. Docs site layer
+### 6. Docs site layer
 
 - MkDocs + Material documentation
 - Version-controlled Markdown docs
@@ -30,7 +44,7 @@ Neksus JobSpec is intentionally split into simple layers to keep open-source usa
 
 ## Local MCP architecture
 
-### 5. Local MCP server
+### 7. Local MCP server
 
 - Optional local stdio MCP server (`neksus-jobspec-mcp`)
 - Wraps core validation/rendering/export/feed tooling as MCP tools
@@ -38,7 +52,7 @@ Neksus JobSpec is intentionally split into simple layers to keep open-source usa
 
 ## Planned hosted/server architecture
 
-### 6. Future hosted API (planned)
+### 8. Future hosted API (planned)
 
 - Wrap core validation/rendering as networked services
 - Expose stable contracts for organization-scale automation

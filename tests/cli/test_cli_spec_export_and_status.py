@@ -6,7 +6,7 @@ from pathlib import Path
 from typer.testing import CliRunner
 
 from neksus_jobspec_cli.main import app
-from tests.spec_builders import write_export_spec
+from ..spec_builders import write_export_spec
 
 runner = CliRunner()
 

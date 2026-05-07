@@ -682,3 +682,74 @@ class JobSpec(StrictModel):
                     last = rank
 
         return self
+
+    def days_remaining(self, today: date | None = None) -> int | None:
+        if not self.campaign or not self.campaign.expires_at:
+            return None
+        reference = today or date.today()
+        return (self.campaign.expires_at - reference).days
+
+    def campaign_status_payload(self, today: date | None = None) -> dict[str, Any]:
+        campaign = self.campaign
+        return {
+            "id": self.id,
+            "title": self.job.title,
+            "campaign_status": campaign.status if campaign else None,
+            "starts_at": campaign.starts_at.isoformat() if campaign and campaign.starts_at else None,
+            "expires_at": campaign.expires_at.isoformat() if campaign and campaign.expires_at else None,
+            "days_remaining": self.days_remaining(today=today),
+        }
+
+    def resolved_theme(self, default_theme: str = "soft-professional") -> str:
+        if self.rendering.web.template and self.rendering.web.template.strip():
+            return self.rendering.web.template.strip()
+        return default_theme
+
+    def validation_warnings(self) -> list[dict[str, str]]:
+        from collections import Counter
+
+        warnings: list[dict[str, str]] = []
+        if len(self.job.title.strip()) < 5:
+            warnings.append(
+                {"path": "job.title", "code": "short_title", "message": "Title is very short."}
+            )
+        list_components = [
+            component for component in self.components if isinstance(component, ListComponent)
+        ]
+        for component in list_components:
+            counts = Counter(item.strip().lower() for item in component.items)
+            if any(count > 1 for count in counts.values()):
+                warnings.append(
+                    {
+                        "path": f"components.{component.id}",
+                        "code": "duplicate_items",
+                        "message": f"Duplicate items found in list component '{component.id}'.",
+                    }
+                )
+        return warnings
+
+    def export_payload(
+        self, target: Literal["generic", "linkedin-ready"] = "generic"
+    ) -> dict[str, Any]:
+        from neksus_jobspec.jobspec.exports import normalized_export_payload
+
+        payload = normalized_export_payload(self)
+        if target == "generic":
+            return payload
+        apply = payload["apply"] if isinstance(payload["apply"], dict) else {}
+        return {
+            "externalJobPostingId": self.id,
+            "title": self.job.title,
+            "description": payload.get("description"),
+            "location": payload.get("location"),
+            "companyApplyUrl": apply.get("url"),
+            "employmentStatus": payload.get("employment"),
+            "workplaceTypes": [],
+            "listedAt": self.campaign.starts_at.isoformat()
+            if self.campaign and self.campaign.starts_at
+            else None,
+            "validThrough": self.campaign.expires_at.isoformat()
+            if self.campaign and self.campaign.expires_at
+            else None,
+            "companyJobCode": self.id,
+        }

@@ -69,7 +69,7 @@ def normalized_export_payload(spec: JobSpec) -> dict[str, object]:
 
 
 def render_generic_json(spec: JobSpec) -> str:
-    return to_json(normalized_export_payload(spec))
+    return to_json(spec.export_payload("generic"))
 
 
 def render_generic_xml(spec: JobSpec) -> str:
@@ -108,7 +108,7 @@ def render_generic_xml(spec: JobSpec) -> str:
 
 
 def render_linkedin_ready_json(spec: JobSpec) -> tuple[str, list[str]]:
-    payload = normalized_export_payload(spec)
+    payload = spec.export_payload("generic")
     apply = payload["apply"] if isinstance(payload["apply"], dict) else {}
     company_apply_url = apply.get("url")
     warnings: list[str] = []
@@ -119,20 +119,5 @@ def render_linkedin_ready_json(spec: JobSpec) -> tuple[str, list[str]]:
     if not company_apply_url:
         warnings.append("companyApplyUrl is missing; URL-based apply method is recommended")
 
-    linkedin = {
-        "externalJobPostingId": spec.id,
-        "title": spec.job.title,
-        "description": payload.get("description"),
-        "location": payload.get("location"),
-        "companyApplyUrl": company_apply_url,
-        "employmentStatus": payload.get("employment"),
-        "workplaceTypes": [],
-        "listedAt": spec.campaign.starts_at.isoformat()
-        if spec.campaign and spec.campaign.starts_at
-        else None,
-        "validThrough": spec.campaign.expires_at.isoformat()
-        if spec.campaign and spec.campaign.expires_at
-        else None,
-        "companyJobCode": spec.id,
-    }
+    linkedin = spec.export_payload("linkedin-ready")
     return to_json(linkedin), warnings

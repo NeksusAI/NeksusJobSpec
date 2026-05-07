@@ -19,6 +19,12 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 - Theme/config validation now accepts `classic`, `classic-dark`, and `custom` for project defaults and render profiles.
 - Custom theme validation now enforces known component/region contracts and required package files.
 - Documentation now includes dedicated user guides and one screenshot per built-in theme (`soft-professional`, `classic`, `classic-dark`).
+- Internal orchestration for `spec new`, `spec validate`, `spec render`, `spec inspect`, `spec status`, `spec export`, `spec schema`, `spec templates`, `spec migrate`, project `check` and `config get/set`, and feed `export`/`sitemap` is now shared through a core application use-case layer used by both CLI and local MCP handlers.
+- JobSpec operation modules are reorganized into vertical slices under `neksus_jobspec.jobspec.spec_ops`, and project use cases now share a `ProjectContext` for root/config resolution.
+- App-layer use cases now return typed DTO payloads for core spec/project flows, and input-contract errors are normalized through domain exceptions.
+- Added domain methods on `JobSpec` for campaign status, theme resolution, warning derivation, and export payload shaping, and wired validation/status/export paths to use these model-level contracts.
+- Batch `render` orchestration moved from CLI command code into `RenderUseCase` with shared filesystem gateway handling.
+- Tests are now organized by layer (`tests/cli`, `tests/core`, `tests/mcp`, `tests/arch`, `tests/integration`) with architecture boundary checks for CLI/app/MCP layering.
 
 ## [0.3.0]
 

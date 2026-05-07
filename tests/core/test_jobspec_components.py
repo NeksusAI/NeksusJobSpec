@@ -9,7 +9,7 @@ from pydantic import ValidationError
 from neksus_jobspec.jobspec.models import JobSpec
 from neksus_jobspec.jobspec.renderer import render_jobspec
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def _component_spec() -> dict:

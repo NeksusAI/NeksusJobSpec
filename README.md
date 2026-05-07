@@ -198,6 +198,18 @@ uv run python -m mkdocs build --strict
 - Scope boundaries: [`docs/roadmap-boundaries.md`](docs/roadmap-boundaries.md)
 - Security policy: [`SECURITY.md`](SECURITY.md)
 
+## Codebase docs index
+
+- Core package: [`src/neksus_jobspec/README.md`](src/neksus_jobspec/README.md)
+- App use cases: [`src/neksus_jobspec/app/README.md`](src/neksus_jobspec/app/README.md)
+- JobSpec domain: [`src/neksus_jobspec/jobspec/README.md`](src/neksus_jobspec/jobspec/README.md)
+- JobSpec vertical ops: [`src/neksus_jobspec/jobspec/spec_ops/README.md`](src/neksus_jobspec/jobspec/spec_ops/README.md)
+- Rendering internals: [`src/neksus_jobspec/jobspec/rendering/README.md`](src/neksus_jobspec/jobspec/rendering/README.md)
+- Project internals: [`src/neksus_jobspec/project/README.md`](src/neksus_jobspec/project/README.md)
+- CLI package: [`src/neksus_jobspec_cli/README.md`](src/neksus_jobspec_cli/README.md)
+- CLI commands: [`src/neksus_jobspec_cli/commands/README.md`](src/neksus_jobspec_cli/commands/README.md)
+- MCP package: [`src/neksus_jobspec_mcp/README.md`](src/neksus_jobspec_mcp/README.md)
+
 ## License
 
 Licensed under AGPL-3.0-or-later. See [LICENSE](LICENSE).

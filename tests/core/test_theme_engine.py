@@ -16,7 +16,7 @@ def test_resolve_builtin_theme_package() -> None:
 
 
 def test_resolve_custom_theme_package_path() -> None:
-    root = Path(__file__).resolve().parents[1] / "fixtures" / "themes" / "custom-basic"
+    root = Path(__file__).resolve().parents[2] / "fixtures" / "themes" / "custom-basic"
     pkg = resolve_theme_package(str(root))
     assert pkg.theme_id == "custom"
     assert pkg.root == root

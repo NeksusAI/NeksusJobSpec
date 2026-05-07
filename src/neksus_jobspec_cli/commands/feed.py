@@ -9,17 +9,12 @@ import click
 import typer
 from pydantic import ValidationError
 
+from neksus_jobspec.app import FeedUseCase
 from neksus_jobspec.errors import NeksusError
-from neksus_jobspec.jobspec.feeds import (
-    expand_input_paths,
-    render_jobs_json_feed,
-    render_jobs_xml_feed,
-    render_sitemap,
-)
-from neksus_jobspec.jobspec.parser import load_jobspec
 from neksus_jobspec_cli.commands.common import handle_expected_error, print_json, print_success
 
 app = typer.Typer(help="Feed commands")
+feed_use_case = FeedUseCase()
 EXPECTED_COMMAND_ERRORS = (
     typer.BadParameter,
     click.UsageError,
@@ -42,41 +37,22 @@ def feed_export(
 ) -> None:
     """Export multiple JobSpecs into a feed format."""
     try:
-        paths = expand_input_paths(inputs)
-        if not paths:
-            raise typer.BadParameter("No input files found.")
-        specs = []
-        invalid: list[str] = []
-        for path in paths:
-            try:
-                specs.append(load_jobspec(path))
-            except Exception:
-                invalid.append(str(path))
-        if invalid and not skip_invalid:
-            raise NeksusError(f"Invalid JobSpec input(s): {', '.join(invalid)}")
-        if target == "jobs-json":
-            content = render_jobs_json_feed(specs)
-        elif target == "jobs-xml":
-            content = render_jobs_xml_feed(specs)
-        else:
+        if target not in {"jobs-json", "jobs-xml"}:
             raise typer.BadParameter("Unsupported target. Use: jobs-json or jobs-xml")
-        out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(content, encoding="utf-8")
+        payload = feed_use_case.export(
+            inputs=inputs,
+            target=target,
+            out=out,
+            skip_invalid=skip_invalid,
+        )
     except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 
-    payload = {
-        "ok": True,
-        "target": target,
-        "output": str(out),
-        "count": len(specs),
-        "invalid": invalid,
-    }
     if json:
         print_json(payload)
         return
-    print_success(f"Exported {len(specs)} job(s) to {out} ({target})")
+    print_success(f"Exported {payload['count']} job(s) to {out} ({target})")
 
 
 @app.command("sitemap")
@@ -91,24 +67,17 @@ def feed_sitemap(
 ) -> None:
     """Generate sitemap.xml from multiple JobSpecs."""
     try:
-        paths = expand_input_paths(inputs)
-        if not paths:
-            raise typer.BadParameter("No input files found.")
-        specs = [load_jobspec(path) for path in paths]
-        content = render_sitemap(specs, base_url, exclude_closed=exclude_closed)
-        out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(content, encoding="utf-8")
+        payload = feed_use_case.sitemap(
+            inputs=inputs,
+            base_url=base_url,
+            out=out,
+            exclude_closed=exclude_closed,
+        )
     except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 
-    payload = {
-        "ok": True,
-        "output": str(out),
-        "count": len(specs),
-        "exclude_closed": exclude_closed,
-    }
     if json:
         print_json(payload)
         return
-    print_success(f"Generated sitemap for {len(specs)} job(s): {out}")
+    print_success(f"Generated sitemap for {payload['count']} job(s): {out}")

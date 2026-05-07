@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 from neksus_jobspec_mcp.service import JobspecMcpService
-from tests.spec_builders import write_export_spec
+from ..spec_builders import write_export_spec
 
 
 def test_mcp_service_version_payload() -> None:

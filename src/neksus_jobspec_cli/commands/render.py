@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import shutil
 from pathlib import Path
 from typing import Annotated
 
@@ -10,24 +9,15 @@ import click
 import typer
 from pydantic import ValidationError
 
+from neksus_jobspec.app import RenderUseCase
 from neksus_jobspec_cli.commands.common import (
     handle_expected_error,
     print_error,
     print_json,
     print_success,
 )
-from neksus_jobspec.errors import ConfigError, FileSystemError, NeksusError
-from neksus_jobspec.jobspec.models import JobSpec
-from neksus_jobspec.jobspec.parser import load_yaml_file
-from neksus_jobspec.jobspec.renderer import render_jobspec
-from neksus_jobspec.jobspec.validator import validate_spec_data
-from neksus_jobspec.project.config import ProjectConfig, RenderProfile, load_project_config
-from neksus_jobspec.project.discovery import find_project_root
+from neksus_jobspec.errors import NeksusError
 
-EXTENSIONS_BY_FORMAT = {
-    "web": ".html",
-    "json-ld": ".json",
-}
 EXPECTED_COMMAND_ERRORS = (
     typer.BadParameter,
     click.UsageError,
@@ -37,21 +27,7 @@ EXPECTED_COMMAND_ERRORS = (
     ValueError,
 )
 
-
-def _output_name_for_data(data: dict, source: Path) -> str:
-    spec_id = data.get("id")
-    if isinstance(spec_id, str) and spec_id.strip():
-        return spec_id.strip()
-    return source.stem
-
-
-def _resolve_profile(name: str | None, config: ProjectConfig) -> RenderProfile | None:
-    if name is None:
-        return None
-    profile = config.render_profiles.get(name)
-    if profile is None:
-        raise ConfigError(f"Unknown render profile: {name}")
-    return profile
+render_use_case = RenderUseCase()
 
 
 def render_command(
@@ -84,112 +60,22 @@ def render_command(
     """Render all project JobSpecs into configured output directory."""
     _ = all_specs
     try:
-        root = find_project_root()
-        config = load_project_config(root)
-        selected_profile = _resolve_profile(profile, config)
-
-        render_format = (
-            format
-            or (selected_profile.format if selected_profile else None)
-            or config.default_format
+        result = render_use_case.render_project(
+            format=format,
+            theme=theme,
+            css=css,
+            no_css=no_css,
+            asset_base_url=asset_base_url,
+            profile=profile,
+            clean=clean,
         )
-        selected_theme = (
-            theme or (selected_profile.theme if selected_profile else None) or config.default_theme
-        )
-        output_directory = (
-            selected_profile.output_directory if selected_profile else None
-        ) or config.output_directory
-        sections = (
-            selected_profile.sections.model_dump()
-            if selected_profile and selected_profile.sections
-            else None
-        )
-
-        if (css is not None or no_css or asset_base_url is not None) and render_format != "web":
-            raise typer.BadParameter(
-                "--css, --no-css, and --asset-base-url are only supported for --format web"
-            )
-
-        if render_format not in EXTENSIONS_BY_FORMAT:
-            raise typer.BadParameter(
-                f"Unsupported render format: {render_format}",
-                param_hint="--format",
-            )
-
-        custom_css: str | None = None
-        if css is not None:
-            try:
-                custom_css = css.read_text(encoding="utf-8")
-            except OSError as exc:
-                raise FileSystemError(f"Failed to read CSS file: {css}") from exc
-
-        spec_dir = root / config.spec_directory
-        output_dir = root / output_directory
-        if not spec_dir.exists() or not spec_dir.is_dir():
-            raise FileSystemError(f"Spec directory does not exist: {spec_dir}")
-
-        if clean and output_dir.exists():
-            shutil.rmtree(output_dir)
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        files = sorted(spec_dir.glob("*.jobspec.yaml"))
-        rendered: list[dict[str, str]] = []
-        errors: list[dict[str, str]] = []
-        warnings: list[dict[str, str]] = []
-
-        for path in files:
-            data = load_yaml_file(path)
-            validation = validate_spec_data(data)
-
-            for issue in validation.errors:
-                errors.append({"source": str(path.relative_to(root)), **issue.model_dump()})
-            for issue in validation.warnings:
-                warnings.append({"source": str(path.relative_to(root)), **issue.model_dump()})
-            if not validation.valid:
-                continue
-
-            target_name = _output_name_for_data(data, path)
-            target = output_dir / f"{target_name}{EXTENSIONS_BY_FORMAT[render_format]}"
-            spec = JobSpec.model_validate(data)
-            if theme is not None:
-                spec.rendering.web.template = theme
-            rendered_content = render_jobspec(
-                spec,
-                format=render_format,
-                theme=selected_theme,
-                embed_css=not no_css,
-                custom_css=custom_css,
-                asset_base_url=asset_base_url,
-                sections=sections,
-            )
-            target.write_text(rendered_content, encoding="utf-8")
-            if render_format == "web":
-                target.with_suffix(".css").write_text(
-                    spec.rendering.web.css.inline, encoding="utf-8"
-                )
-            rendered.append(
-                {
-                    "source": str(path.relative_to(root)),
-                    "output": str(target.relative_to(root)),
-                }
-            )
-
-        ok = not errors
-        payload = {
-            "ok": ok,
-            "format": render_format,
-            "theme": selected_theme,
-            "profile": profile,
-            "rendered": rendered,
-            "errors": errors,
-            "warnings": warnings,
-        }
+        payload = result.model_dump()
         if json:
             print_json(payload)
-            raise typer.Exit(0 if ok else 1)
+            raise typer.Exit(0 if result.ok else 1)
 
-        if ok:
-            print_success(f"Rendered {len(rendered)} JobSpec files to {output_dir}")
+        if result.ok:
+            print_success(f"Rendered {len(result.rendered)} JobSpec files")
             return
         print_error("Batch render failed: one or more JobSpec files are invalid.")
         raise typer.Exit(1)

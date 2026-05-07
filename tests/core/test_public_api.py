@@ -7,7 +7,7 @@ import pytest
 
 from neksus_jobspec.errors import JobSpecParseError, JobSpecValidationError
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_import_neksus_jobspec_module() -> None:
