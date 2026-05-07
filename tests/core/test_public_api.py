@@ -1,0 +1,112 @@
+from __future__ import annotations
+
+import importlib
+from pathlib import Path
+
+import pytest
+
+from neksus_jobspec.errors import JobSpecParseError, JobSpecValidationError
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def test_import_neksus_jobspec_module() -> None:
+    module = importlib.import_module("neksus_jobspec")
+    assert hasattr(module, "__version__")
+
+
+def test_top_level_public_imports() -> None:
+    from neksus_jobspec import JobSpec, load_jobspec, render_jobspec, validate_jobspec
+
+    assert JobSpec is not None
+    assert callable(load_jobspec)
+    assert callable(validate_jobspec)
+    assert callable(render_jobspec)
+
+
+def test_load_jobspec_returns_model_for_valid_fixture() -> None:
+    from neksus_jobspec import load_jobspec
+
+    spec = load_jobspec(ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml")
+    assert spec.id == "backend-engineer"
+
+
+def test_validate_jobspec_accepts_mapping() -> None:
+    from neksus_jobspec import validate_jobspec
+
+    spec = validate_jobspec(
+        {
+            "schema_version": 1,
+            "id": "api-test",
+            "page": {"layout": "job_detail"},
+            "job": {"title": "API Test", "intro": "Test summary"},
+            "components": [
+                {
+                    "type": "list",
+                    "id": "requirements",
+                    "variant": "bullets",
+                    "title": "Requirements",
+                    "items": ["Know Python"],
+                }
+            ],
+        }
+    )
+    assert spec.id == "api-test"
+
+
+def test_render_jobspec_web_from_path() -> None:
+    from neksus_jobspec import render_jobspec
+
+    content = render_jobspec(ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml")
+    assert "<!doctype html>" in content.lower()
+
+
+def test_render_jobspec_web_with_builtin_theme() -> None:
+    from neksus_jobspec import render_jobspec
+
+    content = render_jobspec(
+        ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml",
+        format="web",
+        theme="soft-professional",
+    )
+    assert "<!doctype html>" in content.lower()
+
+
+def test_render_jobspec_returns_content_for_caller_managed_output(tmp_path: Path) -> None:
+    from neksus_jobspec import render_jobspec
+
+    out = tmp_path / "dist" / "backend-engineer.html"
+    content = render_jobspec(
+        ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml",
+        format="web",
+        theme="soft-professional",
+    )
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(content, encoding="utf-8")
+    assert out.exists()
+
+
+def test_load_jobspec_invalid_yaml_raises_useful_exception(tmp_path: Path) -> None:
+    from neksus_jobspec import load_jobspec
+
+    broken = tmp_path / "broken.jobspec.yaml"
+    broken.write_text("schema_version: [", encoding="utf-8")
+
+    with pytest.raises(JobSpecParseError):
+        load_jobspec(broken)
+
+
+def test_validate_jobspec_invalid_schema_raises_useful_exception() -> None:
+    from neksus_jobspec import validate_jobspec
+
+    with pytest.raises(JobSpecValidationError):
+        validate_jobspec(
+            {
+                "schema_version": 1,
+                "id": "invalid",
+                "title": "Invalid",
+                "summary": "No requirements",
+                "responsibilities": ["Build things"],
+                "requirements": [],
+            }
+        )

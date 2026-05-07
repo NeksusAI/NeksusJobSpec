@@ -1,49 +1,81 @@
 Neksus JobSpec (neksus-jobspec)
 
-Purpose
-- Local-first CLI and Python package for creating, validating, inspecting, and rendering structured JobSpec YAML files.
+What it is
+- Open, local-first CLI and Python package for structured, branded,
+  machine-readable job campaigns.
+- Free/core scope only: define -> validate -> render -> export -> document
+  JobSpec files.
 
-Install
-- pip install neksus-jobspec
+Product boundary (important)
+- This package does NOT collect applications, upload/parse CVs, send emails,
+  process payments, or manage candidates.
+- This package does NOT include hosted SaaS features, LinkedIn API posting,
+  ATS automation, dashboards, or backend infrastructure.
 
-Core CLI Commands
-- neksus-jobspec version
-- neksus-jobspec init
-- neksus-jobspec spec new <name>
-- neksus-jobspec spec validate <path>
-- neksus-jobspec spec render <path> --format web|json-ld
-- neksus-jobspec check
+Schema basics (v0.3.0)
+- Top-level fields: `schema_version`, `id`, `page`, `job`, `components`,
+  optional `campaign`, optional `rendering`.
+- `campaign`:
+  - `starts_at: date | optional`
+  - `expires_at: date | optional`
+  - `status: draft | active | expired | closed | optional`
+- `job.apply` (strict method-based):
+  - `method: email | external_url | ats_url | custom | agent_ready`
+  - email method requires `email`
+  - URL methods require `url`
+  - `agent_ready` requires `url` and `job_reference`
 
-Public Python API
-- from neksus_jobspec import JobSpec, load_jobspec, validate_jobspec, render_jobspec
+Minimal YAML
+```yaml
+schema_version: 1
+id: backend-engineer
+page:
+  layout: job_detail
+job:
+  title: Backend Engineer
+  apply:
+    method: external_url
+    url: https://example.com/apply/backend-engineer
+components:
+  - type: list
+    id: requirements
+    items:
+      - 3+ years backend experience
+```
 
-v0.2.x Composition Model
-- Job-detail pages are composed from controlled, typed components.
-- Assistants must use documented `components` types, variants, and placement values only.
-- Assistants must not invent unsupported component types or variants.
-- Validate before render.
-- Prefer JSON-LD render output for automation.
-- Legacy simple-schema JobSpec payloads are removed in v0.2.x.
-- For web output portability, assistants may set `rendering.web.asset_base_url` (or CLI `--asset-base-url`) when relative media paths are used.
+Common CLI commands
+- `neksus-jobspec init`
+- `neksus-jobspec spec validate <path>`
+- `neksus-jobspec spec render <path> --format web`
+- `neksus-jobspec spec render <path> --format json-ld`
+- `neksus-jobspec spec export <path> --target generic-json --out dist/job.json`
+- `neksus-jobspec spec export <path> --target generic-xml --out dist/job.xml`
+- `neksus-jobspec spec export <path> --target linkedin-ready-json --out dist/linkedin-job.json`
+- `neksus-jobspec feed export "examples/*.jobspec.yaml" --target jobs-json --out dist/jobs.json`
+- `neksus-jobspec feed sitemap "examples/*.jobspec.yaml" --base-url https://company.dk/jobs --out dist/sitemap.xml`
 
-Security and boundaries
-- Custom CSS is supported.
-- Theme customization in v0.2.x is CSS-first.
-- Rendering produces output only and does not execute scripts.
-- Hosted API: planned, not implemented.
-- MCP server: planned, not implemented.
+Optional local MCP
+- Install: `pip install "neksus-jobspec[mcp]"`
+- Run: `neksus-jobspec-mcp`
+- Scope: local stdio, CLI/API-parity tools only.
+- Not included: application intake, CV handling, payments, hosted APIs,
+  ATS workflows, LinkedIn API posting.
 
-Documentation
-- README.md
-- CHANGELOG.md
-- docs/concepts/specification.md
-- docs/concepts/rendering.md
-- docs/guides/soft-professional-guide.md
-- docs/guides/content-vs-theme.md
-- docs/guides/render-troubleshooting.md
-- docs/guides/migration-0.1-to-0.2.md
-- docs/reference/python-api.md
-- docs/reference/api-reference.md
-- docs/project/versioning.md
-- SECURITY.md
-- docs/project/security.md
+Common mistakes
+- Using legacy `job.apply: {label, url}` instead of method-based apply.
+- Adding unsupported fields like `application_form`, CV/candidate data,
+  or hosted backend concepts.
+- Using unknown component types/variants.
+- Skipping validation before render/export.
+
+Docs entry points
+- `README.md`
+- `docs/concepts/specification.md`
+- `docs/concepts/rendering.md`
+- `docs/exports.md`
+- `docs/llm-usage.md`
+- `docs/integrations/mcp-server.md`
+- `docs/integrations/mcp-install-matrix.md`
+- `docs/roadmap-boundaries.md`
+- Built-in web themes: `classic`, `classic-dark`, `soft-professional`
+- Custom themes are filesystem theme packages with `manifest.json`, Jinja template, and CSS assets

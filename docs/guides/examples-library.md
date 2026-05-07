@@ -1,6 +1,6 @@
 # Examples Library
 
-This page provides component-based v0.2.0 examples.
+This page provides component-based v0.3.x examples.
 
 ## Minimal role
 

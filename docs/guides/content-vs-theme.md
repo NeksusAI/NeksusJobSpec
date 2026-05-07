@@ -9,7 +9,7 @@ Use this split to decide where a change belongs.
 | Map URL/address/alt text | JobSpec YAML (`hero_banner`, `location_map`) |
 | Page spacing, colors, typography, borders, responsive layout rules | Theme CSS |
 | Head includes (font/script links) and HTML scaffold contract | Renderer/theme implementation |
-| One-off organization branding tweaks across many specs | Custom CSS file + `--css` |
+| One-off organization branding tweaks across many specs | Custom theme package |
 
 ## Rule of thumb
 

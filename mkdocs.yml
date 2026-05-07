@@ -41,15 +41,20 @@ nav:
       - Quickstart: guides/quickstart.md
       - Examples: guides/examples.md
       - Examples Library: guides/examples-library.md
-      - Migration 0.1.0 to 0.2.x: guides/migration-0.1-to-0.2.md
       - Soft-Professional Guide: guides/soft-professional-guide.md
+      - Classic Theme Guide: guides/classic-guide.md
+      - Classic-Dark Theme Guide: guides/classic-dark-guide.md
+      - Custom Theme Package Guide: guides/custom-theme-package.md
       - Content vs Theme: guides/content-vs-theme.md
       - Render Troubleshooting: guides/render-troubleshooting.md
+      - LLM Usage: llm-usage.md
+      - Exports: exports.md
   - Reference:
       - CLI Reference: reference/cli-reference.md
       - Python API: reference/python-api.md
       - API Reference: reference/api-reference.md
       - Internal API Reference: reference/internal-api-reference.md
+      - Code Structure: reference/code-structure.md
       - Schema: reference/schema.md
       - Schema Editor Integration: reference/schema-editor-integration.md
       - Model Reference: reference/model-reference.md
@@ -63,8 +68,10 @@ nav:
       - Assistant Usage: integrations/assistant-usage.md
       - LLM Integrations: integrations/llm-integrations.md
       - MCP Server: integrations/mcp-server.md
+      - MCP Install Matrix: integrations/mcp-install-matrix.md
   - Project Policy:
       - Contributing: project/contributing.md
       - Security: project/security.md
       - Versioning and Compatibility: project/versioning.md
       - Release Notes: project/release-notes.md
+      - Roadmap Boundaries: roadmap-boundaries.md

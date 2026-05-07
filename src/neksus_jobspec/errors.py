@@ -23,3 +23,7 @@ class JobSpecValidationError(NeksusError):
 
 class UnsupportedFormatError(NeksusError):
     """Raised when a render format is unsupported."""
+
+
+class InvalidInputError(NeksusError):
+    """Raised when input values violate command/use-case contracts."""

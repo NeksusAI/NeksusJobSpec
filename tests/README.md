@@ -9,25 +9,22 @@ Pytest suite for CLI and core behaviors.
 - Validate model constraints and project checks.
 - Keep tests filesystem-isolated (no dependency on user machine state).
 
-## Files
+## Layout
 
-- `test_cli_init.py`
-  - `init`, `init --empty`, overwrite refusal behavior.
+- `tests/cli/`
+  - CLI command behavior, JSON shape, and exit-code contracts.
 
-- `test_cli_spec_validate.py`
-  - valid/invalid validation paths and JSON payload shape.
+- `tests/core/`
+  - core domain models, renderer/theme behavior, project checks/config, and public API.
 
-- `test_cli_spec_render.py`
-  - render-to-stdout, render-to-file, inspect JSON.
+- `tests/mcp/`
+  - local MCP service parity tests.
 
-- `test_cli_spec_new_and_config.py`
-  - spec scaffolding and config key validation.
+- `tests/arch/`
+  - architecture boundary checks (`cli -> app -> core`).
 
-- `test_project_checks.py`
-  - project check pass path and duplicate-id failure.
-
-- `test_jobspec_models.py`
-  - schema-level constraints in Pydantic models.
+- `tests/integration/`
+  - real end-to-end flows and local MCP integration.
 
 ## Testing style
 

@@ -46,4 +46,5 @@ Behavior:
 
 - CLI layer: thin command orchestration and output formatting.
 - Core layer: parsing, validation, checks, and rendering logic.
-- Planned MCP/API: future network wrappers around core logic; not implemented now.
+- Local MCP layer: optional local stdio server wrapping core logic.
+- Hosted API: future network wrappers beyond local tooling; not implemented now.

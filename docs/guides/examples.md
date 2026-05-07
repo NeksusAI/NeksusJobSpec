@@ -18,6 +18,6 @@ It demonstrates:
 
 For more scenarios, see [Examples Library](examples-library.md).
 
-Reference render (soft-professional theme):
+Soft-professional theme screenshot:
 
-![Soft Professional Job Detail](../assets/job-detail-soft-professional.png)
+![Soft Professional Theme](../assets/soft-professional-current-render.png)

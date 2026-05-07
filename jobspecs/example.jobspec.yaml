@@ -1,0 +1,31 @@
+schema_version: 1
+id: example
+page:
+  layout: job_detail
+  language: en
+  theme: soft-professional
+  component_order:
+  - hero
+  - responsibilities
+  - requirements
+job:
+  title: Example
+  intro: Describe the role.
+components:
+- type: hero
+  id: hero
+  variant: default
+  title: Example
+  intro: Describe the role.
+- type: list
+  id: responsibilities
+  variant: bullets
+  title: Responsibilities
+  items:
+  - Define the main responsibilities.
+- type: list
+  id: requirements
+  variant: bullets
+  title: Requirements
+  items:
+  - Define the core requirements.

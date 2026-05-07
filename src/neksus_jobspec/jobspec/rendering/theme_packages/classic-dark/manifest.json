@@ -1,0 +1,28 @@
+{
+  "name": "classic-dark",
+  "version": 1,
+  "template": "template.html.j2",
+  "styles": [],
+  "supported_components": [
+    "header_brand",
+    "nav_links",
+    "header_actions",
+    "hero_banner",
+    "hero",
+    "meta_chips",
+    "rich_text",
+    "feature_grid",
+    "list",
+    "quote",
+    "benefits",
+    "application_process",
+    "company_profile",
+    "legal",
+    "contact",
+    "meta_panel",
+    "social_links",
+    "location_map",
+    "footer_brand"
+  ],
+  "supported_regions": ["header", "hero", "main", "sidebar", "footer"]
+}

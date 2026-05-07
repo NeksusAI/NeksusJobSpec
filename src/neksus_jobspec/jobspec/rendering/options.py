@@ -7,7 +7,6 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 RenderFormat = Literal["web", "json-ld"]
-RenderTheme = Literal["soft-professional"]
 
 
 class RenderSections(BaseModel):
@@ -24,8 +23,6 @@ class RenderOptions(BaseModel):
     """Normalized render options for format renderers."""
 
     format: RenderFormat = "web"
-    theme: RenderTheme = "soft-professional"
-    embed_css: bool = True
-    custom_css: str | None = None
+    theme: str = "soft-professional"
     asset_base_url: str | None = None
     sections: RenderSections = Field(default_factory=RenderSections)

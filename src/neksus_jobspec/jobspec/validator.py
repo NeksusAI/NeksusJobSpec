@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-from collections import Counter
-
 from pydantic import ValidationError
 
-from neksus_jobspec.jobspec.models import JobSpec, ListComponent
+from neksus_jobspec.jobspec.models import JobSpec
 from neksus_jobspec.results import ValidationIssue, ValidationResult
 
 
@@ -31,33 +29,8 @@ def pydantic_errors_to_issues(exc: ValidationError) -> list[ValidationIssue]:
     return issues
 
 
-def _normalized_counts(values: list[str]) -> Counter[str]:
-    return Counter(item.strip().lower() for item in values)
-
-
 def collect_warnings(spec: JobSpec) -> list[ValidationIssue]:
-    warnings: list[ValidationIssue] = []
-
-    if len(spec.job.title.strip()) < 5:
-        warnings.append(
-            ValidationIssue(path="job.title", code="short_title", message="Title is very short.")
-        )
-
-    list_components = [
-        component for component in spec.components if isinstance(component, ListComponent)
-    ]
-    for component in list_components:
-        counts = _normalized_counts(component.items)
-        if any(count > 1 for count in counts.values()):
-            warnings.append(
-                ValidationIssue(
-                    path=f"components.{component.id}",
-                    code="duplicate_items",
-                    message=f"Duplicate items found in list component '{component.id}'.",
-                )
-            )
-
-    return warnings
+    return [ValidationIssue(**warning) for warning in spec.validation_warnings()]
 
 
 def validate_spec_data(data: dict) -> ValidationResult:

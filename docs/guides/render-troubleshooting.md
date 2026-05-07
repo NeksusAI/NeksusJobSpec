@@ -27,11 +27,10 @@
   - `rendering.web.show_share_links: true`
   - `rendering.web.show_print_link: true`
 
-## CSS overrides do nothing
+## Styling changes do not apply
 
-- Confirm file path passed to `--css` exists.
-- Verify selector specificity; override classes may require stronger selectors.
-- Confirm rendered output includes `<style>` block and override rules.
+- Runtime CSS overrides are not supported.
+- Put styling changes in a custom theme package (`manifest.json` + `template.html.j2` + CSS assets).
 
 ## Relative assets break after deploy
 
@@ -41,5 +40,5 @@
 ## Validation passes but output still looks off
 
 - Compare with `examples/job-detail.jobspec.yaml`.
-- Render with no custom CSS first.
-- Then re-add `--css` overrides incrementally.
+- Render with a built-in theme first.
+- Then switch to your custom theme package and apply changes there.

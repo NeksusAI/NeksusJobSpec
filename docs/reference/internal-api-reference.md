@@ -49,3 +49,15 @@ See [Versioning and Compatibility Policy](../project/versioning.md) for the supp
 
 - Prefer CLI invocation for stable automation behavior.
 - If importing Python internals, pin versions and expect refactors.
+
+## Internal codebase docs map
+
+- Core package overview: `src/neksus_jobspec/README.md`
+- App layer: `src/neksus_jobspec/app/README.md`
+- JobSpec domain: `src/neksus_jobspec/jobspec/README.md`
+- JobSpec vertical ops: `src/neksus_jobspec/jobspec/spec_ops/README.md`
+- Rendering internals: `src/neksus_jobspec/jobspec/rendering/README.md`
+- Project internals: `src/neksus_jobspec/project/README.md`
+- CLI package: `src/neksus_jobspec_cli/README.md`
+- CLI commands: `src/neksus_jobspec_cli/commands/README.md`
+- MCP package: `src/neksus_jobspec_mcp/README.md`

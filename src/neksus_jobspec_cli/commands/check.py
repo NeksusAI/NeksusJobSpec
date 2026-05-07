@@ -8,6 +8,7 @@ import click
 import typer
 from rich.table import Table
 
+from neksus_jobspec.app import ProjectUseCase
 from neksus_jobspec_cli.commands.common import (
     handle_expected_error,
     print_error,
@@ -16,11 +17,10 @@ from neksus_jobspec_cli.commands.common import (
     print_warning,
     stdout,
 )
-from neksus_jobspec.project.checks import run_project_checks
-from neksus_jobspec.project.discovery import find_project_root
 from neksus_jobspec.errors import NeksusError
 
 EXPECTED_COMMAND_ERRORS = (typer.BadParameter, click.UsageError, NeksusError, OSError, ValueError)
+project_use_case = ProjectUseCase()
 
 
 def app(
@@ -39,30 +39,24 @@ def app(
                 param_hint="--format",
             )
         # Discover project root then execute all configured checks.
-        root = find_project_root()
-        result = run_project_checks(root, strict=strict)
+        payload = project_use_case.check(strict=strict).model_dump()
     except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 
-    payload = {
-        "ok": result.ok,
-        "checks": [check.model_dump() for check in result.checks],
-        "errors": [error.model_dump() for error in result.errors],
-        "warnings": [warning.model_dump() for warning in result.warnings],
-    }
+    ok = bool(payload["ok"])
 
     # Keep JSON output stable for automation and tests.
     if json:
         print_json(payload)
-        raise typer.Exit(0 if result.ok else 1)
+        raise typer.Exit(0 if ok else 1)
 
     if format == "github":
-        for error in result.errors:
-            typer.echo(f"::error file={error.path}::{error.message}")
-        for warning in result.warnings:
-            typer.echo(f"::warning file={warning.path}::{warning.message}")
-        raise typer.Exit(0 if result.ok else 1)
+        for error in payload["errors"]:
+            typer.echo(f"::error file={error['path']}::{error['message']}")
+        for warning in payload["warnings"]:
+            typer.echo(f"::warning file={warning['path']}::{warning['message']}")
+        raise typer.Exit(0 if ok else 1)
     if format != "human":
         raise typer.BadParameter(
             f"Unsupported format: {format}",
@@ -73,23 +67,22 @@ def app(
     summary.add_column("Check", style="cyan")
     summary.add_column("Status", style="white")
     summary.add_column("Message", style="white")
-    for check in result.checks:
-        summary.add_row(check.name, "ok" if check.ok else "failed", check.message)
+    for check in payload["checks"]:
+        summary.add_row(check["name"], "ok" if check["ok"] else "failed", check["message"])
     stdout.print(summary)
 
-    if result.ok:
+    if ok:
         print_success("Project check passed.")
-        if result.warnings:
-            for warning in result.warnings:
-                print_warning(f"Warning [{warning.path}] {warning.message}")
+        for warning in payload["warnings"]:
+            print_warning(f"Warning [{warning['path']}] {warning['message']}")
         return
 
     print_error("Project check failed.")
-    for check in result.checks:
-        if not check.ok:
-            print_error(f"Check failed: {check.name} - {check.message}")
-    for error in result.errors:
-        print_error(f"Error [{error.path}] {error.message}")
-    for warning in result.warnings:
-        print_warning(f"Warning [{warning.path}] {warning.message}")
+    for check in payload["checks"]:
+        if not check["ok"]:
+            print_error(f"Check failed: {check['name']} - {check['message']}")
+    for error in payload["errors"]:
+        print_error(f"Error [{error['path']}] {error['message']}")
+    for warning in payload["warnings"]:
+        print_warning(f"Warning [{warning['path']}] {warning['message']}")
     raise typer.Exit(1)

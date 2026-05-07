@@ -17,11 +17,36 @@ Before considering any task complete:
    - `SECURITY.md` (when security policy/support/reporting changes)
    - In-code docs and comments where relevant
    - `docs/` content for any user-visible change
+   - Internal `README.md` files for changed areas (module/sub-module scope)
 2. Temporary artifacts created during development or verification must be deleted:
    - scratch files
    - temporary output files
    - temporary test artifacts not intended to be committed
    - any other non-source transient files
+
+## Documentation Governance (Required)
+
+Documentation quality is a release blocker.
+
+When code changes are made, documentation must be maintained from a **real user perspective**:
+
+- Explain user-visible behavior, command usage, defaults, limitations, and examples.
+- Avoid internal-only wording as the primary explanation in user docs.
+- Ensure examples match actual current behavior and commands.
+
+Repository documentation structure must stay hierarchical:
+
+1. Root `README.md` is the entrypoint and index.
+2. Sub-README files (or equivalent Markdown docs) must exist for meaningful sub-areas.
+3. Root `README.md` must link to those sub-documents.
+4. Sub-documents must link back to their parent context where appropriate.
+5. If `README.md` is not suitable for a sub-area, an equivalent `*.md` file is acceptable, but it must be indexed from parent docs.
+
+For every significant module/sub-module:
+
+- Include a local documentation file (`README.md` or equivalent) describing purpose, responsibilities, and key public APIs.
+- Keep docs colocated with the code area they describe.
+- Update docs in the same change set as code changes.
 
 ## Release and changelog policy
 
@@ -36,7 +61,7 @@ Before considering any task complete:
 
 ## What is Neksus JobSpec?
 Neksus JobSpec is a local-first CLI and Python package for creating, validating, inspecting, and rendering structured job specification files.
-Users write JobSpecs in YAML. The CLI validates them with Pydantic models and renders them into readable formats such as Markdown. Future versions may expose the same core through FastAPI, local MCP servers, and ChatGPT Skills, but the first implementation is focused on the Python CLI and reusable core library.
+Users write JobSpecs in YAML. The CLI validates them with Pydantic models and renders them into readable formats such as Markdown. The package also provides an optional local stdio MCP server for assistant integrations. Future versions may expose the same core through FastAPI and hosted services, while keeping the reusable core library approach.
 The project should remain simple, explicit, and easy to extend.
 ## Core Pipeline
 ```text
@@ -69,6 +94,7 @@ uv run neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml
 uv run neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml
 uv run neksus-jobspec spec inspect jobspecs/backend-engineer.jobspec.yaml
 uv run neksus-jobspec check
+uv run neksus-jobspec-mcp
 uv run pytest
 uv run ruff check .
 uv run ruff format .
@@ -440,6 +466,14 @@ def load_jobspec(path: Path) -> JobSpec:
 
 Do not add noisy docstrings to obvious one-line helpers.
 
+In-code documentation expectations (required):
+
+1. Every public class must include a clear docstring describing purpose and role in the architecture.
+2. Every public method/function must include a docstring with behavior, arguments, returns, and raised exceptions when relevant.
+3. Complex logic blocks must include explanatory comments describing *why* the logic exists, not only *what* it does.
+4. Comments should be comprehensive enough that another engineer can follow intent without external context.
+5. Keep comments accurate and synchronized with behavior changes; stale comments are treated as defects.
+
 Dependency Rules
 
 Use uv.
@@ -556,6 +590,40 @@ uv run ruff check .
 uv run ruff format --check .
 
 all succeed.
+
+## Real-User Acceptance Checklist
+
+Before release or sign-off, run a real-user flow in a temporary directory (not only pytest).
+
+Suggested sequence:
+
+1. Create temp workspace and initialize project.
+2. Create/validate at least one standard JobSpec and one campaign-based JobSpec.
+3. Run single-file operations:
+   - `spec validate`
+   - `spec inspect`
+   - `spec status`
+   - `spec render --format web`
+   - `spec render --format json-ld`
+   - `spec export --target generic-json`
+   - `spec export --target generic-xml`
+   - `spec export --target linkedin-ready-json`
+4. Run multi-file operations:
+   - `feed export --target jobs-json`
+   - `feed export --target jobs-xml`
+   - `feed sitemap --exclude-closed`
+5. Run project-level operations:
+   - `config get/set`
+   - `check`
+   - top-level `render`
+6. Verify artifact behavior manually or with lightweight assertions:
+   - JSON-LD maps campaign dates correctly.
+   - Closed/expired notice appears in web render when expected.
+   - Feed ordering is deterministic.
+   - Sitemap filtering behaves as expected.
+7. If MCP is in scope, run a local stdio MCP client call against `neksus-jobspec-mcp` and verify tool discovery + at least one tool execution.
+
+This checklist complements (not replaces) unit/integration test suites.
 
 ## Documentation Site Workflow
 

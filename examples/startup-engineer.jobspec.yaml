@@ -1,0 +1,39 @@
+schema_version: 1
+id: startup-engineer-open
+page:
+  layout: job_detail
+  language: en
+  theme: soft-professional
+job:
+  title: Startup Backend Engineer
+  intro: Join a small team building API and data pipelines.
+  apply:
+    method: external_url
+    url: https://example.com/jobs/startup-engineer-open/apply
+campaign:
+  starts_at: 2026-05-01
+  expires_at: 2026-08-01
+  status: active
+components:
+  - type: hero
+    id: hero
+    variant: split
+    title: Startup Backend Engineer
+    intro: Join a small team building API and data pipelines.
+  - type: meta_chips
+    id: chips
+    variant: pills
+    items:
+      - label: Location
+        value: Aarhus, Denmark
+        icon: location_on
+      - label: Employment
+        value: FULL_TIME
+        icon: work
+  - type: list
+    id: requirements
+    variant: bullets
+    title: Requirements
+    items:
+      - Strong Python or TypeScript experience.
+      - Comfort with API design and operations.

@@ -34,7 +34,7 @@ def test_integration_init_and_validate_flow(tmp_path: Path) -> None:
 
 
 @pytest.mark.integration
-def test_integration_render_web_with_css_flow(tmp_path: Path) -> None:
+def test_integration_render_web_theme_flow(tmp_path: Path) -> None:
     subprocess.run([str(CLI_BIN), "init", "--empty"], cwd=tmp_path, check=True)
     jobspec = tmp_path / "jobspecs" / "minimal-valid.jobspec.yaml"
     jobspec.parent.mkdir(exist_ok=True)
@@ -51,8 +51,6 @@ def test_integration_render_web_with_css_flow(tmp_path: Path) -> None:
             "web",
             "--theme",
             "soft-professional",
-            "--css",
-            str(ROOT / "examples" / "theme-overrides.css"),
             "--output",
             str(out_file),
         ],
@@ -63,7 +61,7 @@ def test_integration_render_web_with_css_flow(tmp_path: Path) -> None:
     assert out_file.exists()
     html = out_file.read_text(encoding="utf-8")
     assert "<html" in html
-    assert "font-family" in html
+    assert "tailwind.config" in html
 
 
 @pytest.mark.integration

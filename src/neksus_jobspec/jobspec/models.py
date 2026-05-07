@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from datetime import date
 from urllib.parse import urlparse
 from typing import Annotated, Any, Literal
 
@@ -36,22 +37,52 @@ def _is_safe_url(value: str) -> bool:
 
 class PageConfig(StrictModel):
     layout: Literal["job_detail"] = "job_detail"
-    layout_mode: Literal["stitch_job_detail"] | None = None
+    layout_mode: Literal["structured_job_detail"] | None = None
     language: str | None = None
     theme: str | None = None
     component_order: list[str] = Field(default_factory=list)
 
 
 class JobApply(StrictModel):
-    label: str
-    url: str
+    method: Literal["email", "external_url", "ats_url", "custom", "agent_ready"]
+    label: str | None = None
+    email: str | None = None
+    url: str | None = None
+    job_reference: str | None = None
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        cleaned = value.strip()
+        if not cleaned or "@" not in cleaned:
+            raise ValueError("email must be a valid email address")
+        return cleaned
 
     @field_validator("url")
     @classmethod
-    def validate_url(cls, value: str) -> str:
+    def validate_url(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
         if not _is_safe_url(value):
             raise ValueError("url must use a safe scheme or a safe relative path")
         return value
+
+    @model_validator(mode="after")
+    def validate_method_fields(self) -> JobApply:
+        if self.method == "email":
+            if not self.email:
+                raise ValueError("apply.email is required when apply.method=email")
+            return self
+        if self.method in {"external_url", "ats_url", "custom"} and not self.url:
+            raise ValueError(f"apply.url is required when apply.method={self.method}")
+        if self.method == "agent_ready":
+            if not self.url:
+                raise ValueError("apply.url is required when apply.method=agent_ready")
+            if not self.job_reference:
+                raise ValueError("apply.job_reference is required when apply.method=agent_ready")
+        return self
 
 
 class JobConfig(StrictModel):
@@ -60,7 +91,30 @@ class JobConfig(StrictModel):
     apply: JobApply | None = None
 
 
+class CampaignConfig(StrictModel):
+    starts_at: date | None = None
+    expires_at: date | None = None
+    status: Literal["draft", "active", "expired", "closed"] | None = None
+
+    @model_validator(mode="after")
+    def validate_dates(self) -> CampaignConfig:
+        if self.starts_at and self.expires_at and self.expires_at < self.starts_at:
+            raise ValueError("campaign.expires_at must not be before campaign.starts_at")
+        return self
+
+
 class WebLabels(StrictModel):
+    about: str = "About"
+    responsibilities: str = "Responsibilities"
+    requirements: str = "Requirements"
+    benefits: str = "Benefits"
+    overview: str = "Overview"
+    application_process: str = "Application Process"
+    contact: str = "Contact"
+    quick_facts: str = "Quick Facts"
+    campaign_closed: str = "This position is closed."
+    campaign_expired: str = "This job campaign has expired."
+    map_label_prefix: str = "Main HQ"
     share: str = "Share"
     print: str = "Print"
     phone: str = "Phone"
@@ -90,6 +144,7 @@ class RenderingWebConfig(StrictModel):
     facts_position: Literal["sidebar", "topbar", "grid"] = "sidebar"
     css: RenderingCssConfig = Field(default_factory=RenderingCssConfig)
     labels: WebLabels = Field(default_factory=WebLabels)
+    theme_config: dict[str, Any] = Field(default_factory=dict)
     asset_base_url: str | None = None
     show_top_apply: bool = True
     show_share_links: bool = False
@@ -443,6 +498,7 @@ class MetaChip(StrictModel):
     label: str
     value: str
     icon: str | None = None
+    semantic: Literal["location", "salary", "employment"] | None = None
 
 
 class MetaChipsComponent(ComponentBase):
@@ -479,12 +535,13 @@ Component = Annotated[
 
 
 class JobSpec(StrictModel):
-    """Top-level JobSpec model for v0.2.x component composition."""
+    """Top-level JobSpec model for v0.3.x component composition."""
 
     schema_version: int = 1
     id: str = Field(pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
     page: PageConfig = Field(default_factory=PageConfig)
     job: JobConfig
+    campaign: CampaignConfig | None = None
     components: list[Component] = Field(min_length=1)
     rendering: RenderingConfig = Field(default_factory=RenderingConfig)
 
@@ -516,7 +573,7 @@ class JobSpec(StrictModel):
                     f"page.component_order must include every component ID; missing in order: {extras_csv}"
                 )
 
-        if self.page.layout_mode == "stitch_job_detail":
+        if self.page.layout_mode == "structured_job_detail":
 
             def infer_region(component: Component) -> str:
                 if component.region:
@@ -560,11 +617,11 @@ class JobSpec(StrictModel):
                 if component.type == "meta_panel":
                     if not component.facts:
                         raise ValueError(
-                            "meta_panel must include facts in stitch_job_detail layout mode"
+                            "meta_panel must include facts in structured_job_detail layout mode"
                         )
                     if any(not fact.icon for fact in component.facts):
                         raise ValueError(
-                            "meta_panel facts must include icon in stitch_job_detail layout mode"
+                            "meta_panel facts must include icon in structured_job_detail layout mode"
                         )
 
             missing: list[str] = []
@@ -575,7 +632,8 @@ class JobSpec(StrictModel):
                     missing.append(f"{region}: {', '.join(absent)}")
             if missing:
                 raise ValueError(
-                    "stitch_job_detail missing required region components: " + "; ".join(missing)
+                    "structured_job_detail missing required region components: "
+                    + "; ".join(missing)
                 )
 
             if self.page.component_order:
@@ -590,3 +648,78 @@ class JobSpec(StrictModel):
                     last = rank
 
         return self
+
+    def days_remaining(self, today: date | None = None) -> int | None:
+        if not self.campaign or not self.campaign.expires_at:
+            return None
+        reference = today or date.today()
+        return (self.campaign.expires_at - reference).days
+
+    def campaign_status_payload(self, today: date | None = None) -> dict[str, Any]:
+        campaign = self.campaign
+        return {
+            "id": self.id,
+            "title": self.job.title,
+            "campaign_status": campaign.status if campaign else None,
+            "starts_at": campaign.starts_at.isoformat()
+            if campaign and campaign.starts_at
+            else None,
+            "expires_at": campaign.expires_at.isoformat()
+            if campaign and campaign.expires_at
+            else None,
+            "days_remaining": self.days_remaining(today=today),
+        }
+
+    def resolved_theme(self, default_theme: str = "soft-professional") -> str:
+        if self.rendering.web.template and self.rendering.web.template.strip():
+            return self.rendering.web.template.strip()
+        return default_theme
+
+    def validation_warnings(self) -> list[dict[str, str]]:
+        from collections import Counter
+
+        warnings: list[dict[str, str]] = []
+        if len(self.job.title.strip()) < 5:
+            warnings.append(
+                {"path": "job.title", "code": "short_title", "message": "Title is very short."}
+            )
+        list_components = [
+            component for component in self.components if isinstance(component, ListComponent)
+        ]
+        for component in list_components:
+            counts = Counter(item.strip().lower() for item in component.items)
+            if any(count > 1 for count in counts.values()):
+                warnings.append(
+                    {
+                        "path": f"components.{component.id}",
+                        "code": "duplicate_items",
+                        "message": f"Duplicate items found in list component '{component.id}'.",
+                    }
+                )
+        return warnings
+
+    def export_payload(
+        self, target: Literal["generic", "linkedin-ready"] = "generic"
+    ) -> dict[str, Any]:
+        from neksus_jobspec.jobspec.exports import normalized_export_payload
+
+        payload = normalized_export_payload(self)
+        if target == "generic":
+            return payload
+        apply = payload["apply"] if isinstance(payload["apply"], dict) else {}
+        return {
+            "externalJobPostingId": self.id,
+            "title": self.job.title,
+            "description": payload.get("description"),
+            "location": payload.get("location"),
+            "companyApplyUrl": apply.get("url"),
+            "employmentStatus": payload.get("employment"),
+            "workplaceTypes": [],
+            "listedAt": self.campaign.starts_at.isoformat()
+            if self.campaign and self.campaign.starts_at
+            else None,
+            "validThrough": self.campaign.expires_at.isoformat()
+            if self.campaign and self.campaign.expires_at
+            else None,
+            "companyJobCode": self.id,
+        }

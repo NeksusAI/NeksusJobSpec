@@ -13,7 +13,7 @@ from neksus_jobspec.jobspec.models import JobSpec
 from neksus_jobspec.jobspec.parser import load_jobspec as _load_jobspec
 from neksus_jobspec.jobspec.renderer import render_jobspec as _render_jobspec
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 
 def load_jobspec(path: str | Path) -> JobSpec:
@@ -60,7 +60,6 @@ def render_jobspec(
     spec_or_path: JobSpec | str | Path,
     format: str = "web",
     theme: str | None = None,
-    css: str | None = None,
     asset_base_url: str | None = None,
 ) -> str:
     """Render a JobSpec to a string.
@@ -69,7 +68,6 @@ def render_jobspec(
         spec_or_path: Validated JobSpec or YAML file path.
         format: Output format (``web`` or ``json-ld``).
         theme: Built-in theme name for web output.
-        css: Extra CSS rules appended for web output.
         asset_base_url: Prefix for relative media/asset paths.
 
     Returns:
@@ -86,7 +84,6 @@ def render_jobspec(
         spec,
         format=format,
         theme=theme or "soft-professional",
-        custom_css=css,
         asset_base_url=asset_base_url,
     )
 

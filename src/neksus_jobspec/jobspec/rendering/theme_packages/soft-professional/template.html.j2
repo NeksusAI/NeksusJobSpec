@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+{% set hero = contract.component_groups.get('hero', []) %}
+{% set hero_payload = hero[0].payload if hero else {} %}
+{% set chips = contract.component_groups.get('meta_chips', []) %}
+{% set chips_payload = chips[0].payload if chips else {} %}
+{% set about = contract.component_groups.get('rich_text', []) %}
+{% set about_payload = about[0].payload if about else {} %}
+{% set grid = contract.component_groups.get('feature_grid', []) %}
+{% set grid_payload = grid[0].payload if grid else {} %}
+{% set req = contract.component_groups.get('list', []) %}
+{% set req_payload = req[0].payload if req else {} %}
+{% set meta = contract.component_groups.get('meta_panel', []) %}
+{% set meta_payload = meta[0].payload if meta else {} %}
+{% set benefits_component = contract.component_groups.get('benefits', []) %}
+{% set benefits_payload = benefits_component[0].payload if benefits_component else {} %}
+{% set banner = contract.component_groups.get('hero_banner', []) %}
+{% set banner_payload = banner[0].payload if banner else {} %}
+{% set location_map = contract.component_groups.get('location_map', []) %}
+{% set location_map_payload = location_map[0].payload if location_map else {} %}
+{% set footer = contract.component_groups.get('footer_brand', []) %}
+{% set footer_payload = footer[0].payload if footer else {} %}
+{% set social = contract.component_groups.get('social_links', []) %}
+{% set social_payload = social[0].payload if social else {} %}
+
+{% set ns = namespace(location='', salary='', employment='') %}
+{% for item in chips_payload.get('items', []) %}
+  {% set label = (item.label or '')|lower %}
+  {% if item.semantic == 'location' or 'location' in label %}{% set ns.location = item.value %}{% endif %}
+  {% if item.semantic == 'salary' or 'salary' in label or 'comp' in label %}{% set ns.salary = item.value %}{% endif %}
+  {% if item.semantic == 'employment' or 'type' in label or 'employment' in label %}{% set ns.employment = item.value %}{% endif %}
+{% endfor %}
+
+{% set icon_map = contract.theme_config.get('icon_map', {}) %}
+{% set logo_icon = icon_map.get('logo', 'terminal') %}
+{% set bookmark_icon = icon_map.get('bookmark', 'bookmark') %}
+{% set location_icon = icon_map.get('location', 'location_on') %}
+{% set salary_icon = icon_map.get('salary', 'payments') %}
+{% set employment_icon = icon_map.get('employment', 'work') %}
+
+{% set footer_icons = [] %}
+{% for link in social_payload.get('links', []) %}{% if link.icon %}{% set _ = footer_icons.append(link.icon) %}{% endif %}{% endfor %}
+{% if contract.show_share_links and 'share' not in footer_icons %}{% set _ = footer_icons.append('share') %}{% endif %}
+{% if contract.show_print_link and 'report' not in footer_icons %}{% set _ = footer_icons.append('report') %}{% endif %}
+
+{% set campaign_notice = '' %}
+{% if contract.campaign_status == 'closed' %}{% set campaign_notice = contract.labels.campaign_closed %}{% endif %}
+{% if contract.campaign_status == 'expired' %}{% set campaign_notice = contract.labels.campaign_expired %}{% endif %}
+
+{% set title = hero_payload.get('title') or contract.title %}
+{% set location = ns.location %}
+{% set salary = ns.salary %}
+{% set employment = ns.employment %}
+{% set apply_label = contract.apply_label or 'Apply' %}
+{% set about_title = about_payload.get('title') or contract.labels.about %}
+{% set about_body = about_payload.get('body') or contract.intro or '' %}
+{% set responsibilities_title = grid_payload.get('title') or contract.labels.responsibilities %}
+{% set responsibility_cards = [] %}
+{% for item in grid_payload.get('items', []) %}{% set _ = responsibility_cards.append((item.icon or 'work', item.title, item.body)) %}{% endfor %}
+{% set requirements_title = req_payload.get('title') or contract.labels.requirements %}
+{% set requirements = req_payload.get('items', []) %}
+{% set quick_facts = [] %}
+{% for fact in meta_payload.get('facts', []) %}{% set _ = quick_facts.append((fact.label, fact.value)) %}{% endfor %}
+{% set benefits_title = benefits_payload.get('title') or contract.labels.benefits %}
+{% set benefits = [] %}
+{% for item in benefits_payload.get('items', []) %}{% if item is mapping %}{% set _ = benefits.append(item.text) %}{% else %}{% set _ = benefits.append(item) %}{% endif %}{% endfor %}
+{% set map_image = banner_payload.get('image_url') or location_map_payload.get('map_url') or '' %}
+{% set map_alt = banner_payload.get('alt') or contract.labels.open_map %}
+{% set map_label = (contract.labels.map_label_prefix ~ ': ' ~ location_map_payload.get('address')) if location_map_payload.get('address') else '' %}
+{% set cta_title = contract.theme_config.get('cta_title', 'Have Questions?') %}
+{% set cta_body = meta_payload.get('contact_email') or '' %}
+{% set cta_label = contract.theme_config.get('cta_label', apply_label) %}
+{% set footer_brand = footer_payload.get('body') or contract.title %}
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#e7e8e9",
+                        "secondary-container": "#39b1fd",
+                        "surface-variant": "#e1e3e4",
+                        "surface-dim": "#d9dadb",
+                        "secondary": "#006496",
+                        "surface-container-low": "#f3f4f5",
+                        "tertiary-container": "#4d4b4b",
+                        "surface-tint": "#3351d1",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#484646",
+                        "surface-container-highest": "#e1e3e4",
+                        "outline": "#757686",
+                        "background": "#f8f9fa",
+                        "primary": "#002696",
+                        "on-background": "#191c1d",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#c9c6c5",
+                        "tertiary-fixed": "#e6e1e1",
+                        "primary-container": "#193cbe",
+                        "inverse-on-surface": "#f0f1f2",
+                        "primary-fixed-dim": "#b9c3ff",
+                        "inverse-surface": "#2e3132",
+                        "on-secondary-fixed": "#001e31",
+                        "on-primary-fixed-variant": "#0f36b9",
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#b9c3ff",
+                        "surface-bright": "#f8f9fa",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#acb8ff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#004b72",
+                        "on-secondary-container": "#004164",
+                        "tertiary": "#363534",
+                        "on-surface": "#191c1d",
+                        "on-primary-fixed": "#001257",
+                        "primary-fixed": "#dde1ff",
+                        "on-tertiary-container": "#bfbbbb",
+                        "surface": "#f8f9fa",
+                        "secondary-fixed-dim": "#91cdff",
+                        "surface-container": "#edeeef",
+                        "outline-variant": "#c5c5d6",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#444654",
+                        "secondary-fixed": "#cce5ff",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "xl": "80px",
+                        "md": "24px",
+                        "xs": "4px",
+                        "lg": "48px",
+                        "gutter": "24px",
+                        "content-max": "720px",
+                        "sm": "12px",
+                        "container-max": "1100px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Inter"],
+                        "display": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .technical-border { border: 1px solid #e1e3e4; }
+        .custom-bullet { width: 6px; height: 6px; border-radius: 1px; background-color: #002696; display: inline-block; margin-right: 12px; margin-bottom: 2px; }
+{{ theme_css | safe }}
+</style>
+</head>
+<body class="bg-surface-container-low font-body-md text-on-surface">
+<div class="max-w-[1100px] mx-auto min-h-screen bg-surface-container-low">
+<header class="bg-surface-container-lowest py-lg px-md technical-border border-t-0 border-x-0">
+<div class="max-w-[1100px] mx-auto flex flex-col md:flex-row items-start md:items-center gap-md">
+<div class="w-16 h-16 bg-primary flex items-center justify-center rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-on-primary text-3xl" data-icon="{{ logo_icon }}">{{ logo_icon }}</span>
+</div>
+<div class="flex-grow">
+<h1 class="font-h1 text-h1 text-on-surface mb-xs">{{ title }}</h1>
+{% if campaign_notice %}<div class="bg-error-container text-on-error-container technical-border rounded p-sm mt-sm">{{ campaign_notice }}</div>{% endif %}
+<div class="flex flex-wrap gap-sm items-center">
+<div class="flex items-center bg-surface-container-high px-3 py-1 rounded"><span class="material-symbols-outlined text-sm mr-2" data-icon="{{ location_icon }}">{{ location_icon }}</span><span class="font-label-sm text-label-sm uppercase">{{ location }}</span></div>
+<div class="flex items-center bg-surface-container-high px-3 py-1 rounded"><span class="material-symbols-outlined text-sm mr-2" data-icon="{{ salary_icon }}">{{ salary_icon }}</span><span class="font-label-sm text-label-sm uppercase">{{ salary }}</span></div>
+<div class="flex items-center bg-surface-container-high px-3 py-1 rounded"><span class="material-symbols-outlined text-sm mr-2" data-icon="{{ employment_icon }}">{{ employment_icon }}</span><span class="font-label-sm text-label-sm uppercase">{{ employment }}</span></div>
+</div></div>
+<div class="flex gap-sm">
+{% if contract.show_top_apply %}<button class="bg-primary text-on-primary px-6 py-3 font-semibold rounded hover:bg-primary-container transition-colors{% if campaign_notice %} opacity-70{% endif %}">{{ apply_label }}</button>{% endif %}
+<button class="border border-primary text-primary px-4 py-3 font-semibold rounded hover:bg-primary hover:text-on-primary transition-colors"><span class="material-symbols-outlined" data-icon="{{ bookmark_icon }}">{{ bookmark_icon }}</span></button>
+</div>
+</div>
+</header>
+<main class="max-w-[1100px] mx-auto px-md py-xl grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<div class="lg:col-span-8 flex flex-col gap-xl">
+{% if about_body %}<section><h2 class="font-h2 text-h2 text-on-surface mb-md">{{ about_title }}</h2><p class="font-body-md text-body-md text-on-surface-variant max-w-[720px]">{{ about_body }}</p></section>{% endif %}
+{% if responsibility_cards %}<section><h2 class="font-h2 text-h2 text-on-surface mb-md">{{ responsibilities_title }}</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-md">{% for card in responsibility_cards %}<div class="p-md bg-surface-container-lowest technical-border rounded-lg{% if loop.index0 == 2 %} md:col-span-2{% endif %}"><span class="material-symbols-outlined text-primary mb-sm block" data-icon="{{ card[0] }}">{{ card[0] }}</span><h3 class="font-semibold text-lg mb-xs">{{ card[1] }}</h3><p class="text-sm text-on-surface-variant">{{ card[2] }}</p></div>{% endfor %}</div></section>{% endif %}
+<section><h2 class="font-h2 text-h2 text-on-surface mb-md">{{ requirements_title }}</h2><ul class="space-y-sm">{% for item in requirements %}<li class="flex items-start"><span class="custom-bullet mt-2"></span><span class="font-body-md text-body-md text-on-surface-variant">{{ item }}</span></li>{% endfor %}</ul></section>
+</div>
+<aside class="lg:col-span-4 flex flex-col gap-md">
+{% if quick_facts %}<div class="p-md bg-surface-container-highest technical-border rounded-lg"><h3 class="font-label-sm text-label-sm uppercase text-on-surface-variant mb-md border-b border-surface-dim pb-sm">{{ contract.labels.quick_facts }}</h3><div class="space-y-md">{% for fact in quick_facts %}<div class="flex justify-between items-center"><span class="text-sm font-medium text-on-surface-variant">{{ fact[0] }}</span><span class="text-sm font-bold">{{ fact[1] }}</span></div>{% endfor %}</div></div>{% endif %}
+{% if benefits %}<div class="p-md bg-surface-container-lowest technical-border rounded-lg"><h3 class="font-label-sm text-label-sm uppercase text-on-surface-variant mb-md">{{ benefits_title }}</h3><div class="flex flex-wrap gap-xs">{% for item in benefits %}<span class="bg-surface-container-low text-primary text-[10px] font-bold px-2 py-1 rounded uppercase">{{ item }}</span>{% endfor %}</div></div>{% endif %}
+{% if map_image %}<div class="technical-border rounded-lg overflow-hidden"><div class="h-48 bg-surface-variant relative"><img class="w-full h-full object-cover grayscale opacity-60" data-alt="{{ map_alt }}" data-location="{{ location }}" src="{{ map_image }}" alt="{{ map_alt }}"/><div class="absolute inset-0 flex items-center justify-center"><div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center border-2 border-white shadow-lg"><span class="material-symbols-outlined text-white text-sm" data-icon="location_on">location_on</span></div></div></div><div class="p-3 bg-surface-container-lowest"><p class="text-xs font-bold text-on-surface">{{ map_label }}</p></div></div>{% endif %}
+{% if cta_title or cta_body or cta_label %}<div class="p-md bg-primary rounded-lg text-on-primary"><h4 class="font-bold mb-2">{{ cta_title }}</h4><p class="text-xs mb-4 opacity-90">{{ cta_body }}</p><button class="w-full bg-on-primary text-primary py-2 text-xs font-bold rounded hover:bg-secondary-container transition-colors">{{ cta_label }}</button></div>{% endif %}
+</aside>
+</main>
+<footer class="py-md px-md border-t border-surface-variant mt-lg flex justify-between items-center opacity-60"><span class="text-xs font-label-sm uppercase tracking-widest">{{ footer_brand }}</span><div class="flex gap-md">{% for icon in footer_icons %}<span class="material-symbols-outlined text-sm" data-icon="{{ icon }}">{{ icon }}</span>{% endfor %}</div></footer>
+</div>
+</body></html>

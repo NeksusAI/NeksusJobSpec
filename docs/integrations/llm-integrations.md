@@ -12,6 +12,14 @@ You can use Neksus JobSpec as a local structured source of truth:
 - validate specs before sharing with LLM tools
 - render to Markdown/JSON for prompt context or review flows
 
+### Local MCP server
+
+Neksus JobSpec includes a local stdio MCP server for MCP-capable clients.
+
+- Install: `pip install "neksus-jobspec[mcp]"`
+- Run: `neksus-jobspec-mcp`
+- Setup matrix: [MCP Install Matrix](mcp-install-matrix.md)
+
 ### CI/CD
 
 You can run CLI checks in CI to enforce quality gates:
@@ -31,3 +39,4 @@ Planned direction is to map validated JobSpec fields into ATS/job-board payloads
 ### Hosted API/server workflows (planned)
 
 Planned direction is to expose the same core validation/rendering logic behind a hosted API for team-wide automation.
+This is separate from the current local MCP server.

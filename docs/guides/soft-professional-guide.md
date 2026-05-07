@@ -37,6 +37,6 @@ neksus-jobspec spec render examples/job-detail.jobspec.yaml --format web --theme
 - `benefits`
 - `location_map`
 
-Reference screenshot:
+## Theme screenshot
 
-![Soft Professional Job Detail](../assets/job-detail-soft-professional.png)
+![Soft Professional Theme](../assets/soft-professional-current-render.png)

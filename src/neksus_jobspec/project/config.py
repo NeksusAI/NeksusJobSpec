@@ -41,7 +41,7 @@ class RenderProfile(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     format: Literal["web", "json-ld"] | None = None
-    theme: Literal["soft-professional"] | None = None
+    theme: Literal["soft-professional", "classic", "classic-dark", "custom"] | None = None
     output_directory: str | None = None
     sections: RenderSections | None = None
 
@@ -52,7 +52,9 @@ class ProjectConfig(BaseModel):
     output_directory: str = "dist"
     default_format: Literal["web", "json-ld"] = "web"
     strict_validation: bool = False
-    default_theme: Literal["soft-professional"] = "soft-professional"
+    default_theme: Literal["soft-professional", "classic", "classic-dark", "custom"] = (
+        "soft-professional"
+    )
     render_profiles: dict[str, RenderProfile] = Field(default_factory=dict)
 
 

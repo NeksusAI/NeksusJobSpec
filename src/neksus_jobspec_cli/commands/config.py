@@ -7,6 +7,7 @@ from typing import Annotated
 import click
 import typer
 
+from neksus_jobspec.app import ProjectUseCase
 from neksus_jobspec_cli.commands.common import (
     handle_expected_error,
     print_json,
@@ -14,12 +15,11 @@ from neksus_jobspec_cli.commands.common import (
     print_success,
     stdout,
 )
-from neksus_jobspec.project.config import load_project_config, set_config_key
-from neksus_jobspec.project.discovery import find_project_root
 from neksus_jobspec.errors import NeksusError
 
 app = typer.Typer(help="Project config commands")
 EXPECTED_COMMAND_ERRORS = (typer.BadParameter, click.UsageError, NeksusError, OSError, ValueError)
+project_use_case = ProjectUseCase()
 
 
 @app.command("get")
@@ -29,20 +29,13 @@ def config_get(
 ) -> None:
     """Read config values."""
     try:
-        # Config commands require project discovery first.
-        root = find_project_root()
-        config = load_project_config(root)
+        payload = project_use_case.config_get(key).model_dump(exclude_none=True)
     except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 
-    data = config.model_dump()
-    # Return either one key or full config payload.
     if key is not None:
-        if key not in data:
-            handle_expected_error(ValueError(f"Unknown config key: {key}"), as_json=json)
-            return
-        value = data[key]
+        value = payload["value"]
         if json:
             print_json({"ok": True, "key": key, "value": value})
             return
@@ -50,8 +43,9 @@ def config_get(
         return
 
     if json:
-        print_json({"ok": True, "config": data})
+        print_json(payload)
         return
+    data = payload["config"]
     print_kv_table("Project Config", [(key, str(value)) for key, value in data.items()])
 
 
@@ -63,14 +57,12 @@ def config_set(
 ) -> None:
     """Set mutable config keys."""
     try:
-        # Validation and mutability checks happen in core layer.
-        root = find_project_root()
-        updated = set_config_key(root, key, value)
+        payload = project_use_case.config_set(key, value).model_dump()
     except EXPECTED_COMMAND_ERRORS as exc:
         handle_expected_error(exc, as_json=json)
         return
 
     if json:
-        print_json({"ok": True, "config": updated.model_dump()})
+        print_json(payload)
         return
     print_success(f"Updated {key}.")
