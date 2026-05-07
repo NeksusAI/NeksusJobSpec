@@ -15,6 +15,17 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 
 ### Changed
 
+- Introduced a shared `ThemeRenderContext` contract and unified built-in/custom web rendering pipeline through package validation + Jinja rendering.
+- Added centralized theme package compatibility validation (`validate_theme_package`) for manifest structure, mandatory component support, region support, and context compatibility.
+- Rendering config now uses `rendering.web.theme_config` as the canonical per-theme configuration surface for web presentation settings.
+- Removed compatibility fallback branch selection from HTML rendering; web rendering now uses only the unified theme-package contract path.
+- Built-in and custom theme templates now consume the shared `contract` context directly, and rendering parity matrix tests were added for built-in/custom paths.
+- Removed theme-specific adapter dataclasses/mappers from `html.py`; templates now read canonical component payloads from `contract.component_groups`.
+- Rendering contracts were reorganized by output target through typed Pydantic target models (`rendering/targets.py`) for JSON-LD, jobs feeds, and sitemap output generation.
+- Feed and sitemap generation now run through typed render-target models before JSON/XML serialization, replacing ad-hoc dict/XML assembly in the old `jobspec/feeds.py` module.
+- JSON-LD rendering now builds a typed `JsonLdJobPosting` model before serialization, replacing ad-hoc payload assembly in the old `rendering/json_ld.py` module.
+- Built-in theme templates now source section labels, campaign notices, map label prefix, and footer/legal links from YAML/config contracts instead of hardcoded text.
+- `meta_chips` items now support an optional `semantic` key (`location`, `salary`, `employment`) to avoid fragile label-text inference in theme rendering.
 - Web renderer now dispatches through theme package resolution and Jinja templates.
 - Theme/config validation now accepts `classic`, `classic-dark`, and `custom` for project defaults and render profiles.
 - Custom theme validation now enforces known component/region contracts and required package files.

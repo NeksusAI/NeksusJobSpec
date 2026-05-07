@@ -4,17 +4,25 @@
   "template": "template.html.j2",
   "styles": [],
   "supported_components": [
+    "header_brand",
+    "nav_links",
+    "header_actions",
+    "hero_banner",
     "hero",
     "meta_chips",
     "rich_text",
     "feature_grid",
     "list",
+    "quote",
+    "company_profile",
+    "legal",
+    "application_process",
     "meta_panel",
     "benefits",
-    "hero_banner",
     "location_map",
     "footer_brand",
-    "social_links"
+    "social_links",
+    "contact"
   ],
-  "supported_regions": ["hero", "main", "sidebar", "footer"]
+  "supported_regions": ["header", "hero", "main", "sidebar", "footer"]
 }

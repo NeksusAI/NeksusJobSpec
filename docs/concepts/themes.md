@@ -62,6 +62,8 @@ Theme package directory requirements:
 - `template.html.j2`
 - CSS file(s) declared in `manifest.json`
 - Declared components/regions must be existing built-in component/region types.
+- Theme manifests must declare support for the global mandatory component set.
+- Theme-specific knobs should be defined in `rendering.web.theme_config`.
 
 ## Theme selection in JobSpec YAML
 
@@ -73,11 +75,11 @@ rendering:
 
 `rendering.web.template` can be one of built-in theme names (`classic`, `classic-dark`, `soft-professional`) or a filesystem path to a custom theme package when `--theme custom` is used.
 
-Built-in theme CSS is file-based under:
+Built-in theme assets are package-scoped under:
 
-- `src/neksus_jobspec/jobspec/rendering/theme_css/soft-professional.css`
-- `src/neksus_jobspec/jobspec/rendering/theme_css/classic.css`
-- `src/neksus_jobspec/jobspec/rendering/theme_css/classic-dark.css`
+- `src/neksus_jobspec/jobspec/rendering/theme_packages/<theme-name>/manifest.json`
+- `src/neksus_jobspec/jobspec/rendering/theme_packages/<theme-name>/template.html.j2`
+- CSS files referenced by each theme package manifest.
 
 ## Real render examples
 

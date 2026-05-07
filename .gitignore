@@ -222,3 +222,6 @@ __marimo__/
 
 # playwright
 .playwright-mcp/
+
+#neksus config
+.nexus/

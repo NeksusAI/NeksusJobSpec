@@ -1,3 +1,52 @@
+{% set hero = contract.component_groups.get('hero', []) %}
+{% set hero_payload = hero[0].payload if hero else {} %}
+{% set chips = contract.component_groups.get('meta_chips', []) %}
+{% set chips_payload = chips[0].payload if chips else {} %}
+{% set about = contract.component_groups.get('rich_text', []) %}
+{% set about_payload = about[0].payload if about else {} %}
+{% set grid = contract.component_groups.get('feature_grid', []) %}
+{% set grid_payload = grid[0].payload if grid else {} %}
+{% set req = contract.component_groups.get('list', []) %}
+{% set req_payload = req[0].payload if req else {} %}
+{% set ben = contract.component_groups.get('benefits', []) %}
+{% set ben_payload = ben[0].payload if ben else {} %}
+{% set process = contract.component_groups.get('application_process', []) %}
+{% set process_payload = process[0].payload if process else {} %}
+{% set contact = contract.component_groups.get('contact', []) %}
+{% set contact_payload = contact[0].payload if contact else {} %}
+{% set meta = contract.component_groups.get('meta_panel', []) %}
+{% set meta_payload = meta[0].payload if meta else {} %}
+{% set header_brand = contract.component_groups.get('header_brand', []) %}
+{% set header_brand_payload = header_brand[0].payload if header_brand else {} %}
+{% set header_actions = contract.component_groups.get('header_actions', []) %}
+{% set header_actions_payload = header_actions[0].payload if header_actions else {} %}
+{% set footer_brand = contract.component_groups.get('footer_brand', []) %}
+{% set footer_brand_payload = footer_brand[0].payload if footer_brand else {} %}
+{% set title = hero_payload.get('title') or contract.title %}
+{% set brand_name = header_brand_payload.get('brand_name') or 'NeksusJobSpec' %}
+{% set top_action_label = (header_actions_payload.get('actions') or [{'label': (contract.apply_label or 'Apply Now')}])[0].label %}
+{% set subtitle = hero_payload.get('subtitle') or '' %}
+{% if not subtitle %}{% set subtitle = (chips_payload.get('items', []) | map(attribute='value') | list)[:3] | join(' · ') %}{% endif %}
+{% set apply_label = contract.apply_label or 'Apply Now' %}
+{% set marker = contract.theme_config.get('requirements_marker', 'dash') %}
+{% set list_marker = 'check' if marker == 'check' else '—' %}
+{% set overview_body = about_payload.get('body') or contract.intro or '' %}
+{% set responsibilities = [] %}{% for i in grid_payload.get('items', []) %}{% set _ = responsibilities.append((i.icon or 'hub', i.title, i.body)) %}{% endfor %}
+{% set requirements = req_payload.get('items', []) %}
+{% set benefits = [] %}{% for i in ben_payload.get('items', []) %}{% if i is mapping %}{% set _ = benefits.append(i.text) %}{% else %}{% set _ = benefits.append(i) %}{% endif %}{% endfor %}
+{% set process_body = process_payload.get('body') or '' %}
+{% set process_steps = process_payload.get('steps', []) %}
+{% set contact_lines = [] %}
+{% if contact_payload %}
+{% for k in ['name','role','phone','mobile','email'] %}{% if contact_payload.get(k) %}{% set _ = contact_lines.append(contact_payload.get(k)) %}{% endif %}{% endfor %}
+{% else %}
+{% for k in ['contact_name','contact_role','contact_phone','contact_mobile','contact_email'] %}{% if meta_payload.get(k) %}{% set _ = contact_lines.append(meta_payload.get(k)) %}{% endif %}{% endfor %}
+{% endif %}
+{% set footer_text = footer_brand_payload.get('body') or (brand_name ~ ' • ' ~ title) %}
+{% set footer_links = footer_brand_payload.get('links', []) %}
+{% if not footer_links %}{% set footer_links = contract.theme_config.get('footer_links', []) %}{% endif %}
+{% if not footer_links %}{% set footer_links = [{'label': 'Privacy Policy', 'url': '#'}, {'label': 'Terms of Service', 'url': '#'}, {'label': 'Cookie Policy', 'url': '#'}] %}{% endif %}
+
 <!DOCTYPE html>
 <html class="dark" lang="en"><head>
 <meta charset="utf-8"/>
@@ -81,33 +130,33 @@
 </section>
 {% if overview_body %}<div class="w-full h-hairline bg-outline-variant mb-element-gap"></div>
 <section class="mb-section-gap">
-<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-element-gap uppercase tracking-widest">Overview</h2>
+<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-element-gap uppercase tracking-widest">{{ contract.labels.overview }}</h2>
 <p class="font-body-lg text-body-lg leading-relaxed text-on-surface">{{ overview_body }}</p>
 </section>{% endif %}
 {% if responsibilities %}<div class="w-full h-hairline bg-outline-variant mb-element-gap"></div>
 <section class="mb-section-gap">
-<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-element-gap uppercase tracking-widest">Responsibilities</h2>
+<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-element-gap uppercase tracking-widest">{{ contract.labels.responsibilities }}</h2>
 <ul class="space-y-4 ml-4">
-{% for icon,title,body in responsibilities %}<li class="flex items-start gap-3"><span class="text-outline mt-1">—</span><span class="font-body-md text-body-md text-on-surface">{{ title }}{% if body %}: {{ body }}{% endif %}</span></li>{% endfor %}
+{% for icon,title,body in responsibilities %}<li class="flex items-start gap-3"><span class="text-outline mt-1">{{ list_marker }}</span><span class="font-body-md text-body-md text-on-surface">{{ title }}{% if body %}: {{ body }}{% endif %}</span></li>{% endfor %}
 </ul>
 </section>{% endif %}
 {% if requirements %}<div class="w-full h-hairline bg-outline-variant mb-element-gap"></div>
 <section class="mb-section-gap">
-<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-element-gap uppercase tracking-widest">Requirements</h2>
+<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-element-gap uppercase tracking-widest">{{ contract.labels.requirements }}</h2>
 <ul class="space-y-4 ml-4">
-{% for item in requirements %}<li class="flex items-start gap-3"><span class="text-outline mt-1">—</span><span class="font-body-md text-body-md text-on-surface">{{ item }}</span></li>{% endfor %}
+{% for item in requirements %}<li class="flex items-start gap-3"><span class="text-outline mt-1">{{ list_marker }}</span><span class="font-body-md text-body-md text-on-surface">{{ item }}</span></li>{% endfor %}
 </ul>
 </section>{% endif %}
 {% if benefits %}<div class="w-full h-hairline bg-outline-variant mb-element-gap"></div>
 <section class="mb-section-gap">
-<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-element-gap uppercase tracking-widest">Benefits</h2>
+<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-element-gap uppercase tracking-widest">{{ contract.labels.benefits }}</h2>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 ml-4">
-{% for item in benefits %}<div class="flex items-start gap-3"><span class="text-outline mt-1">—</span><span class="font-body-md text-body-md text-on-surface">{{ item }}</span></div>{% endfor %}
+{% for item in benefits %}<div class="flex items-start gap-3"><span class="text-outline mt-1">{{ list_marker }}</span><span class="font-body-md text-body-md text-on-surface">{{ item }}</span></div>{% endfor %}
 </div>
 </section>{% endif %}
 {% if process_body or process_steps %}<div class="w-full h-hairline bg-outline-variant mb-element-gap"></div>
 <section class="mb-section-gap">
-<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-element-gap uppercase tracking-widest">Application Process</h2>
+<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-element-gap uppercase tracking-widest">{{ contract.labels.application_process }}</h2>
 {% if process_body %}<p class="font-body-md text-body-md mb-6 text-on-surface-variant">{{ process_body }}</p>{% endif %}
 {% if process_steps %}<div class="space-y-6 ml-4">
 {% for step in process_steps %}<div class="flex gap-4"><span class="font-label-mono text-label-mono text-outline">{{ '%02d'|format(loop.index) }}</span><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface">Step {{ loop.index }}</span><span class="font-body-md text-body-md text-on-surface-variant">{{ step }}</span></div></div>{% endfor %}
@@ -115,7 +164,7 @@
 </section>{% endif %}
 {% if contact_lines %}<div class="w-full h-hairline bg-outline-variant mb-element-gap"></div>
 <section>
-<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-element-gap uppercase tracking-widest">Contact</h2>
+<h2 class="font-label-caps text-label-caps text-on-surface-variant mb-element-gap uppercase tracking-widest">{{ contract.labels.contact }}</h2>
 <div class="ml-4">
 {% for line in contact_lines %}{% if line.startswith('mailto:') %}<a class="text-primary font-bold hover:underline" href="{{ line }}">{{ line[7:] }}</a>{% else %}<p class="font-body-md text-body-md mb-2 text-on-surface">{{ line }}</p>{% endif %}{% endfor %}
 </div>
@@ -124,11 +173,7 @@
 <footer class="border-t border-outline-variant bg-surface-container-lowest py-section-gap">
 <div class="max-w-container-max-width mx-auto px-inline-padding flex flex-col md:flex-row justify-between items-center gap-element-gap">
 <span class="font-headline-sm text-headline-sm text-primary">{{ brand_name }}</span>
-<div class="flex gap-8">
-<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
-<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
-<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Cookie Policy</a>
-</div>
+<div class="flex gap-8">{% for link in footer_links %}<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="{{ link.url }}">{{ link.label }}</a>{% endfor %}</div>
 <span class="font-label-caps text-label-caps text-on-surface-variant">{{ footer_text }}</span>
 </div>
 </footer>

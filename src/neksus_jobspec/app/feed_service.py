@@ -6,13 +6,13 @@ from pathlib import Path
 from typing import Any
 
 from neksus_jobspec.errors import InvalidInputError, NeksusError
-from neksus_jobspec.jobspec.feeds import (
+from neksus_jobspec.jobspec.parser import load_jobspec
+from neksus_jobspec.jobspec.rendering.targets import (
     expand_input_paths,
     render_jobs_json_feed,
     render_jobs_xml_feed,
     render_sitemap,
 )
-from neksus_jobspec.jobspec.parser import load_jobspec
 
 
 class FeedUseCase:

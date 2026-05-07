@@ -12,9 +12,8 @@ This folder contains the canonical schema model and all transformation logic fro
 - `parser.py`: YAML loading and parse/validation mapping.
 - `validator.py`: normalized validation/warning result shaping.
 - `renderer.py`: format-level render wrapper (`web`, `json-ld`).
-- `rendering/`: theme engine + HTML/JSON-LD backend implementations.
+- `rendering/`: target-oriented rendering backends and theme engine implementations.
 - `exports.py`: deterministic machine-readable single-job exports.
-- `feeds.py`: deterministic multi-job feed exports.
 - `inspect.py`: metadata extraction for inspect flows.
 - `schema.py`: JSON Schema generation.
 - `templates.py`: template scaffold generation.

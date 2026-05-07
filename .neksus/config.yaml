@@ -1,7 +1,0 @@
-version: 1
-spec_directory: jobspecs
-output_directory: dist
-default_format: web
-strict_validation: true
-default_theme: soft-professional
-render_profiles: {}

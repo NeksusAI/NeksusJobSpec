@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from neksus_jobspec.errors import UnsupportedFormatError
 from neksus_jobspec.jobspec.models import JobSpec
-from neksus_jobspec.jobspec.rendering.json_ld import render_json_ld
 from neksus_jobspec.jobspec.rendering.options import RenderOptions, RenderSections
+from neksus_jobspec.jobspec.rendering.targets import render_json_ld
 from neksus_jobspec.jobspec.rendering.themes import (
     get_theme_css,
     get_theme_metadata,

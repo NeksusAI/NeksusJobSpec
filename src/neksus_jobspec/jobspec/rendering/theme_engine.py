@@ -11,6 +11,10 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from neksus_jobspec.errors import ConfigError, FileSystemError
+from neksus_jobspec.jobspec.rendering.theme_contract import (
+    GLOBAL_MANDATORY_COMPONENT_TYPES,
+    ThemeRenderContext,
+)
 
 _BUILTIN_THEME_IDS = {"soft-professional", "classic", "classic-dark"}
 _ALLOWED_COMPONENTS = {
@@ -51,6 +55,7 @@ class ThemeManifest(BaseModel):
     styles: list[str] = Field(default_factory=list)
     supported_components: list[str] = Field(default_factory=list)
     supported_regions: list[str] = Field(default_factory=list)
+    required_components: list[str] = Field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -161,3 +166,33 @@ def render_theme(
 
     template = env.get_template(package.manifest.template)
     return template.render(**context, theme_css="\n".join(chunk for chunk in css_chunks if chunk))
+
+
+def validate_theme_package(package: ThemePackage, context: ThemeRenderContext) -> None:
+    """Validate package-to-context compatibility using the shared render contract."""
+    manifest = package.manifest
+
+    supported = set(manifest.supported_components)
+    required = set(manifest.required_components or GLOBAL_MANDATORY_COMPONENT_TYPES)
+    required_missing = sorted(required - supported)
+    if required_missing:
+        raise ConfigError(
+            "Theme manifest must support mandatory components: " + ", ".join(required_missing)
+        )
+
+    context_types = {component.type for component in context.components}
+    unsupported = sorted(context_types - supported)
+    if unsupported:
+        raise ConfigError(
+            "Theme manifest does not support component types used by this JobSpec: "
+            + ", ".join(unsupported)
+        )
+
+    supported_regions = set(manifest.supported_regions)
+    context_regions = {component.region for component in context.components}
+    unsupported_regions = sorted(context_regions - supported_regions)
+    if unsupported_regions:
+        raise ConfigError(
+            "Theme manifest does not support regions used by this JobSpec: "
+            + ", ".join(unsupported_regions)
+        )

@@ -118,6 +118,10 @@ Supported component types:
 - `show_share_links`: boolean
 - `show_print_link`: boolean
 - `asset_base_url`: optional URL/path prefix for relative component asset URLs
+- `theme_config`: dictionary of theme-specific presentation options consumed by theme templates/CSS (canonical style/layout config surface)
 - `labels`: optional localized UI labels:
+  - `about`, `responsibilities`, `requirements`, `benefits`, `overview`
+  - `application_process`, `contact`, `quick_facts`
+  - `campaign_closed`, `campaign_expired`, `map_label_prefix`
   - `share`, `print`, `phone`, `mobile`, `email`, `open_map`, `deadline`
 - `template`: built-in theme name or custom template identifier/path

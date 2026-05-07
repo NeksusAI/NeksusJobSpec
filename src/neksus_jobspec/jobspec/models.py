@@ -104,6 +104,17 @@ class CampaignConfig(StrictModel):
 
 
 class WebLabels(StrictModel):
+    about: str = "About"
+    responsibilities: str = "Responsibilities"
+    requirements: str = "Requirements"
+    benefits: str = "Benefits"
+    overview: str = "Overview"
+    application_process: str = "Application Process"
+    contact: str = "Contact"
+    quick_facts: str = "Quick Facts"
+    campaign_closed: str = "This position is closed."
+    campaign_expired: str = "This job campaign has expired."
+    map_label_prefix: str = "Main HQ"
     share: str = "Share"
     print: str = "Print"
     phone: str = "Phone"
@@ -111,52 +122,6 @@ class WebLabels(StrictModel):
     email: str = "Email"
     open_map: str = "Open map"
     deadline: str = "Deadline"
-
-
-class ClassicThemePalette(StrictModel):
-    background: str | None = None
-    text: str | None = None
-    muted_text: str | None = None
-    border: str | None = None
-    card_background: str | None = None
-    footer_background: str | None = None
-    button_background: str | None = None
-    button_text: str | None = None
-
-    @field_validator("*")
-    @classmethod
-    def validate_color(cls, value: str | None) -> str | None:
-        if value is None:
-            return value
-        cleaned = value.strip()
-        if not cleaned:
-            raise ValueError("color value must not be empty")
-        return cleaned
-
-
-class ClassicThemeConfig(StrictModel):
-    content_max_width_px: int = 720
-    section_gap_px: int = 64
-    show_section_dividers: bool = True
-    responsibilities_style: Literal["cards", "list"] = "cards"
-    requirements_marker: Literal["check", "dash"] = "check"
-    process_style: Literal["ordered", "bullets"] = "ordered"
-    footer_style: Literal["minimal", "detailed"] = "minimal"
-    palette: ClassicThemePalette = Field(default_factory=ClassicThemePalette)
-
-    @field_validator("content_max_width_px")
-    @classmethod
-    def validate_content_max_width_px(cls, value: int) -> int:
-        if value < 480 or value > 1400:
-            raise ValueError("content_max_width_px must be between 480 and 1400")
-        return value
-
-    @field_validator("section_gap_px")
-    @classmethod
-    def validate_section_gap_px(cls, value: int) -> int:
-        if value < 24 or value > 200:
-            raise ValueError("section_gap_px must be between 24 and 200")
-        return value
 
 
 class RenderingCssTokens(StrictModel):
@@ -179,12 +144,12 @@ class RenderingWebConfig(StrictModel):
     facts_position: Literal["sidebar", "topbar", "grid"] = "sidebar"
     css: RenderingCssConfig = Field(default_factory=RenderingCssConfig)
     labels: WebLabels = Field(default_factory=WebLabels)
+    theme_config: dict[str, Any] = Field(default_factory=dict)
     asset_base_url: str | None = None
     show_top_apply: bool = True
     show_share_links: bool = False
     show_print_link: bool = False
     repeat_cta: bool = False
-    classic: ClassicThemeConfig = Field(default_factory=ClassicThemeConfig)
 
     @field_validator("template")
     @classmethod
@@ -533,6 +498,7 @@ class MetaChip(StrictModel):
     label: str
     value: str
     icon: str | None = None
+    semantic: Literal["location", "salary", "employment"] | None = None
 
 
 class MetaChipsComponent(ComponentBase):
