@@ -61,7 +61,7 @@ def test_integration_render_web_theme_flow(tmp_path: Path) -> None:
     assert out_file.exists()
     html = out_file.read_text(encoding="utf-8")
     assert "<html" in html
-    assert "cdn.tailwindcss.com" in html
+    assert "tailwind.config" in html
 
 
 @pytest.mark.integration
