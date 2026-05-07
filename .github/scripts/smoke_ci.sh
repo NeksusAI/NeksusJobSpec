@@ -32,7 +32,7 @@ cd "$tmp_dir"
 "$ROOT_DIR/.venv/bin/neksus-jobspec" spec new backend-engineer >/dev/null
 "$ROOT_DIR/.venv/bin/neksus-jobspec" spec validate jobspecs/backend-engineer.jobspec.yaml >/dev/null
 "$ROOT_DIR/.venv/bin/neksus-jobspec" spec render jobspecs/backend-engineer.jobspec.yaml --format web --output dist/backend-engineer.html >/dev/null
-"$ROOT_DIR/.venv/bin/neksus-jobspec" spec render jobspecs/backend-engineer.jobspec.yaml --format web --theme soft-professional --css "$ROOT_DIR/examples/theme-overrides.css" --output dist/backend-engineer-custom.html >/dev/null
+"$ROOT_DIR/.venv/bin/neksus-jobspec" spec render jobspecs/backend-engineer.jobspec.yaml --format web --theme "$ROOT_DIR/fixtures/themes/custom-basic" --output dist/backend-engineer-custom.html >/dev/null
 "$ROOT_DIR/.venv/bin/neksus-jobspec" spec render jobspecs/backend-engineer.jobspec.yaml --format json-ld --output dist/backend-engineer.json >/dev/null
 "$ROOT_DIR/.venv/bin/neksus-jobspec" check >/dev/null
 
