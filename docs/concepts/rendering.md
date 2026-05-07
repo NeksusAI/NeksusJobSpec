@@ -12,7 +12,7 @@ Rendering expects a v0.3.x component JobSpec (`page` + `job` + `components`).
 - Supports filesystem custom theme packages (`manifest.json` + Jinja template + CSS assets).
 - Derives visible job content from YAML components and rendering config.
 - Supports apply CTA, share links, and print-link icon toggle from `rendering.web`.
-- Supports CSS overrides from CLI (`--css`) for built-in themes.
+- Runtime CSS overrides are intentionally disabled; theme packages are the only styling extension mechanism.
 - Custom theme packages own their full visual contract through package template/CSS assets.
 - Supports `rendering.web.asset_base_url` (or CLI `--asset-base-url`) to prefix relative component media/asset URLs.
 - Supports built-in theme names via `--theme`.

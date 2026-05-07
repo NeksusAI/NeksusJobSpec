@@ -22,7 +22,7 @@ from neksus_jobspec_cli.commands.common import (
     print_success,
     print_warning,
 )
-from neksus_jobspec.errors import FileSystemError, NeksusError
+from neksus_jobspec.errors import NeksusError
 from neksus_jobspec.jobspec.validator import pydantic_errors_to_issues
 from neksus_jobspec.output import to_json
 
@@ -106,17 +106,11 @@ def spec_render(
     path: Annotated[Path, typer.Argument(help="Path to a JobSpec YAML file.")],
     format: Annotated[str, typer.Option("--format", help="Render format.")] = "web",
     theme: Annotated[str | None, typer.Option("--theme", help="Built-in render theme.")] = None,
-    css: Annotated[
-        Path | None, typer.Option("--css", help="Append custom CSS file (web only).")
-    ] = None,
-    no_css: Annotated[
-        bool, typer.Option("--no-css", help="Disable embedded CSS (web only).")
-    ] = False,
     asset_base_url: Annotated[
         str | None,
         typer.Option(
             "--asset-base-url",
-            help="Prefix relative component asset URLs in web output (e.g. ../examples/assets).",
+            help="Prefix relative component asset URLs in web output (e.g. ../assets).",
         ),
     ] = None,
     output: Annotated[
@@ -130,22 +124,14 @@ def spec_render(
 ) -> None:
     """Render a JobSpec."""
     try:
-        if (css is not None or no_css or asset_base_url is not None) and format != "web":
-            raise typer.BadParameter(
-                "--css, --no-css, and --asset-base-url are only supported for --format web"
-            )
+        if asset_base_url is not None and format != "web":
+            raise typer.BadParameter("--asset-base-url is only supported for --format web")
         if format not in {"web", "json-ld"}:
             raise typer.BadParameter(
                 "Unsupported render format. Use: web or json-ld",
                 param_hint="--format",
             )
         selected_theme = spec_use_case.resolve_default_theme(theme)
-        custom_css: str | None = None
-        if css is not None:
-            try:
-                custom_css = css.read_text(encoding="utf-8")
-            except OSError as exc:
-                raise FileSystemError(f"Failed to read CSS file: {css}") from exc
 
         # Delegate format-specific rendering to core service.
         service_result = spec_use_case.render_file(
@@ -153,8 +139,6 @@ def spec_render(
             format=format,
             theme=selected_theme,
             no_validate=no_validate,
-            embed_css=not no_css,
-            custom_css=custom_css,
             asset_base_url=asset_base_url,
             output=output,
         )
@@ -167,8 +151,6 @@ def spec_render(
             raise typer.Exit(1)
 
         if output:
-            if format == "web" and service_result.inline_css is not None:
-                output.with_suffix(".css").write_text(service_result.inline_css, encoding="utf-8")
             if json:
                 print_json(
                     {

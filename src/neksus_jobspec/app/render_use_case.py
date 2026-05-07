@@ -30,8 +30,6 @@ class RenderUseCase:
         root: Path | None = None,
         format: str | None = None,
         theme: str | None = None,
-        css: Path | None = None,
-        no_css: bool = False,
         asset_base_url: str | None = None,
         profile: str | None = None,
         clean: bool = False,
@@ -64,19 +62,10 @@ class RenderUseCase:
             else None
         )
 
-        if (css is not None or no_css or asset_base_url is not None) and render_format != "web":
-            raise InvalidInputError(
-                "--css, --no-css, and --asset-base-url are only supported for --format web"
-            )
+        if asset_base_url is not None and render_format != "web":
+            raise InvalidInputError("--asset-base-url is only supported for --format web")
         if render_format not in EXTENSIONS_BY_FORMAT:
             raise InvalidInputError(f"Unsupported render format: {render_format}")
-
-        custom_css: str | None = None
-        if css is not None:
-            try:
-                custom_css = self._fs.read_text(css)
-            except OSError as exc:
-                raise FileSystemError(f"Failed to read CSS file: {css}") from exc
 
         spec_dir = context.root / context.config.spec_directory
         output_dir = context.root / output_directory
@@ -112,14 +101,10 @@ class RenderUseCase:
                 spec,
                 format=render_format,
                 theme=selected_theme,
-                embed_css=not no_css,
-                custom_css=custom_css,
                 asset_base_url=asset_base_url,
                 sections=sections,
             )
             self._fs.write_text(target, rendered_content)
-            if render_format == "web":
-                self._fs.write_text(target.with_suffix(".css"), spec.rendering.web.css.inline)
             rendered.append(
                 {
                     "source": str(path.relative_to(context.root)),

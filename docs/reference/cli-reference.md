@@ -104,15 +104,13 @@ Purpose: Render one JobSpec into web/json-ld.
 Syntax:
 
 ```bash
-neksus-jobspec spec render PATH [--format FORMAT] [--theme THEME] [--css PATH] [--no-css] [--asset-base-url URL_OR_PATH] [--output PATH] [--no-validate] [--json]
+neksus-jobspec spec render PATH [--format FORMAT] [--theme THEME] [--asset-base-url URL_OR_PATH] [--output PATH] [--no-validate] [--json]
 ```
 
 Options:
 
 - `--format`: `web`, `json-ld`.
 - `--theme`: Built-in render theme.
-- `--css`: Append custom CSS (`web` only).
-- `--no-css`: Disable embedded CSS (`web` only).
 - `--asset-base-url`: Prefix relative component asset URLs in rendered web output (`web` only).
 - `--output`: Write rendered content to file.
 - `--no-validate`: Skip validation before rendering.
@@ -122,7 +120,7 @@ Examples:
 
 ```bash
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web
-neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web --theme soft-professional --css examples/theme-overrides.css
+neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format web --theme soft-professional
 neksus-jobspec spec render jobspecs/backend-engineer.jobspec.yaml --format json-ld --output dist/backend-engineer.json --json
 ```
 
@@ -248,7 +246,7 @@ Purpose: Batch render all `*.jobspec.yaml` in configured project `spec_directory
 Syntax:
 
 ```bash
-neksus-jobspec render [--all] [--format FORMAT] [--theme THEME] [--css PATH] [--no-css] [--asset-base-url URL_OR_PATH] [--profile NAME] [--clean] [--json]
+neksus-jobspec render [--all] [--format FORMAT] [--theme THEME] [--asset-base-url URL_OR_PATH] [--profile NAME] [--clean] [--json]
 ```
 
 Options:
@@ -256,8 +254,6 @@ Options:
 - `--all`: Alias/no-op for clarity.
 - `--format`: `web`, `json-ld`.
 - `--theme`: Built-in render theme.
-- `--css`: Append custom CSS (`web` only).
-- `--no-css`: Disable embedded CSS (`web` only).
 - `--asset-base-url`: Prefix relative component asset URLs in rendered web output (`web` only).
 - `--profile`: Render profile name from config.
 - `--clean`: Remove output directory before render.

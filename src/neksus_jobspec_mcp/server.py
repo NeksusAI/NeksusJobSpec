@@ -36,14 +36,12 @@ def build_tool_map(service: JobspecMcpService) -> dict[str, Callable[..., dict[s
         "spec_validate": lambda path, strict=False: service.safe_call(
             "spec_validate", path=path, strict=strict
         ),
-        "spec_render": lambda path, format="web", theme=None, css_path=None, no_css=False, asset_base_url=None, output=None, no_validate=False: (
+        "spec_render": lambda path, format="web", theme=None, asset_base_url=None, output=None, no_validate=False: (
             service.safe_call(  # noqa: E501
                 "spec_render",
                 path=path,
                 format=format,
                 theme=theme,
-                css_path=css_path,
-                no_css=no_css,
                 asset_base_url=asset_base_url,
                 output=output,
                 no_validate=no_validate,

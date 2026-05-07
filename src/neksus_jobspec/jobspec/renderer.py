@@ -16,8 +16,6 @@ def render_jobspec(
     format: str = "web",
     *,
     theme: str = "soft-professional",
-    embed_css: bool = True,
-    custom_css: str | None = None,
     asset_base_url: str | None = None,
     sections: RenderSections | dict[str, bool] | None = None,
 ) -> str:
@@ -38,8 +36,6 @@ def render_jobspec(
     options = RenderOptions(
         format=format,
         theme=theme,
-        embed_css=embed_css,
-        custom_css=custom_css,
         asset_base_url=asset_base_url,
         sections=section_options,
     )

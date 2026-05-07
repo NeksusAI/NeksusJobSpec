@@ -107,28 +107,21 @@ class JobspecMcpService:
         path: str,
         format: str = "web",
         theme: str | None = None,
-        css_path: str | None = None,
-        no_css: bool = False,
         asset_base_url: str | None = None,
         output: str | None = None,
         no_validate: bool = False,
     ) -> dict[str, Any]:
         file_path = Path(path)
-        if (css_path is not None or no_css or asset_base_url is not None) and format != "web":
-            raise ValueError("css_path/no_css/asset_base_url are only supported for web rendering")
+        if asset_base_url is not None and format != "web":
+            raise ValueError("asset_base_url is only supported for web rendering")
         if format not in {"web", "json-ld"}:
             raise ValueError("Unsupported render format. Use: web or json-ld")
         selected_theme = theme or "soft-professional"
-        custom_css: str | None = None
-        if css_path is not None:
-            custom_css = Path(css_path).read_text(encoding="utf-8")
         result = self._spec_use_case.render_file(
             file_path,
             format=format,
             theme=selected_theme,
             no_validate=no_validate,
-            embed_css=not no_css,
-            custom_css=custom_css,
             asset_base_url=asset_base_url,
             output=Path(output) if output else None,
         )

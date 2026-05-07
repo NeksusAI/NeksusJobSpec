@@ -22,7 +22,6 @@ class RenderFileResult(BaseModel):
     theme: str
     output: str | None = None
     content: str | None = None
-    inline_css: str | None = None
     valid: bool | None = None
     errors: list[dict[str, str]] | None = None
     warnings: list[dict[str, str]] | None = None

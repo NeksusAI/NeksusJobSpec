@@ -142,9 +142,7 @@ def resolve_theme_package(theme_value: str, template_hint: str | None = None) ->
     )
 
 
-def render_theme(
-    package: ThemePackage, context: dict[str, Any], custom_css: str | None = None
-) -> str:
+def render_theme(package: ThemePackage, context: dict[str, Any]) -> str:
     """Render HTML for a resolved theme package."""
     env = Environment(
         loader=FileSystemLoader(str(package.root)),
@@ -160,9 +158,6 @@ def render_theme(
             css_chunks.append(css_path.read_text(encoding="utf-8"))
         except OSError as exc:
             raise FileSystemError(f"Failed to read theme CSS file: {css_path}") from exc
-
-    if custom_css:
-        css_chunks.append(custom_css.strip())
 
     template = env.get_template(package.manifest.template)
     return template.render(**context, theme_css="\n".join(chunk for chunk in css_chunks if chunk))

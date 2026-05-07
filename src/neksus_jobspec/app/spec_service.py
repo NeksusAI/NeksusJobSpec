@@ -100,8 +100,6 @@ class SpecUseCase:
         format: str,
         theme: str,
         no_validate: bool,
-        embed_css: bool,
-        custom_css: str | None,
         asset_base_url: str | None,
         output: Path | None,
     ) -> RenderFileResult:
@@ -111,8 +109,6 @@ class SpecUseCase:
             format=format,
             theme=theme,
             no_validate=no_validate,
-            embed_css=embed_css,
-            custom_css=custom_css,
             asset_base_url=asset_base_url,
             output=output,
         )

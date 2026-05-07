@@ -8,36 +8,11 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 
 ### Added
 
-- Added two built-in web themes: `classic` and `classic-dark`.
-- Added prototype-aligned web rendering variants for `classic` and `classic-dark` with graceful omission of missing optional sections.
-- Added Jinja2-based theme package rendering infrastructure.
-- Added filesystem custom theme package support (`manifest.json` + Jinja template + CSS assets).
+- No entries yet.
 
 ### Changed
 
-- Introduced a shared `ThemeRenderContext` contract and unified built-in/custom web rendering pipeline through package validation + Jinja rendering.
-- Added centralized theme package compatibility validation (`validate_theme_package`) for manifest structure, mandatory component support, region support, and context compatibility.
-- Rendering config now uses `rendering.web.theme_config` as the canonical per-theme configuration surface for web presentation settings.
-- Removed compatibility fallback branch selection from HTML rendering; web rendering now uses only the unified theme-package contract path.
-- Built-in and custom theme templates now consume the shared `contract` context directly, and rendering parity matrix tests were added for built-in/custom paths.
-- Removed theme-specific adapter dataclasses/mappers from `html.py`; templates now read canonical component payloads from `contract.component_groups`.
-- Rendering contracts were reorganized by output target through typed Pydantic target models (`rendering/targets.py`) for JSON-LD, jobs feeds, and sitemap output generation.
-- Feed and sitemap generation now run through typed render-target models before JSON/XML serialization, replacing ad-hoc dict/XML assembly in the old `jobspec/feeds.py` module.
-- JSON-LD rendering now builds a typed `JsonLdJobPosting` model before serialization, replacing ad-hoc payload assembly in the old `rendering/json_ld.py` module.
-- Built-in theme templates now source section labels, campaign notices, map label prefix, and footer/legal links from YAML/config contracts instead of hardcoded text.
-- Restored visual parity defaults in built-in theme assets (including `soft-professional` tokenized Tailwind config and classic/classic-dark footer-link defaults) while keeping rendering template-driven.
-- `meta_chips` items now support an optional `semantic` key (`location`, `salary`, `employment`) to avoid fragile label-text inference in theme rendering.
-- Web renderer now dispatches through theme package resolution and Jinja templates.
-- Theme/config validation now accepts `classic`, `classic-dark`, and `custom` for project defaults and render profiles.
-- Custom theme validation now enforces known component/region contracts and required package files.
-- Documentation now includes dedicated user guides and one screenshot per built-in theme (`soft-professional`, `classic`, `classic-dark`).
-- Internal orchestration for `spec new`, `spec validate`, `spec render`, `spec inspect`, `spec status`, `spec export`, `spec schema`, `spec templates`, `spec migrate`, project `check` and `config get/set`, and feed `export`/`sitemap` is now shared through a core application use-case layer used by both CLI and local MCP handlers.
-- JobSpec operation modules are reorganized into vertical slices under `neksus_jobspec.jobspec.spec_ops`, and project use cases now share a `ProjectContext` for root/config resolution.
-- App-layer use cases now return typed DTO payloads for core spec/project flows, and input-contract errors are normalized through domain exceptions.
-- Added domain methods on `JobSpec` for campaign status, theme resolution, warning derivation, and export payload shaping, and wired validation/status/export paths to use these model-level contracts.
-- Batch `render` orchestration moved from CLI command code into `RenderUseCase` with shared filesystem gateway handling.
-- Tests are now organized by layer (`tests/cli`, `tests/core`, `tests/mcp`, `tests/arch`, `tests/integration`) with architecture boundary checks for CLI/app/MCP layering.
-- MkDocs strict-build docs fixes: added `reference/code-structure.md` to navigation and removed invalid links to non-doc `src/...` paths from reference pages.
+- No entries yet.
 
 ## [0.3.0]
 
@@ -63,6 +38,10 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
   - executable: `neksus-jobspec-mcp`
   - local CLI/API-parity tools for project/config/check, spec schema/template/new/validate/render/inspect/status/migrate/export, feed export, and sitemap generation.
 - MCP integration documentation and assistant install matrix for Claude, ChatGPT, Gemini, and Copilot.
+- Added two built-in web themes: `classic` and `classic-dark`.
+- Added prototype-aligned web rendering variants for `classic` and `classic-dark` with graceful omission of missing optional sections.
+- Added Jinja2-based theme package rendering infrastructure.
+- Added filesystem custom theme package support (`manifest.json` + Jinja template + CSS assets).
 
 ### Changed
 
@@ -71,6 +50,30 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 - Web rendering shows a visible closed/expired campaign notice.
 - Release and assistant docs were reformatted for readability and v0.3.0 scope clarity.
 - Version bumped to `0.3.0`.
+- Introduced a shared `ThemeRenderContext` contract and unified built-in/custom web rendering pipeline through package validation + Jinja rendering.
+- Added centralized theme package compatibility validation (`validate_theme_package`) for manifest structure, mandatory component support, region support, and context compatibility.
+- Rendering config now uses `rendering.web.theme_config` as the canonical per-theme configuration surface for web presentation settings.
+- Removed CLI/MCP/Python runtime CSS override paths (`--css` / `--no-css` and related API fields). Web styling now comes only from built-in or custom theme packages.
+- Removed compatibility fallback branch selection from HTML rendering; web rendering now uses only the unified theme-package contract path.
+- Built-in and custom theme templates now consume the shared `contract` context directly, and rendering parity matrix tests were added for built-in/custom paths.
+- Removed theme-specific adapter dataclasses/mappers from `html.py`; templates now read canonical component payloads from `contract.component_groups`.
+- Rendering contracts were reorganized by output target through typed Pydantic target models (`rendering/targets.py`) for JSON-LD, jobs feeds, and sitemap output generation.
+- Feed and sitemap generation now run through typed render-target models before JSON/XML serialization, replacing ad-hoc dict/XML assembly in the old `jobspec/feeds.py` module.
+- JSON-LD rendering now builds a typed `JsonLdJobPosting` model before serialization, replacing ad-hoc payload assembly in the old `rendering/json_ld.py` module.
+- Built-in theme templates now source section labels, campaign notices, map label prefix, and footer/legal links from YAML/config contracts instead of hardcoded text.
+- Restored visual parity defaults in built-in theme assets (including `soft-professional` tokenized Tailwind config and classic/classic-dark footer-link defaults) while keeping rendering template-driven.
+- `meta_chips` items now support an optional `semantic` key (`location`, `salary`, `employment`) to avoid fragile label-text inference in theme rendering.
+- Web renderer now dispatches through theme package resolution and Jinja templates.
+- Theme/config validation now accepts `classic`, `classic-dark`, and `custom` for project defaults and render profiles.
+- Custom theme validation now enforces known component/region contracts and required package files.
+- Documentation now includes dedicated user guides and one screenshot per built-in theme (`soft-professional`, `classic`, `classic-dark`).
+- Internal orchestration for `spec new`, `spec validate`, `spec render`, `spec inspect`, `spec status`, `spec export`, `spec schema`, `spec templates`, `spec migrate`, project `check` and `config get/set`, and feed `export`/`sitemap` is now shared through a core application use-case layer used by both CLI and local MCP handlers.
+- JobSpec operation modules are reorganized into vertical slices under `neksus_jobspec.jobspec.spec_ops`, and project use cases now share a `ProjectContext` for root/config resolution.
+- App-layer use cases now return typed DTO payloads for core spec/project flows, and input-contract errors are normalized through domain exceptions.
+- Added domain methods on `JobSpec` for campaign status, theme resolution, warning derivation, and export payload shaping, and wired validation/status/export paths to use these model-level contracts.
+- Batch `render` orchestration moved from CLI command code into `RenderUseCase` with shared filesystem gateway handling.
+- Tests are now organized by layer (`tests/cli`, `tests/core`, `tests/mcp`, `tests/arch`, `tests/integration`) with architecture boundary checks for CLI/app/MCP layering.
+- MkDocs strict-build docs fixes: added `reference/code-structure.md` to navigation and removed invalid links to non-doc `src/...` paths from reference pages.
 
 ### Security
 

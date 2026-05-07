@@ -44,6 +44,7 @@ nav:
       - Soft-Professional Guide: guides/soft-professional-guide.md
       - Classic Theme Guide: guides/classic-guide.md
       - Classic-Dark Theme Guide: guides/classic-dark-guide.md
+      - Custom Theme Package Guide: guides/custom-theme-package.md
       - Content vs Theme: guides/content-vs-theme.md
       - Render Troubleshooting: guides/render-troubleshooting.md
       - LLM Usage: llm-usage.md

@@ -35,5 +35,5 @@ spec = validate_jobspec(data)
 print(render_jobspec(spec, format="json-ld"))
 
 # If your web output references relative media paths, prefix them at render time:
-web = render_jobspec(spec, format="web", asset_base_url="../examples/assets")
+web = render_jobspec(spec, format="web", asset_base_url="../assets")
 ```

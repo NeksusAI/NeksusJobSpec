@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Annotated
 
 import click
@@ -37,17 +36,11 @@ def render_command(
     ] = False,
     format: Annotated[str | None, typer.Option("--format", help="Render format.")] = None,
     theme: Annotated[str | None, typer.Option("--theme", help="Built-in render theme.")] = None,
-    css: Annotated[
-        Path | None, typer.Option("--css", help="Append custom CSS file (web only).")
-    ] = None,
-    no_css: Annotated[
-        bool, typer.Option("--no-css", help="Disable embedded CSS (web only).")
-    ] = False,
     asset_base_url: Annotated[
         str | None,
         typer.Option(
             "--asset-base-url",
-            help="Prefix relative component asset URLs in web output (e.g. ../examples/assets).",
+            help="Prefix relative component asset URLs in web output (e.g. ../assets).",
         ),
     ] = None,
     profile: Annotated[str | None, typer.Option("--profile", help="Render profile name.")] = None,
@@ -63,8 +56,6 @@ def render_command(
         result = render_use_case.render_project(
             format=format,
             theme=theme,
-            css=css,
-            no_css=no_css,
             asset_base_url=asset_base_url,
             profile=profile,
             clean=clean,

@@ -150,59 +150,7 @@ def test_spec_render_web_output_writes_file() -> None:
         assert "<!doctype html>" in out_path.read_text(encoding="utf-8").lower()
 
 
-def test_spec_render_web_custom_css_appended() -> None:
-    with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
-        target = Path("valid.jobspec.yaml")
-        css = Path("brand.css")
-        css.write_text("main { border-width: 3px; }", encoding="utf-8")
-        shutil.copy(src, target)
-
-        result = runner.invoke(
-            app,
-            [
-                "spec",
-                "render",
-                str(target),
-                "--format",
-                "web",
-                "--theme",
-                "soft-professional",
-                "--css",
-                str(css),
-            ],
-        )
-        assert result.exit_code == 0
-        assert "main { border-width: 3px; }" in result.stdout
-
-
-def test_spec_render_web_custom_css_appended_for_classic_theme() -> None:
-    with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
-        target = Path("valid.jobspec.yaml")
-        css = Path("brand.css")
-        css.write_text("body { letter-spacing: 0.01em; }", encoding="utf-8")
-        shutil.copy(src, target)
-
-        result = runner.invoke(
-            app,
-            [
-                "spec",
-                "render",
-                str(target),
-                "--format",
-                "web",
-                "--theme",
-                "classic",
-                "--css",
-                str(css),
-            ],
-        )
-        assert result.exit_code == 0
-        assert "body { letter-spacing: 0.01em; }" in result.stdout
-
-
-def test_spec_render_web_theme_custom_requires_css() -> None:
+def test_spec_render_web_theme_custom_requires_template_path() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
         target = Path("valid.jobspec.yaml")
@@ -241,60 +189,6 @@ def test_spec_render_web_theme_custom_uses_user_css_as_theme() -> None:
         assert 'class="jobspec-page"' in result.stdout
 
 
-def test_spec_render_web_no_css_has_no_style_block() -> None:
-    with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
-        target = Path("valid.jobspec.yaml")
-        shutil.copy(src, target)
-
-        result = runner.invoke(app, ["spec", "render", str(target), "--format", "web", "--no-css"])
-        assert result.exit_code == 0
-        assert "<style>" in result.stdout
-
-
-def test_spec_render_web_no_css_keeps_custom_css() -> None:
-    with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
-        target = Path("valid.jobspec.yaml")
-        css = Path("brand.css")
-        css.write_text("main { border-width: 3px; }", encoding="utf-8")
-        shutil.copy(src, target)
-
-        result = runner.invoke(
-            app,
-            [
-                "spec",
-                "render",
-                str(target),
-                "--format",
-                "web",
-                "--no-css",
-                "--css",
-                str(css),
-            ],
-        )
-        assert result.exit_code == 0
-        assert "<style>" in result.stdout
-        assert "main { border-width: 3px; }" in result.stdout
-
-
-def test_spec_render_css_flags_rejected_for_non_web() -> None:
-    with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
-        target = Path("valid.jobspec.yaml")
-        css = Path("brand.css")
-        css.write_text("x", encoding="utf-8")
-        shutil.copy(src, target)
-
-        result = runner.invoke(
-            app,
-            ["spec", "render", str(target), "--format", "json-ld", "--css", str(css), "--json"],
-        )
-        assert result.exit_code == 2
-        payload = json.loads(result.stdout)
-        assert payload["ok"] is False
-
-
 def test_spec_render_asset_base_url_rejected_for_non_web() -> None:
     with runner.isolated_filesystem():
         src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
@@ -315,21 +209,6 @@ def test_spec_render_asset_base_url_rejected_for_non_web() -> None:
             ],
         )
         assert result.exit_code == 2
-        payload = json.loads(result.stdout)
-        assert payload["ok"] is False
-
-
-def test_spec_render_css_missing_file_fails() -> None:
-    with runner.isolated_filesystem():
-        src = ROOT / "fixtures" / "valid" / "minimal-valid.jobspec.yaml"
-        target = Path("valid.jobspec.yaml")
-        shutil.copy(src, target)
-
-        result = runner.invoke(
-            app,
-            ["spec", "render", str(target), "--format", "web", "--css", "missing.css", "--json"],
-        )
-        assert result.exit_code == 3
         payload = json.loads(result.stdout)
         assert payload["ok"] is False
 

@@ -60,7 +60,6 @@ def render_jobspec(
     spec_or_path: JobSpec | str | Path,
     format: str = "web",
     theme: str | None = None,
-    css: str | None = None,
     asset_base_url: str | None = None,
 ) -> str:
     """Render a JobSpec to a string.
@@ -69,7 +68,6 @@ def render_jobspec(
         spec_or_path: Validated JobSpec or YAML file path.
         format: Output format (``web`` or ``json-ld``).
         theme: Built-in theme name for web output.
-        css: Extra CSS rules appended for web output.
         asset_base_url: Prefix for relative media/asset paths.
 
     Returns:
@@ -86,7 +84,6 @@ def render_jobspec(
         spec,
         format=format,
         theme=theme or "soft-professional",
-        custom_css=css,
         asset_base_url=asset_base_url,
     )
 

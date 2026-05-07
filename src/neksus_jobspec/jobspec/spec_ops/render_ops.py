@@ -27,8 +27,6 @@ def render_jobspec_file(
     format: str,
     theme: str,
     no_validate: bool,
-    embed_css: bool,
-    custom_css: str | None,
     asset_base_url: str | None,
     output: Path | None,
 ) -> dict[str, object]:
@@ -54,8 +52,6 @@ def render_jobspec_file(
         spec,
         format=format,
         theme=theme,
-        embed_css=embed_css,
-        custom_css=custom_css,
         asset_base_url=asset_base_url,
     )
     if output is not None:
@@ -67,7 +63,6 @@ def render_jobspec_file(
             "format": format,
             "theme": theme,
             "output": str(output),
-            "inline_css": spec.rendering.web.css.inline if format == "web" else None,
         }
 
     return {

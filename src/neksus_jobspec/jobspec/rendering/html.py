@@ -18,7 +18,6 @@ def _render_with_theme_package(spec, options: RenderOptions) -> str:
     return render_theme(
         package,
         context={"contract": contract.model_dump(mode="json")},
-        custom_css=options.custom_css,
     )
 
 

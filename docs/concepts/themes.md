@@ -35,20 +35,11 @@ neksus-jobspec spec render examples/job-detail.jobspec.yaml --format web --theme
 - [Soft-Professional Guide](../guides/soft-professional-guide.md)
 - [Classic Theme Guide](../guides/classic-guide.md)
 - [Classic-Dark Theme Guide](../guides/classic-dark-guide.md)
+- [Custom Theme Package Guide](../guides/custom-theme-package.md)
 
-## CSS customization
+## Theme customization
 
-Layer your CSS on top of the embedded base theme:
-
-```bash
-neksus-jobspec spec render examples/job-detail.jobspec.yaml --format web --theme soft-professional --css examples/theme-overrides.css --output dist/job-detail-custom.html
-```
-
-Disable embedded base CSS (advanced):
-
-```bash
-neksus-jobspec spec render examples/job-detail.jobspec.yaml --format web --no-css --css examples/theme-overrides.css
-```
+Web styling is owned by theme packages only. Runtime CSS overrides are not supported.
 
 Use a fully user-defined theme package:
 

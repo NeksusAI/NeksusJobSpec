@@ -123,7 +123,7 @@ components:
         assert Path("dist/role.html").exists()
 
 
-def test_render_batch_web_custom_css_and_no_css() -> None:
+def test_render_batch_web_theme_pipeline_embeds_theme_styles() -> None:
     with runner.isolated_filesystem():
         assert runner.invoke(app, ["init", "--empty"]).exit_code == 0
         Path("jobspecs/role.jobspec.yaml").write_text(
@@ -149,21 +149,10 @@ components:
 """,
             encoding="utf-8",
         )
-        css_path = Path("brand.css")
-        css_path.write_text("body { outline: 0; }", encoding="utf-8")
-
-        with_css = runner.invoke(
-            app,
-            ["render", "--format", "web", "--theme", "soft-professional", "--css", str(css_path)],
-        )
-        assert with_css.exit_code == 0
+        result = runner.invoke(app, ["render", "--format", "web", "--theme", "soft-professional"])
+        assert result.exit_code == 0
         content = Path("dist/role.html").read_text(encoding="utf-8")
-        assert "body { outline: 0; }" in content
-
-        no_css = runner.invoke(app, ["render", "--format", "web", "--no-css"])
-        assert no_css.exit_code == 0
-        content_no_css = Path("dist/role.html").read_text(encoding="utf-8")
-        assert "<style>" in content_no_css
+        assert "<style>" in content
 
 
 def test_render_batch_profile_and_cli_overrides() -> None:
