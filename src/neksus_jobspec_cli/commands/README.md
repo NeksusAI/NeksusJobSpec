@@ -8,6 +8,7 @@ CLI command modules grouped by workflow domain.
 - `render.py`: batch project render.
 - `feed.py`: multi-spec feeds/sitemap.
 - `check.py`: project checks.
+- `doctor.py`: local environment and project health diagnostics.
 - `config.py`: project config read/update.
 - `themes.py`: theme metadata commands.
 - `init.py`: project initialization.

@@ -5,6 +5,27 @@ This page tracks user-visible changes by release.
 Compatibility expectations for each release are defined by the
 [Versioning and Compatibility Policy](versioning.md).
 
+## 0.4.0
+
+### Notes
+
+- Stability and packaging hardening for the `src/` package layout and CLI/MCP entrypoint validation.
+- Added `neksus-jobspec doctor` local diagnostics command.
+- Added `neksus-jobspec spec lint` quality warnings command.
+- Added `neksus-jobspec spec preview` local preview server command.
+- Added theme developer workflows:
+  - `themes list`
+  - `themes show` (built-in and filesystem/custom path support)
+  - `themes validate`
+  - `themes init`
+- Added minimal custom theme example at `examples/themes/minimal`.
+- Expanded tests for preview/lint/theme workflows and maintained deterministic machine-readable outputs.
+
+### Scope boundary
+
+v0.4.0 remains local-first free/core software with no hosted SaaS, ATS automation,
+candidate collection, CV handling, auth, payments, or direct LinkedIn posting.
+
 ## 0.3.0
 
 ### Breaking changes

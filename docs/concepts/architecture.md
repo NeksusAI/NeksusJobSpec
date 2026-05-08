@@ -1,66 +1,33 @@
 # Architecture
 
-Neksus JobSpec is intentionally split into simple layers to keep open-source usage clean while enabling future hosted/server products.
+Neksus JobSpec is structured as a reusable local-first core with thin interfaces.
 
-## Current open-source architecture
+## Runtime layers
 
-### 1. CLI/package layer
+1. CLI layer (`neksus-jobspec`)
+- argument parsing
+- human/json output formatting
+- thin delegation to app use cases
 
-- `neksus-jobspec` Typer commands
-- Human and JSON command outputs
-- Thin orchestration over core modules
+2. Core app/use-case layer (`neksus_jobspec.app`)
+- orchestrates validate/render/export/feed/project flows
+- shared by CLI and MCP
 
-### 2. Schema/validation layer
+3. Domain layer (`neksus_jobspec.jobspec`)
+- parser, Pydantic models, validation, rendering, exports, lint
 
-- Pydantic v2 models for JobSpec
-- Parse and validation normalization
-- Structured errors and warnings
+4. Project layer (`neksus_jobspec.project`)
+- project discovery, config, checks, initialization
 
-### 3. Application use-case layer
+5. MCP adapter layer (`neksus_jobspec_mcp`)
+- local stdio tools mapped to the same core use cases
 
-- Core orchestration use cases under `neksus_jobspec.app`
-- Reusable spec/project/feed workflows shared by CLI and MCP
-- Typed DTO payloads for app-layer contracts
-- Shared `ProjectContext` for root/config discovery in project workflows
-- Shared filesystem gateway for app-layer side effects
+## Pipeline
 
-### 4. JobSpec operation layer
+```text
+YAML -> parser/loader -> Pydantic JobSpec model -> app use cases -> render/export/feed/MCP/CLI
+```
 
-- Vertical slices under `neksus_jobspec.jobspec.spec_ops`
-- File-oriented operations grouped by use case (`new`, `validate`, `render`, `inspect`, `export`, `migrate`)
-- Thin wrappers around stable domain modules in `neksus_jobspec.jobspec`
+## Principle
 
-### 5. Renderer/export layer
-
-- Markdown, HTML, and JSON rendering
-- Theme support for HTML rendering
-- Schema export for editor/tooling integration
-
-### 6. Docs site layer
-
-- MkDocs + Material documentation
-- Version-controlled Markdown docs
-- GitHub Pages deployment workflow
-
-## Local MCP architecture
-
-### 7. Local MCP server
-
-- Optional local stdio MCP server (`neksus-jobspec-mcp`)
-- Wraps core validation/rendering/export/feed tooling as MCP tools
-- Keeps local-first usage with no hosted deployment requirement
-
-## Planned hosted/server architecture
-
-### 8. Future hosted API (planned)
-
-- Wrap core validation/rendering as networked services
-- Expose stable contracts for organization-scale automation
-- Keep schema/versioning explicit to reduce integration risk
-
-## Design principles
-
-- Keep CLI thin and core reusable
-- Prefer explicit contracts over implicit behavior
-- Preserve backward-compatible outputs where possible
-- Avoid speculative complexity until needed
+Keep CLI and MCP thin; place behavior and orchestration in core services.

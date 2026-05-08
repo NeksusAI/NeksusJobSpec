@@ -1,18 +1,29 @@
 # Neksus JobSpec
 
-Neksus JobSpec is a local-first toolchain for component-based job-detail specifications.
+Neksus JobSpec is a local-first CLI and Python package for creating structured, branded, machine-readable job campaign pages from YAML.
 
-Install:
+Current docs target: **v0.4.x**.
 
-```bash
-pip install neksus-jobspec
-```
+## Start here
 
-## v0.3.x model
+1. [Installation](guides/installation.md)
+2. [First Run Checklist](guides/first-run-checklist.md)
+3. [Quickstart](guides/quickstart.md)
+4. [CLI Decision Guide](guides/cli-decision-guide.md)
 
-v0.3.x uses typed page components and is not backward compatible with legacy simple-schema JobSpec files.
+## Product boundary
 
-## Short example
+Neksus JobSpec free/core includes:
+- local CLI
+- local Python API
+- local rendering/export/feed/sitemap
+- optional local MCP server
+
+It does **not** include hosted SaaS, authentication, database persistence, candidate collection, CV handling, payments, ATS workflow automation, or direct LinkedIn API posting.
+
+See [Scope and Non-Goals](guides/scope-and-non-goals.md).
+
+## Minimal example
 
 ```yaml
 schema_version: 1
@@ -21,25 +32,25 @@ page:
   layout: job_detail
 job:
   title: Backend Engineer
-  intro: Build backend services for employer workflows.
+  apply:
+    method: external_url
+    url: https://example.com/apply/backend-engineer
 components:
   - type: hero
     id: hero
-    variant: default
     title: Backend Engineer
-    intro: Build backend services for employer workflows.
   - type: list
     id: requirements
-    variant: bullets
-    title: Requirements
     items:
-      - 3+ years of backend software engineering experience.
+      - 3+ years of backend engineering experience.
 ```
 
-## Next steps
+## Common workflows
 
-- [Quickstart](guides/quickstart.md)
-- [Specification](concepts/specification.md)
-- [Schema](reference/schema.md)
-- [Examples](guides/examples.md)
-- [Python API](reference/python-api.md)
+```bash
+neksus-jobspec doctor
+neksus-jobspec spec validate examples/startup-engineer.jobspec.yaml
+neksus-jobspec spec lint examples/startup-engineer.jobspec.yaml
+neksus-jobspec spec preview examples/startup-engineer.jobspec.yaml --no-open
+neksus-jobspec themes list
+```

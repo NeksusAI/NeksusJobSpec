@@ -1,36 +1,23 @@
-# Roadmap Boundaries
+# Roadmap and Boundaries
 
-## Free/core package responsibilities
+## Current release line
 
-- JobSpec schema
-- Validation
-- Rendering
-- Controlled components
-- CSS/theme support
-- JSON-LD
-- Generic exports
-- Multi-job feeds
-- Sitemap
-- Assistant/LLM documentation
-- Optional local MCP server and local spec tooling
+This documentation targets the local-first free/core release line (`v0.4.x`).
 
-## Commercial/hosted product responsibilities
+## Free/core includes
 
-- Application forms and submission
-- CV upload and parsing
-- Candidate profile builder
-- Email confirmation and inbox workflows
-- Employer dashboard
-- Payments and campaign extension billing
-- Azure deployment and hosted APIs
-- AI job builder and AI screening
-- Hosted analytics and ATS integrations
+- local CLI workflows
+- local Python API workflows
+- local rendering, exports, feeds, sitemap
+- optional local stdio MCP server
 
-## v0.3.0 explicit boundary
+## Explicitly out of scope
 
-NeksusJobSpec v0.3.0 does not include application forms, application
-collection, CV upload, CV parsing, candidate storage, email delivery,
-payments, hosted APIs, or ATS workflows.
+- hosted SaaS/API infrastructure
+- auth and identity workflows
+- candidate intake and CV pipelines
+- ATS workflow automation
+- payments
+- direct LinkedIn API posting
 
-Do not add hosted/commercial features to the free/core package unless the
-project intentionally changes scope.
+See [Scope and Non-Goals](guides/scope-and-non-goals.md) for the canonical user-facing boundary page.

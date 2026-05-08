@@ -1,78 +1,44 @@
 # Themes
 
-Neksus renders `web` output with built-in themes and supports user-defined filesystem theme packages.
+Neksus renders `web` output through built-in or filesystem custom theme packages.
 
-## Built-in theme
-
-List available themes:
+## Theme discovery and inspection
 
 ```bash
-neksus-jobspec themes
-neksus-jobspec themes --json
-```
-
-Inspect theme metadata:
-
-```bash
+neksus-jobspec themes list
 neksus-jobspec themes show soft-professional
+neksus-jobspec themes show examples/themes/minimal
 ```
 
-Current built-in:
-
+Built-in themes:
 - `classic`
 - `classic-dark`
-- `custom`
 - `soft-professional`
+- `custom` (filesystem package mode)
 
-Use it at render time:
-
-```bash
-neksus-jobspec spec render examples/job-detail.jobspec.yaml --format web --theme soft-professional --output dist/job-detail.html
-```
-
-## Theme guides
-
-- [Soft-Professional Guide](../guides/soft-professional-guide.md)
-- [Classic Theme Guide](../guides/classic-guide.md)
-- [Classic-Dark Theme Guide](../guides/classic-dark-guide.md)
-- [Custom Theme Package Guide](../guides/custom-theme-package.md)
-
-## Theme customization
-
-Web styling is owned by theme packages only. Runtime CSS overrides are not supported.
-
-Use a fully user-defined theme package:
+## Theme developer workflow
 
 ```bash
-neksus-jobspec spec render examples/job-detail.jobspec.yaml --format web --theme ./my-theme-package
+neksus-jobspec themes init my-theme
+neksus-jobspec themes validate my-theme
+neksus-jobspec spec render examples/startup-engineer.jobspec.yaml --format web --theme ./my-theme --output dist/startup-engineer-custom.html
 ```
 
-Theme package directory requirements:
+## Package requirements
 
+A custom theme directory must include:
 - `manifest.json`
-- `template.html.j2`
-- CSS file(s) declared in `manifest.json`
-- Declared components/regions must be existing built-in component/region types.
-- Theme manifests must declare support for the global mandatory component set.
-- Theme-specific knobs should be defined in `rendering.web.theme_config`.
+- template file declared by `manifest.template`
+- CSS files declared by `manifest.styles`
 
-## Theme selection in JobSpec YAML
+Validation checks:
+- manifest required fields
+- known component and region names
+- referenced template/CSS files exist
+- mandatory component support
+- render smoke test on a minimal valid JobSpec
 
-```yaml
-rendering:
-  web:
-    template: soft-professional
-```
-
-`rendering.web.template` can be one of built-in theme names (`classic`, `classic-dark`, `soft-professional`) or a filesystem path to a custom theme package when `--theme custom` is used.
-
-Built-in theme assets are package-scoped under:
-
-- `src/neksus_jobspec/jobspec/rendering/theme_packages/<theme-name>/manifest.json`
-- `src/neksus_jobspec/jobspec/rendering/theme_packages/<theme-name>/template.html.j2`
-- CSS files referenced by each theme package manifest.
-
-## Real render examples
+## Render examples
 
 ### Soft-Professional
 

@@ -38,7 +38,10 @@ nav:
   - Guides:
       - Getting Started: guides/getting-started.md
       - Installation: guides/installation.md
+      - First Run Checklist: guides/first-run-checklist.md
       - Quickstart: guides/quickstart.md
+      - CLI Decision Guide: guides/cli-decision-guide.md
+      - Scope and Non-Goals: guides/scope-and-non-goals.md
       - Examples: guides/examples.md
       - Examples Library: guides/examples-library.md
       - Soft-Professional Guide: guides/soft-professional-guide.md
@@ -49,6 +52,7 @@ nav:
       - Render Troubleshooting: guides/render-troubleshooting.md
       - LLM Usage: llm-usage.md
       - Exports: exports.md
+      - Export Example Artifacts: examples/README.md
   - Reference:
       - CLI Reference: reference/cli-reference.md
       - Python API: reference/python-api.md

@@ -49,6 +49,7 @@ def build_tool_map(service: JobspecMcpService) -> dict[str, Callable[..., dict[s
         ),
         "spec_inspect": lambda path: service.safe_call("spec_inspect", path=path),
         "spec_status": lambda path: service.safe_call("spec_status", path=path),
+        "spec_lint": lambda path: service.safe_call("spec_lint", path=path),
         "spec_migrate": lambda path, write=False: service.safe_call(
             "spec_migrate", path=path, write=write
         ),

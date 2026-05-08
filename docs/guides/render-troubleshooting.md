@@ -1,44 +1,53 @@
-# Render Troubleshooting
+# Render and Command Troubleshooting
 
-## Output is missing section content
+## `doctor` reports FAIL
 
-- Check component exists in `components`.
-- Check component `id` appears in `page.component_order` when order is set.
-- Check `visibility` / `render_if` rules are not hiding it.
+- Read the failed check row first.
+- If importability fails, reinstall in a clean environment.
+- If repository file checks fail, run from project root.
 
-## Wrong text appears in hero chips
+## `spec validate` fails
 
-- Validate `meta_chips.items[*].label` contains expected keywords:
-  - location: `Location`
-  - salary: `Salary` or `Comp`
-  - type: `Type` or `Employment`
+- Fix schema errors first.
+- Use `spec schema --output ...` with editor integration for YAML validation.
 
-## Map image or label is wrong
+## `spec lint` shows warnings
 
-- Image source priority:
-  1. `hero_banner.image_url`
-  2. `location_map.map_url`
-- Label source: `location_map.address`
+Warnings are advisory. Typical fixes:
+- add `job.apply`
+- use HTTPS apply URL
+- add salary/location metadata (`meta_chips`)
+- expand short intro text
+- add campaign metadata
 
-## Footer icons not visible
+## `spec preview` fails to start
 
-- Add `social_links.links[*].icon` values.
-- Or enable rendering toggles:
-  - `rendering.web.show_share_links: true`
-  - `rendering.web.show_print_link: true`
+- Port conflict: choose another port (`--port 8770`).
+- Invalid spec: run `spec validate` first.
+- Stop preview with `Ctrl+C`.
 
-## Styling changes do not apply
+## Custom theme validation fails
 
-- Runtime CSS overrides are not supported.
-- Put styling changes in a custom theme package (`manifest.json` + `template.html.j2` + CSS assets).
+Run:
 
-## Relative assets break after deploy
+```bash
+neksus-jobspec themes validate <theme-path>
+```
 
-- Set `rendering.web.asset_base_url` in YAML, or
-- pass `--asset-base-url` during render.
+Check:
+- `manifest.json` exists and is valid JSON
+- template file exists
+- all CSS files in `styles` exist
+- supported components/regions use known names
 
-## Validation passes but output still looks off
+## Output looks wrong but validation passes
 
-- Compare with `examples/job-detail.jobspec.yaml`.
-- Render with a built-in theme first.
-- Then switch to your custom theme package and apply changes there.
+- Render once with a built-in theme to isolate content vs theme issues.
+- Compare against `examples/startup-engineer.jobspec.yaml`.
+- Verify `page.component_order` includes all component IDs exactly once when set.
+
+## Export/feed/sitemap issues
+
+- Ensure each input file passes `spec validate`.
+- Confirm shell glob resolves to the files you expect.
+- Use `--json` mode for machine-readable diagnostics where available.

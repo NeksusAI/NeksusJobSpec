@@ -1,0 +1,14 @@
+{
+  "jobs": [
+    {
+      "id": "campaign-active",
+      "title": "Campaign Active",
+      "campaign": {"status": "active"}
+    },
+    {
+      "id": "startup-engineer",
+      "title": "Startup Engineer",
+      "campaign": {"status": "active"}
+    }
+  ]
+}

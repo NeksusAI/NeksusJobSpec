@@ -2,24 +2,25 @@
 
 ## Preferred workflow
 
-1. Produce typed JobSpec data.
-2. Validate before render.
-3. Render to JSON-LD for automation and web for presentation.
+1. Generate typed JobSpec YAML.
+2. Run `spec validate`.
+3. Run `spec lint`.
+4. Use `spec render` (`web`/`json-ld`) or `spec export` targets.
 
-## Components-first guidance
+## Components-first rule
 
-For v0.3.x job-detail pages, assistants should prefer typed `components` over arbitrary HTML.
+Assistants should emit typed `components` data, not arbitrary HTML blocks.
 
-- Use only documented component types and variants.
-- Do not invent unknown component types or variant names.
-- If `page.component_order` is set, include each declared component ID exactly once.
+## Trust boundaries
 
-## Security and trust boundaries
+- Keep behavior in YAML/theme packages.
+- Do not assume JavaScript runtime logic for rendering behavior.
+- Output is deterministic text artifacts, not executable app code.
 
-- Custom CSS is supported.
-- Do not rely on JavaScript for theme behavior in v0.3.x.
-- Rendering emits text output; it does not execute scripts.
+## Useful command sequence
 
-## Automation recommendation
-
-Prefer `--format json-ld` output for deterministic machine workflows.
+```bash
+neksus-jobspec spec validate job.jobspec.yaml
+neksus-jobspec spec lint job.jobspec.yaml
+neksus-jobspec spec render job.jobspec.yaml --format json-ld
+```

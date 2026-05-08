@@ -2,13 +2,11 @@
 
 ## Supported versions
 
-Security fixes are applied to the latest published release line (`0.2.x`) and the default branch.
+Security fixes are applied to the latest published release line (`0.4.x`) and the default branch.
 
 ## Reporting a vulnerability
 
-Please report suspected vulnerabilities privately by email:
-
-- `security@neksusai.com`
+Please report suspected vulnerabilities privately to the repository owner through a non-public channel.
 
 Include:
 

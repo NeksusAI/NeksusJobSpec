@@ -1,39 +1,27 @@
 # Getting Started
 
-## Who this project is for
+Neksus JobSpec is for teams who want validated, machine-readable job campaign content without adopting hosted infrastructure.
 
-Neksus JobSpec is for teams and developers who want structured, portable hiring specs that can be validated and rendered consistently.
-
-## Main use cases
-
-- Create structured job descriptions in YAML
-- Export to common output formats (Markdown, HTML, JSON)
-- Feed LLM tools with normalized role data
-- Prepare structured content for future ATS/job-board pipelines
-- Keep an open-source foundation that can later support hosted API/server offerings
-
-## Conceptual flow
+## Core flow
 
 ```text
-Write YAML -> Parse -> Validate -> Inspect -> Render -> Check project
+Write YAML -> Validate -> Lint -> Preview/Render -> Export/Feed/Sitemap
 ```
 
-1. Write a `*.jobspec.yaml` file.
-2. Validate against JobSpec model rules.
-3. Inspect normalized fields and metadata.
-4. Render to output formats.
-5. Run project-level checks for consistency and duplicate IDs.
+## Recommended first commands
 
-## Command reference
+```bash
+neksus-jobspec doctor
+neksus-jobspec init
+neksus-jobspec spec new backend-engineer
+neksus-jobspec spec validate jobspecs/backend-engineer.jobspec.yaml
+neksus-jobspec spec lint jobspecs/backend-engineer.jobspec.yaml
+neksus-jobspec spec preview jobspecs/backend-engineer.jobspec.yaml --no-open
+```
 
-Top-level command groups:
+## Then choose your path
 
-- `neksus-jobspec version`
-- `neksus-jobspec init`
-- `neksus-jobspec render`
-- `neksus-jobspec spec ...`
-- `neksus-jobspec check`
-- `neksus-jobspec themes ...`
-- `neksus-jobspec config ...`
-
-For setup and command examples, continue with [Installation](installation.md) and [Quickstart](quickstart.md).
+- Need command-by-command walkthrough: [Quickstart](quickstart.md)
+- Need exact command selection logic: [CLI Decision Guide](cli-decision-guide.md)
+- Need schema-level details: [Specification](../concepts/specification.md)
+- Need theme customization: [Custom Theme Package Guide](custom-theme-package.md)

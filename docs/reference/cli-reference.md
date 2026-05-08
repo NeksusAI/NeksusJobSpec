@@ -136,6 +136,37 @@ Syntax:
 neksus-jobspec spec status PATH [--json]
 ```
 
+Notes:
+- Includes campaign metadata and advisory quality warnings.
+
+## `spec lint`
+
+Purpose: Run advisory quality lint checks for one JobSpec.
+
+Syntax:
+
+```bash
+neksus-jobspec spec lint PATH [--json]
+```
+
+Behavior:
+- Exit code `0` for valid schema, even if warnings exist.
+- Schema/parse errors still return non-zero exit codes.
+
+## `spec preview`
+
+Purpose: Render a local preview and serve it over a local HTTP URL.
+
+Syntax:
+
+```bash
+neksus-jobspec spec preview PATH [--theme THEME] [--port PORT] [--no-open]
+```
+
+Notes:
+- Uses only local rendering + local stdlib HTTP server.
+- Press `Ctrl+C` to stop the preview server.
+
 ## `spec export`
 
 Purpose: Export one JobSpec into deterministic machine-readable formats.
@@ -311,16 +342,27 @@ neksus-jobspec check --strict
 neksus-jobspec check --format github
 ```
 
+## `doctor`
+
+Purpose: Run local environment and repository health checks.
+
+Syntax:
+
+```bash
+neksus-jobspec doctor [--json]
+```
+
 JSON notes: `--json` and `--format github` are mutually exclusive.
 
-## `themes`
+## `themes` / `themes list`
 
-Purpose: List built-in themes.
+Purpose: List available themes.
 
 Syntax:
 
 ```bash
 neksus-jobspec themes [--json]
+neksus-jobspec themes list [--json]
 ```
 
 Options:
@@ -341,7 +383,7 @@ Purpose: Show metadata for one built-in theme.
 Syntax:
 
 ```bash
-neksus-jobspec themes show NAME [--json]
+neksus-jobspec themes show NAME_OR_PATH [--json]
 ```
 
 Options:
@@ -356,9 +398,28 @@ neksus-jobspec themes show soft-professional --json
 neksus-jobspec themes show classic
 neksus-jobspec themes show classic-dark
 neksus-jobspec themes show custom
+neksus-jobspec themes show examples/themes/minimal
 ```
 
-For rendering, `--theme` also accepts a filesystem directory path to a custom theme package (`manifest.json` + template + css).
+## `themes validate`
+
+Purpose: Validate a filesystem custom theme package.
+
+Syntax:
+
+```bash
+neksus-jobspec themes validate PATH [--json]
+```
+
+## `themes init`
+
+Purpose: Create a minimal custom theme package scaffold.
+
+Syntax:
+
+```bash
+neksus-jobspec themes init TARGET [--force] [--json]
+```
 
 ## `config get` and `config set`
 

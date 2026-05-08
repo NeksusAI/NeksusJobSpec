@@ -1,68 +1,31 @@
 # Versioning and Compatibility Policy
 
-## Semantic versioning
+## SemVer policy
 
-Neksus JobSpec follows semantic versioning.
+Neksus JobSpec follows semantic versioning. During `0.x`, evolution is allowed, but documented CLI/schema/API surfaces are treated as contracts.
 
-During `0.x`, public APIs are intended to be usable but may still evolve
-between minor releases.
+## Compatibility surfaces
 
-## Compatibility surface
+- Stable public Python imports from `neksus_jobspec`
+- Documented CLI commands/options
+- Documented schema fields and component contracts
+- Optional local MCP surface when `mcp` extra is installed
 
-### Stable public Python API
+## Current line
 
-Stable imports are exposed from `neksus_jobspec`:
+This docs set targets `v0.4.x`.
 
-```python
-from neksus_jobspec import JobSpec, load_jobspec, validate_jobspec, render_jobspec
-```
+## Breaking changes
 
-`__version__` is also stable for tooling and diagnostics.
-
-### Stable CLI surface
-
-Documented CLI commands are part of the compatibility contract.
-
-### Stable schema surface
-
-Documented JobSpec schema fields are part of the compatibility contract.
-
-Documented component types, variants, and placement fields are part of the
-compatibility contract once released.
-
-### Stable local MCP surface (optional)
-
-In `v0.3.x`, local stdio MCP support is part of the release contract when the
-optional `mcp` extra is installed.
-
-- Install extra: `neksus-jobspec[mcp]`
-- Console script: `neksus-jobspec-mcp`
-- Scope: local-only CLI/API-parity tools
-
-The MCP server is not a hosted API and is not an ATS or direct platform posting
-integration.
-
-## Breaking changes and cleanup
-
-`0.3.x` contains a breaking cleanup relative to early/transitional `0.2.0`
-compatibility behavior.
-
-Legacy simple-schema payloads are removed and component schema is authoritative.
-
-Breaking changes must be documented in `CHANGELOG.md`.
-
-Deprecations should be preferred before removals when practical.
+Breaking changes must be explicit in:
+- `CHANGELOG.md`
+- release notes
+- schema/reference docs
 
 ## Non-stable internals
 
-Internal modules under `neksus_jobspec.*` and `neksus_jobspec_cli.*` are
-implementation details and not stable contracts.
+Internal implementation modules may change without API guarantees.
 
-## Out of scope for v0.3.x contract
+## Product boundary
 
-Hosted API capabilities are planned but are not part of the v0.3.x
-compatibility contract.
-
-v0.3.x does not include application forms, application collection, CV upload,
-CV parsing, candidate storage, email delivery, payments, hosted APIs,
-or ATS workflows.
+The compatibility contract does not include hosted SaaS, auth, database persistence, candidate/CV workflows, payments, or direct LinkedIn posting.

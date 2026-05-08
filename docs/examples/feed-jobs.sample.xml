@@ -1,0 +1,10 @@
+<jobs>
+  <job>
+    <id>campaign-active</id>
+    <title>Campaign Active</title>
+  </job>
+  <job>
+    <id>startup-engineer</id>
+    <title>Startup Engineer</title>
+  </job>
+</jobs>

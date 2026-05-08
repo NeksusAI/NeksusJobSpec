@@ -1,0 +1,21 @@
+<jobspec>
+  <schemaVersion>1</schemaVersion>
+  <id>startup-engineer</id>
+  <title>Startup Engineer</title>
+  <companyName>Neksus Labs</companyName>
+  <location>Copenhagen, Denmark</location>
+  <employment>FULL_TIME</employment>
+  <description>Build and ship product features with a small team.</description>
+  <apply>
+    <method>external_url</method>
+    <label></label>
+    <url>https://example.com/apply/startup-engineer</url>
+    <email></email>
+    <jobReference></jobReference>
+  </apply>
+  <campaign>
+    <status>active</status>
+    <startsAt>2026-05-04</startsAt>
+    <expiresAt>2026-07-03</expiresAt>
+  </campaign>
+</jobspec>

@@ -9,6 +9,7 @@ import typer
 
 from neksus_jobspec_cli.commands.check import app as check_app
 from neksus_jobspec_cli.commands.config import app as config_app
+from neksus_jobspec_cli.commands.doctor import doctor_command
 from neksus_jobspec_cli.commands.feed import app as feed_app
 from neksus_jobspec_cli.commands.init import init_command
 from neksus_jobspec_cli.commands.render import render_command
@@ -24,6 +25,7 @@ app.command("init")(init_command)
 app.add_typer(spec_app, name="spec")
 app.command("render")(render_command)
 app.command("check")(check_app)
+app.command("doctor")(doctor_command)
 app.add_typer(feed_app, name="feed")
 app.add_typer(config_app, name="config")
 app.add_typer(themes_app, name="themes")
