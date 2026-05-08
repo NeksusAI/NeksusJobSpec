@@ -6,9 +6,7 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 
 ## [Unreleased]
 
-### Documentation
-
-- Updated security policy docs to current support line (`0.4.x`) and removed hardcoded email contact from vulnerability reporting guidance.
+- No user-visible changes yet.
 
 ## [0.4.0] - 2026-05-08
 
@@ -50,6 +48,7 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 - Updated v0.4.x user docs across onboarding, schema, rendering, exports, themes,
   integrations, and troubleshooting pages.
 - Restored the PyPI version badge in `README.md` for package discoverability.
+- Updated security policy docs to current support line (`0.4.x`) and removed hardcoded email contact from vulnerability reporting guidance.
 
 ### Tests
 
