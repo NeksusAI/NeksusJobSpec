@@ -8,6 +8,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def _has_required_doc_section(doc: str, key_element_groups: tuple[tuple[str, ...], ...]) -> bool:
+    for group in key_element_groups:
+        for token in group:
+            if token in doc:
+                return True
+    return False
+
+
 def test_public_api_functions_have_docstrings() -> None:
     module = importlib.import_module("neksus_jobspec")
     public_functions = [
@@ -25,7 +33,7 @@ def test_public_api_functions_have_docstrings() -> None:
         doc = (func.__doc__ or "").strip()
         assert doc, f"{name} must have a non-empty docstring"
         assert len(doc) >= 20, f"{name} docstring is too short to be useful"
-        assert any(any(token in doc for token in group) for group in key_element_groups), (
+        assert _has_required_doc_section(doc, key_element_groups), (
             f"{name} docstring should include at least one documentation section "
             f"({', '.join('/'.join(group) for group in key_element_groups)})"
         )
