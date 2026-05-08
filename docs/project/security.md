@@ -7,6 +7,6 @@ Neksus JobSpec security policy is maintained in the repository root:
 
 Key points:
 
-- Report vulnerabilities privately to `security@neksusai.com`.
-- Latest supported line is `0.2.x`.
+- Report vulnerabilities privately to the repository owner through a non-public channel.
+- Latest supported line is `0.4.x`.
 - Public issues should not be used for unpatched security findings.

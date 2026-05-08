@@ -6,17 +6,9 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 
 ## [Unreleased]
 
-### Added
+### Documentation
 
-- Expanded user documentation set with:
-  - first-run checklist
-  - CLI decision guide
-  - scope/non-goals guide
-
-### Changed
-
-- Updated v0.4.x user docs across onboarding, schema, rendering, exports, themes,
-  integrations, and troubleshooting pages.
+- Updated security policy docs to current support line (`0.4.x`) and removed hardcoded email contact from vulnerability reporting guidance.
 
 ## [0.4.0] - 2026-05-08
 
@@ -51,6 +43,13 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 - README refreshed for v0.4.0 install and usage flow (`doctor`, `lint`, `preview`, theme dev commands, exports/feeds/sitemap, MCP extra).
 - CLI reference updated with new/extended commands.
 - Release notes updated for `0.4.0`.
+- Expanded user documentation set with:
+  - first-run checklist
+  - CLI decision guide
+  - scope/non-goals guide
+- Updated v0.4.x user docs across onboarding, schema, rendering, exports, themes,
+  integrations, and troubleshooting pages.
+- Restored the PyPI version badge in `README.md` for package discoverability.
 
 ### Tests
 

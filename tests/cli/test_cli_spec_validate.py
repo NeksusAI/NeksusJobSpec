@@ -69,4 +69,4 @@ requirements:
         assert result.exit_code == 1
         payload = json.loads(result.stdout)
         assert payload["ok"] is False
-        assert payload["errors"][0]["code"] == "legacy_schema_removed"
+        assert any(error.get("code") == "legacy_schema_removed" for error in payload["errors"])

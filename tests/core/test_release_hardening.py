@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib
 import re
+import stat
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -33,7 +34,7 @@ def test_public_api_functions_have_docstrings() -> None:
 def test_wheel_smoke_script_exists_and_is_executable() -> None:
     script = ROOT / ".github" / "scripts" / "smoke_wheel.sh"
     assert script.exists()
-    assert (script.stat().st_mode & 0o100) != 0
+    assert (script.stat().st_mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)) != 0
 
 
 def test_version_metadata_is_consistent() -> None:

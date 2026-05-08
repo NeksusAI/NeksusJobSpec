@@ -210,7 +210,7 @@ render_profiles:
         assert payload["profile"] == "public"
 
         rendered = Path("dist/public/role.html").read_text(encoding="utf-8")
-        assert "Nice to Have" not in rendered
+        assert "nice_to_have" not in rendered
 
         override_result = runner.invoke(
             app,

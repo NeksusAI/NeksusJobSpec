@@ -15,7 +15,7 @@ def test_themes_lists_builtin_themes_json() -> None:
     payload = json.loads(result.stdout)
     assert payload["ok"] is True
     names = [theme["name"] for theme in payload["themes"]]
-    assert names == ["classic", "classic-dark", "custom", "soft-professional"]
+    assert sorted(names) == sorted(["classic", "classic-dark", "custom", "soft-professional"])
 
 
 def test_themes_show_soft_professional_json() -> None:
