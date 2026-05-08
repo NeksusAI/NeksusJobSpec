@@ -1,57 +1,35 @@
 # Model Reference
 
-This page documents the v0.3.0 component-based `JobSpec` model (`schema_version: 1`).
+This page summarizes the component-based `JobSpec` model used in v0.4.x.
 
-## Top-level model: `JobSpec`
+## Top-level `JobSpec`
 
 - `schema_version: int = 1`
-- `id: str` (pattern `^[a-z0-9]+(?:-[a-z0-9]+)*$`)
+- `id: slug string`
 - `page: PageConfig`
 - `job: JobConfig`
 - `campaign: CampaignConfig | None`
 - `components: list[Component]` (min length 1)
-- `rendering: RenderingConfig` (optional with defaults)
+- `rendering: RenderingConfig`
 
-## `PageConfig`
+## Key nested blocks
 
-- `layout: "job_detail"`
-- `language: str | None`
-- `theme: str | None`
-- `component_order: list[str]`
+- `PageConfig`: layout/language/theme/component order metadata
+- `JobConfig`: job title/intro + apply destination metadata
+- `CampaignConfig`: optional start/end/status metadata
+- `JobApply`: method-based apply destination contract
 
-## `JobConfig`
+## Validation highlights
 
-- `title: str` (required)
-- `intro: str | None`
-- `apply: JobApply | None`
-
-## `CampaignConfig`
-
-- `starts_at: date | None`
-- `expires_at: date | None`
-- `status: Literal["draft", "active", "expired", "closed"] | None`
-
-## `JobApply`
-
-- `method: Literal["email", "external_url", "ats_url", "custom", "agent_ready"]`
-- `label: str | None`
-- `email: str | None`
-- `url: str | None`
-- `job_reference: str | None`
-
-## Components
-
-Supported `type` values:
-
-- `hero`, `facts`, `rich_text`, `list`, `quote`, `benefits`, `contact`, `company_profile`, `legal`, `cta`, `media`, `application_process`
-
-Shared fields:
-
-- `type`, `id`, optional `variant`, `title`, `class_name`, `attributes`, `visibility`, `render_if`
-
-## Validation rules
-
+- schema version must be `1`
 - component IDs must be unique
-- unknown type/variant fails
-- `page.component_order` entries must match existing component IDs
-- `schema_version` must be `1`
+- unknown component types/variants fail
+- `page.component_order` must match all components exactly once when set
+- campaign date ordering is enforced
+- method-specific apply fields are enforced
+
+For exact JSON Schema, use:
+
+```bash
+neksus-jobspec spec schema --output schemas/jobspec.v1.json
+```

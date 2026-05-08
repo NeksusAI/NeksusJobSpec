@@ -1,41 +1,27 @@
 # Schema
 
-Neksus JobSpec v0.3.x uses a component-based schema (`schema_version: 1`).
-
-## Breaking compatibility
-
-v0.3.x is not backward compatible with legacy simple top-level content fields.
+Neksus JobSpec v0.4.x uses `schema_version: 1` with component-based composition.
 
 ## Required fields
 
-- `schema_version: int` (must be `1`)
-- `id: str` (slug pattern)
+- `schema_version: 1`
+- `id: slug string`
 - `page: object`
 - `job: object`
-- `components: list` (at least one component)
+- `components: non-empty list`
 
 Optional:
+- `campaign`
+- `rendering`
 
-- `campaign: object`
-- `rendering: object`
-
-## Core nested blocks
+## Key nested fields
 
 ```yaml
-page:
-  layout: job_detail
-  language: da | en | ...
-  theme: soft-professional
-  component_order:
-    - hero
-    - facts
-
 job:
   title: string
   intro: string | null
   apply:
     method: email | external_url | ats_url | custom | agent_ready
-    label: string | null
     email: string | null
     url: string | null
     job_reference: string | null
@@ -48,18 +34,19 @@ campaign:
 
 ## Validation behavior
 
-- Missing required fields fail validation.
-- Unknown component types fail validation.
-- Unknown variants fail validation.
-- Component IDs must be unique.
-- `page.component_order`, when set, must include every component ID exactly once.
-- `campaign.expires_at` must not be before `campaign.starts_at`.
-- `job.apply` must satisfy method-specific required fields.
+- Unknown fields are rejected.
+- Unknown component types/variants are rejected.
+- Duplicate component IDs are rejected.
+- `page.component_order` must include all component IDs exactly once if set.
+- `campaign.expires_at` must be >= `campaign.starts_at` when both are set.
+- apply methods enforce method-specific required fields.
 
-## Versioning
+## Related commands
 
-- Current supported version: `schema_version: 1`
-- Other schema versions are rejected.
-- Use `spec migrate` only for version inspection; write mode is not implemented.
+```bash
+neksus-jobspec spec schema --output schemas/jobspec.v1.json
+neksus-jobspec spec validate <path>
+neksus-jobspec spec lint <path>
+```
 
-See [Model Reference](model-reference.md) and [Specification](../concepts/specification.md).
+See [Model Reference](model-reference.md) for model-level details.

@@ -1,42 +1,24 @@
 # Integrations
 
-This page separates what is available now from planned integration paths.
-
 ## Available now
 
-### ChatGPT, Claude, Gemini, GitHub Copilot
+- Local YAML-first workflow under version control.
+- CLI validation/lint/render/export/feed/sitemap.
+- Optional local MCP server for MCP-capable assistants.
 
-You can use Neksus JobSpec as a local structured source of truth:
+## Typical LLM integration pattern
 
-- keep role specs in YAML under version control
-- validate specs before sharing with LLM tools
-- render to Markdown/JSON for prompt context or review flows
+- generate/update JobSpec YAML
+- run `spec validate` and `spec lint`
+- render/export deterministic outputs
+- review artifacts before publishing in external systems
 
-### Local MCP server
-
-Neksus JobSpec includes a local stdio MCP server for MCP-capable clients.
+## MCP
 
 - Install: `pip install "neksus-jobspec[mcp]"`
 - Run: `neksus-jobspec-mcp`
 - Setup matrix: [MCP Install Matrix](mcp-install-matrix.md)
 
-### CI/CD
+## Out of scope
 
-You can run CLI checks in CI to enforce quality gates:
-
-```bash
-uv sync
-uv run neksus-jobspec check --strict
-uv run pytest
-```
-
-## Planned integrations
-
-### ATS and job-board pipelines (planned)
-
-Planned direction is to map validated JobSpec fields into ATS/job-board payloads and export adapters. This is not implemented in the current CLI.
-
-### Hosted API/server workflows (planned)
-
-Planned direction is to expose the same core validation/rendering logic behind a hosted API for team-wide automation.
-This is separate from the current local MCP server.
+Hosted ATS-like workflows and direct posting integrations are not part of the local core package.

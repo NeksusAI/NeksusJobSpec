@@ -6,6 +6,10 @@ The command layer stays thin and delegates business logic to `neksus_jobspec`.
 
 from __future__ import annotations
 
+import http.server
+import socketserver
+import tempfile
+import webbrowser
 from pathlib import Path
 from typing import Annotated
 
@@ -252,6 +256,74 @@ def spec_status(
             ),
         ],
     )
+    for warning in payload["warnings"]:
+        print_warning(f"Warning [{warning['path']}] {warning['message']}")
+
+
+@app.command("lint")
+def spec_lint(
+    path: Annotated[Path, typer.Argument(help="Path to a JobSpec YAML file.")],
+    json: Annotated[bool, typer.Option("--json", help="Output machine-readable JSON.")] = False,
+) -> None:
+    """Run quality lint checks on a JobSpec."""
+    try:
+        payload = spec_use_case.lint_file(path).model_dump()
+    except EXPECTED_COMMAND_ERRORS as exc:
+        handle_expected_error(exc, as_json=json)
+        return
+
+    if json:
+        print_json(payload)
+        return
+
+    print_success(f"Lint completed for: {path}")
+    if not payload["warnings"]:
+        print_success("No lint warnings found.")
+        return
+    for warning in payload["warnings"]:
+        print_warning(f"Warning [{warning['path']}] {warning['message']}")
+
+
+@app.command("preview")
+def spec_preview(
+    path: Annotated[Path, typer.Argument(help="Path to a JobSpec YAML file.")],
+    theme: Annotated[str | None, typer.Option("--theme", help="Built-in theme name.")] = None,
+    port: Annotated[int, typer.Option("--port", help="Local HTTP preview port.")] = 8765,
+    no_open: Annotated[
+        bool,
+        typer.Option("--no-open", help="Do not open the browser automatically."),
+    ] = False,
+) -> None:
+    """Render one JobSpec to a local temp directory and serve a preview URL."""
+    try:
+        selected_theme = spec_use_case.resolve_default_theme(theme)
+        with tempfile.TemporaryDirectory(prefix="neksus-preview-") as temp_dir:
+            output_path = Path(temp_dir) / "index.html"
+            spec_use_case.render_file(
+                path,
+                format="web",
+                theme=selected_theme,
+                no_validate=False,
+                asset_base_url=None,
+                output=output_path,
+            )
+
+            class Handler(http.server.SimpleHTTPRequestHandler):
+                def __init__(self, *args, **kwargs) -> None:  # type: ignore[no-untyped-def]
+                    super().__init__(*args, directory=temp_dir, **kwargs)
+
+            with socketserver.TCPServer(("127.0.0.1", port), Handler) as httpd:
+                url = f"http://127.0.0.1:{port}/index.html"
+                print_success(f"Preview available at: {url}")
+                if not no_open:
+                    webbrowser.open(url)
+                print_warning("Press Ctrl+C to stop preview server.")
+                try:
+                    httpd.serve_forever()
+                except KeyboardInterrupt:
+                    return
+    except EXPECTED_COMMAND_ERRORS as exc:
+        handle_expected_error(exc, as_json=False)
 
 
 @app.command("export")

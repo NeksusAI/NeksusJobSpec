@@ -8,11 +8,55 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 
 ### Added
 
-- No entries yet.
+- Expanded user documentation set with:
+  - first-run checklist
+  - CLI decision guide
+  - scope/non-goals guide
 
 ### Changed
 
-- No entries yet.
+- Updated v0.4.x user docs across onboarding, schema, rendering, exports, themes,
+  integrations, and troubleshooting pages.
+
+## [0.4.0] - 2026-05-08
+
+### Added
+
+- New `neksus-jobspec doctor` command for local environment/project diagnostics with `OK`/`WARN`/`FAIL` checks.
+- New `neksus-jobspec spec lint <path>` quality warning command.
+- New `neksus-jobspec spec preview <path>` local preview command (temp render + local HTTP server).
+- New theme developer commands:
+  - `neksus-jobspec themes list`
+  - `neksus-jobspec themes validate <theme-path>`
+  - `neksus-jobspec themes init <target> [--force]`
+- Added minimal custom theme example at `examples/themes/minimal/`.
+- Added CLI tests for doctor, preview, lint, and expanded themes workflows.
+
+### Changed
+
+- Version bumped to `0.4.0`.
+- Packaging/version metadata aligned for `src/` layout and wheel importability checks.
+- `spec status` now includes quality warnings in both human and JSON output.
+- `themes show` now supports built-in theme names and filesystem custom theme paths.
+- AGENTS policy and architecture guidance updated to current repository boundaries and workflows.
+
+### Fixed
+
+- Packaging/entrypoint validation for `neksus-jobspec` and `neksus-jobspec-mcp` under the current package layout.
+- Optional MCP extra install path validated for editable installs.
+- Docs navigation and strict-build references aligned with current command surface.
+
+### Documentation
+
+- README refreshed for v0.4.0 install and usage flow (`doctor`, `lint`, `preview`, theme dev commands, exports/feeds/sitemap, MCP extra).
+- CLI reference updated with new/extended commands.
+- Release notes updated for `0.4.0`.
+
+### Tests
+
+- Added/extended tests for theme init/validate/list/show flows.
+- Added lint behavior tests (warning-only and invalid-spec failure cases).
+- Added preview command smoke test with controlled server shutdown.
 
 ## [0.3.0]
 

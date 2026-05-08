@@ -1,8 +1,8 @@
 # Examples Library
 
-This page provides component-based v0.3.x examples.
+This page provides focused snippets for common user scenarios in v0.4.x.
 
-## Minimal role
+## Minimal valid spec
 
 ```yaml
 schema_version: 1
@@ -11,57 +11,53 @@ page:
   layout: job_detail
 job:
   title: Office Assistant
-  intro: Support daily office operations.
+  apply:
+    method: external_url
+    url: https://example.com/apply/office-assistant
 components:
   - type: hero
     id: hero
-    variant: default
     title: Office Assistant
-    intro: Support daily office operations.
   - type: list
     id: requirements
-    variant: bullets
-    title: Requirements
     items:
       - Strong organizational skills.
 ```
 
-## Technical role with facts and process
+## Campaign-active spec
 
 ```yaml
-schema_version: 1
-id: data-platform-engineer
-page:
-  layout: job_detail
-  component_order: [hero, facts, responsibilities, requirements, process]
-job:
-  title: Data Platform Engineer
-components:
-  - type: hero
-    id: hero
-    variant: split
-    title: Data Platform Engineer
-  - type: facts
-    id: facts
-    variant: sidebar
-    items:
-      - label: Region
-        value: Copenhagen
-  - type: list
-    id: responsibilities
-    variant: bullets
-    title: Responsibilities
-    items: [Build ETL jobs]
-  - type: list
-    id: requirements
-    variant: bullets
-    title: Requirements
-    items: [Strong SQL skills]
-  - type: application_process
-    id: process
-    variant: steps
-    title: Application process
-    steps: [Apply, Interview, Offer]
+campaign:
+  starts_at: 2026-05-04
+  expires_at: 2026-07-03
+  status: active
 ```
 
-For a full production-style example, use `examples/job-detail.jobspec.yaml`.
+## Campaign-closed spec
+
+```yaml
+campaign:
+  status: closed
+```
+
+## Onsite/hybrid hint with structured location
+
+```yaml
+components:
+  - type: meta_chips
+    id: chips
+    items:
+      - label: Workplace
+        value: Hybrid
+      - label: Location
+        value: Copenhagen, Denmark
+        semantic: location
+```
+
+## Recommended command checks for any example
+
+```bash
+neksus-jobspec spec validate <path>
+neksus-jobspec spec lint <path>
+neksus-jobspec spec status <path>
+```

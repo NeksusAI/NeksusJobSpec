@@ -10,6 +10,7 @@ from neksus_jobspec.app.dtos import (
     InspectResult,
     MigrateStatusResult,
     NewFileResult,
+    LintResult,
     RenderFileResult,
     SchemaResult,
     StatusResult,
@@ -21,6 +22,7 @@ from neksus_jobspec.jobspec.spec_ops import (
     create_jobspec_file,
     export_jobspec,
     inspect_jobspec_file,
+    lint_jobspec_file,
     list_templates,
     migrate_status,
     render_jobspec_file,
@@ -88,6 +90,10 @@ class SpecUseCase:
     def status_file(self, path: Path) -> StatusResult:
         """Return campaign status metadata for a specific JobSpec file."""
         return StatusResult.model_validate(status_jobspec_file(path))
+
+    def lint_file(self, path: Path) -> LintResult:
+        """Run non-failing quality lint checks for a specific JobSpec file."""
+        return LintResult.model_validate(lint_jobspec_file(path))
 
     def export_file(self, path: Path, target: str, out: Path) -> ExportResult:
         """Export a JobSpec into a deterministic machine-readable target."""

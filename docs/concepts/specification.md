@@ -1,21 +1,22 @@
 # JobSpec Format
 
-Neksus v0.3.x uses a component-based JobSpec schema for job-detail pages.
+Neksus v0.4.x uses a component-based JobSpec schema (`schema_version: 1`).
 
-## Breaking compatibility note
+## Compatibility note
 
-`0.3.x` is not backward compatible with `0.1.0` or transitional early `0.2.0` legacy-style payloads.
-Legacy top-level content fields are removed from the accepted schema.
+Legacy simple-schema top-level content formats are not supported.
 
 ## Required top-level fields
 
-- `schema_version`
+- `schema_version` (must be `1`)
 - `id`
 - `page`
 - `job`
 - `components`
-- optional `rendering`
-- optional `campaign`
+
+Optional:
+- `campaign`
+- `rendering`
 
 ## Campaign metadata
 
@@ -27,101 +28,41 @@ campaign:
 ```
 
 Rules:
+- `status` is `draft | active | expired | closed`.
+- `expires_at` cannot be before `starts_at`.
 
-- `campaign` is optional.
-- `status` must be one of `draft`, `active`, `expired`, `closed`.
-- If both dates are present, `expires_at` must not be before `starts_at`.
+## Apply destination
 
-## Apply destination metadata
+`job.apply` is method-based:
 
-`job.apply` is method-based in v0.3.0:
+- `email` -> requires `email`
+- `external_url` -> requires `url`
+- `ats_url` -> requires `url`
+- `custom` -> requires `url`
+- `agent_ready` -> requires `url` and `job_reference`
 
-```yaml
-job:
-  apply:
-    method: external_url
-    url: https://example.com/apply/job-id
-    label: Apply now
-```
+## Validation and lint
 
-Supported methods:
+- `spec validate` enforces schema validity and exits non-zero on invalid specs.
+- `spec lint` reports advisory quality warnings without failing valid specs.
+- `spec status` reports campaign metadata plus quality warnings.
 
-- `email` (requires `email`)
-- `external_url` (requires `url`)
-- `ats_url` (requires `url`)
-- `custom` (requires `url`)
-- `agent_ready` (requires `url` and `job_reference`)
+## Components
 
-## Components model
+Common fields include `type`, `id`, optional `variant`, optional `title`, and placement/region-related fields.
 
-`components` are typed, validated building blocks.
+Key rules:
+- component IDs must be unique
+- when `page.component_order` is set, it must include all component IDs exactly once
+- unknown component types/variants fail validation
 
-Shared fields:
-
-- `type`
-- `id`
-- optional `variant`
-- optional `title`
-- optional `class_name`
-- optional `attributes`
-- optional `visibility`
-- optional `render_if`
-- `placement`: `main | sidebar | fullwidth`
-- optional `container`
-
-Supported component types:
-
-- `hero`
-- `facts`
-- `rich_text`
-- `list`
-- `quote`
-- `benefits`
-- `contact`
-- `company_profile`
-- `legal`
-- `cta`
-- `media`
-- `application_process`
-- `header_brand`
-- `hero_banner`
-- `meta_panel`
-- `social_links`
-- `location_map`
-- `footer_brand`
-- `nav_links`
-- `header_actions`
-- `feature_grid`
-- `meta_chips`
-
-## Ordering rules
-
-- Component IDs must be unique per file.
-- If `page.component_order` is set, it must include each component ID exactly once.
-
-## Security notes
-
-- Typed components are the default authoring model.
-- Arbitrary HTML is not the default model.
-- Custom CSS is supported.
-- Theme customization is CSS-first in v0.3.x.
-- URL fields accept only safe schemes (`http`, `https`, `mailto`, `tel`) or safe relative paths.
-- Component `attributes` are restricted to safe keys (`data-*`, `aria-*`, `id`, `role`, `title`).
-
-## Web rendering knobs
+## Rendering fields
 
 `rendering.web` supports:
+- `template`
+- `theme_config`
+- `labels`
+- `asset_base_url`
+- behavior flags like `show_top_apply`, `show_share_links`, `show_print_link`, `repeat_cta`
 
-- `facts_position`: `sidebar | topbar | grid`
-- `repeat_cta`: boolean
-- `show_top_apply`: boolean
-- `show_share_links`: boolean
-- `show_print_link`: boolean
-- `asset_base_url`: optional URL/path prefix for relative component asset URLs
-- `theme_config`: dictionary of theme-specific presentation options consumed by theme templates/CSS (canonical style/layout config surface)
-- `labels`: optional localized UI labels:
-  - `about`, `responsibilities`, `requirements`, `benefits`, `overview`
-  - `application_process`, `contact`, `quick_facts`
-  - `campaign_closed`, `campaign_expired`, `map_label_prefix`
-  - `share`, `print`, `phone`, `mobile`, `email`, `open_map`, `deadline`
-- `template`: built-in theme name or custom template identifier/path
+See [Schema](../reference/schema.md) for reference and [Themes](themes.md) for package behavior.

@@ -1,23 +1,30 @@
 # Examples
 
-## Job-detail example
+## Recommended real examples in this repository
 
-Use `examples/job-detail.jobspec.yaml` in the repository root as a full component-based example.
+- `examples/startup-engineer.jobspec.yaml`: baseline hiring page example
+- `examples/service-role.jobspec.yaml`: service-oriented role composition
+- `examples/campaign-active.jobspec.yaml`: active campaign metadata
+- `examples/campaign-closed.jobspec.yaml`: closed campaign behavior
+- `examples/job-detail.jobspec.yaml`: full component-rich layout
 
-It demonstrates:
+## Theme example package
 
-- branded header and hero banner
-- title and intro hero
-- apply CTA
-- meta sidebar (`meta_panel`) with job facts and contact details
-- responsibilities and requirements lists
-- quote and benefits blocks
-- application process steps
-- social links and map sidebar blocks
-- company profile, legal/privacy block, and branded footer
+- `examples/themes/minimal/`: copyable minimal custom theme package
 
-For more scenarios, see [Examples Library](examples-library.md).
+Validate it:
 
-Soft-professional theme screenshot:
+```bash
+neksus-jobspec themes validate examples/themes/minimal
+```
 
-![Soft Professional Theme](../assets/soft-professional-current-render.png)
+## Suggested learning path
+
+1. Validate one example.
+2. Run lint and status.
+3. Preview in browser.
+4. Export JSON/XML.
+5. Render with built-in theme.
+6. Render with custom minimal theme.
+
+For inline YAML snippets, see [Examples Library](examples-library.md).

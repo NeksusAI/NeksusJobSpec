@@ -106,6 +106,13 @@ class StatusResult(BaseModel):
     starts_at: str | None = None
     expires_at: str | None = None
     days_remaining: int | None = None
+    warnings: list[dict[str, str]] = Field(default_factory=list)
+
+
+class LintResult(BaseModel):
+    ok: bool
+    file: str
+    warnings: list[dict[str, str]]
 
 
 class ExportResult(BaseModel):

@@ -1,0 +1,16 @@
+{
+  "name": "minimal",
+  "version": 1,
+  "template": "template.html.j2",
+  "styles": ["theme.css"],
+  "supported_components": [
+    "hero",
+    "list",
+    "benefits",
+    "contact",
+    "cta",
+    "legal"
+  ],
+  "supported_regions": ["header", "hero", "main", "sidebar", "footer"],
+  "required_components": ["hero", "list"]
+}

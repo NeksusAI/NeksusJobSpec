@@ -2,19 +2,10 @@
 
 Neksus JobSpec includes an optional local-only stdio MCP server.
 
-It is designed to run on your machine and expose JobSpec tooling to
-MCP-capable assistants. It does not add hosted deployment behavior.
-
 ## Install
 
 ```bash
 pip install "neksus-jobspec[mcp]"
-```
-
-Using `uv`:
-
-```bash
-uv sync --extra mcp
 ```
 
 ## Run
@@ -23,12 +14,7 @@ uv sync --extra mcp
 neksus-jobspec-mcp
 ```
 
-The server uses stdio transport and is intended to be launched by your MCP
-client.
-
 ## Tool surface
-
-The local MCP server exposes CLI-parity-oriented tools:
 
 - `version`
 - `init`
@@ -41,6 +27,7 @@ The local MCP server exposes CLI-parity-oriented tools:
 - `spec_templates`
 - `spec_new`
 - `spec_validate`
+- `spec_lint`
 - `spec_render`
 - `spec_inspect`
 - `spec_status`
@@ -49,23 +36,8 @@ The local MCP server exposes CLI-parity-oriented tools:
 - `feed_export`
 - `feed_sitemap`
 
-All tool responses use stable JSON payloads with `ok` and explicit error
-payloads on failures.
+All responses use stable JSON payloads with explicit failure payloads.
 
 ## Scope boundary
 
-The MCP server is local-only and free/core scoped.
-
-It does not implement:
-
-- application collection
-- `application_form` schema handling
-- CV upload/parsing
-- candidate management
-- email delivery
-- payments
-- direct LinkedIn posting
-- hosted APIs or cloud service orchestration
-
-See [MCP Install Matrix](mcp-install-matrix.md) for Claude, ChatGPT, Gemini,
-and Copilot setup paths.
+Local MCP is local-only tooling parity. It does not add hosted SaaS, ATS/candidate workflows, payments, auth, or direct LinkedIn posting.

@@ -1,9 +1,8 @@
 # LLM Usage
 
-Use this guide when asking assistants to generate or repair Neksus JobSpec
-files.
+Use this guide when asking assistants to generate or revise JobSpecs.
 
-## Required top-level fields
+## Required fields
 
 - `schema_version`
 - `id`
@@ -12,88 +11,35 @@ files.
 - `components`
 
 Optional:
-
 - `campaign`
 - `rendering`
 
-## Recommended field order
-
-1. `schema_version`
-2. `id`
-3. `page`
-4. `job`
-5. `campaign` (optional)
-6. `components`
-7. `rendering` (optional)
-
-## Campaign metadata
-
-```yaml
-campaign:
-  starts_at: 2026-05-04
-  expires_at: 2026-07-03
-  status: active
-```
-
-Allowed status values:
-
-- `draft`
-- `active`
-- `expired`
-- `closed`
-
-## Apply destination metadata
-
-Use only apply destination metadata, not application forms.
-
-```yaml
-job:
-  apply:
-    method: external_url
-    url: https://example.com/apply/job-id
-```
-
-Supported methods:
-
-- `email` (requires `email`)
-- `external_url` (requires `url`)
-- `ats_url` (requires `url`)
-- `custom` (requires `url`)
-- `agent_ready` (requires `url` and `job_reference`)
-
-## Unsupported fields (do not invent)
-
-- `application_form`
-- CV upload fields
-- candidate profile fields
-- payment fields
-- hosted backend/API fields
-
-NeksusJobSpec v0.3.0 does not include application collection, CV upload,
-email delivery, payments, candidate management, hosted APIs, or ATS workflows.
-
-## Validate and render
+## Recommended validation flow
 
 ```bash
 neksus-jobspec spec validate job.jobspec.yaml
-neksus-jobspec spec render job.jobspec.yaml --format web
-neksus-jobspec spec render job.jobspec.yaml --format json-ld
+neksus-jobspec spec lint job.jobspec.yaml
+neksus-jobspec spec status job.jobspec.yaml
 ```
 
-## Export and feeds
+## Rendering and preview
+
+```bash
+neksus-jobspec spec preview job.jobspec.yaml --no-open
+neksus-jobspec spec render job.jobspec.yaml --format web --output dist/job.html
+neksus-jobspec spec render job.jobspec.yaml --format json-ld --output dist/job.jsonld
+```
+
+## Export/feed commands
 
 ```bash
 neksus-jobspec spec export job.jobspec.yaml --target generic-json --out dist/job.json
 neksus-jobspec spec export job.jobspec.yaml --target generic-xml --out dist/job.xml
-neksus-jobspec spec export job.jobspec.yaml --target linkedin-ready-json --out dist/linkedin-job.json
+neksus-jobspec spec export job.jobspec.yaml --target linkedin-ready-json --out dist/job-linkedin.json
 neksus-jobspec feed export "examples/*.jobspec.yaml" --target jobs-json --out dist/jobs.json
 neksus-jobspec feed sitemap "examples/*.jobspec.yaml" --base-url https://company.dk/jobs --out dist/sitemap.xml
 ```
 
-## Example prompts
+## Boundary reminders
 
-- "Create a Danish service-role JobSpec."
-- "Convert this job ad into NeksusJobSpec YAML."
-- "Add campaign metadata to this JobSpec."
-- "Validate this JobSpec and explain likely errors."
-- "Generate a LinkedIn-ready export."
+Do not invent application forms, candidate storage, CV upload/parsing, payments, hosted API flows, or direct LinkedIn posting.

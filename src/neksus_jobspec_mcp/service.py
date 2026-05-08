@@ -77,6 +77,10 @@ class JobspecMcpService:
     def themes_show(self, name: str) -> dict[str, Any]:
         return {"ok": True, "theme": get_theme_metadata(name).model_dump()}
 
+    def spec_lint(self, path: str) -> dict[str, Any]:
+        file_path = Path(path)
+        return self._spec_use_case.lint_file(file_path).model_dump()
+
     def spec_schema(self, output: str | None = None) -> dict[str, Any]:
         return self._spec_use_case.write_schema(Path(output) if output else None).model_dump(
             exclude_none=True, by_alias=True
